@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
+import path from 'node:path';
 
 export default defineConfig({
   plugins: [
@@ -7,7 +8,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      $lib: path.resolve("./src/lib"),
+      $lib: path.resolve(__dirname, './src/lib')
     },
   },
 });
