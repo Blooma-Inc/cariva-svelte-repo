@@ -30,7 +30,9 @@ export const config = defineConfig(
       parserOptions: {
         projectService: true,
         extraFileExtensions: ['.svelte'],
-        parser: ts.parser
+        parser: ts.parser,
+        tsconfigRootDir: import.meta.dirname,
+        project: ['./tsconfig.json']
       }
     }
   }

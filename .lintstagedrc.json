@@ -1,0 +1,4 @@
+{
+  "**/*.+(js|ts|svelte)": ["prettier --write --ignore-unknown", "turbo run lint --continue --"],
+  "**/*.+(json|md)": "prettier --write --ignore-unknown"
+}

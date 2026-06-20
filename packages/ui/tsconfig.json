@@ -5,7 +5,11 @@
     "declarationMap": true,
     "allowArbitraryExtensions": true,
     "strictNullChecks": true,
-    "types": ["svelte"]
+    "types": ["svelte", "@sveltejs/kit"],
+    "paths": {
+      "$lib": ["./src/lib"],
+      "$lib/*": ["./src/lib/*"]
+    }
   },
   "include": ["dist", "./src/**/*.svelte", "./src/**/*.ts"],
   "exclude": ["node_modules", ".svelte-kit"]

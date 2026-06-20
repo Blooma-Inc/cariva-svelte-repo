@@ -1,17 +1,20 @@
 {
-  "$schema": "https://turborepo.dev/schema.json",
+  "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
   "tasks": {
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["sync", "^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".svelte-kit/**", ".vercel/**", "dist/**"]
+      "outputs": [".svelte-kit/**", "build/**", "dist/**", ".vercel/**"]
     },
-    "lint": {
-      "dependsOn": ["^lint"]
+    "sync": {
+      "outputs": [".svelte-kit/**"]
     },
     "check-types": {
-      "dependsOn": ["^check-types"]
+      "dependsOn": ["sync"]
+    },
+    "lint": {
+      "dependsOn": ["sync"]
     },
     "dev": {
       "cache": false,
