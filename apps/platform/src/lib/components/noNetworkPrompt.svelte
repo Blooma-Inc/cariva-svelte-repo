@@ -4,13 +4,13 @@
 	import { useNetworkStatus } from '$lib/hooks/app/useNetworkStatus.svelte';
 
 	const networkStatus = useNetworkStatus();
-	const hidePrompt = $derived(networkStatus.isReady && networkStatus.isOnline);
+	const hidePrompt = $derived(!networkStatus.isReady && networkStatus.isOnline);
 </script>
 
 {#if !hidePrompt}
 	<div
 		data-isServer={networkStatus.lastError === NETWORK_ERR}
-		class="border-primary-200 bg-primary-50 text-primary-500 data-[isServer=true]:border-error data-[isServer=true]:bg-error w-full border-b py-4 data-[isServer=true]:text-white"
+		class="data-[isServer=true]:border-error data-[isServer=true]:bg-error w-full border-b bg-info py-4 text-info-foreground data-[isServer=true]:text-white"
 	>
 		<div class="max-w-desktop mx-auto flex h-full w-11/12 items-center justify-between">
 			<div class="mx-auto flex w-fit items-center justify-center gap-3">
