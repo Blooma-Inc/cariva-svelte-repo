@@ -1,10 +1,6 @@
 import initializer from '$lib/utils/initializers';
+import type { TLoginSchema } from '../../../routes/auth/login/validator';
 import type { RootStore } from '../index.svelte';
-import jwt from 'jsonwebtoken';
-
-export function decodeJWT(token: string) {
-	return jwt.decode(token) as IJwtPayloadExt;
-}
 
 const INIT_IS_LOADING = {
 	logout: false,
@@ -25,7 +21,9 @@ class AuthStore {
 		return { ttl: 0, token: '', email: '' };
 	}
 
-	async login() {}
+	async login(payload: TLoginSchema) {
+		console.log('login function called: ', JSON.stringify(payload));
+	}
 	async getTokenFromCookie() {}
 	async fetchNewToken() {
 		return '';

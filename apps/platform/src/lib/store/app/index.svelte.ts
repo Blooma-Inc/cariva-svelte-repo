@@ -22,6 +22,13 @@ class AppStore {
 		showClose: true
 	});
 
+	dynamicModal = $state({
+		title: '',
+		description: '',
+		btnText: '',
+		btnFn: () => {}
+	});
+
 	constructor(rootStore: RootStore) {
 		this.rootStore = rootStore;
 	}
@@ -45,6 +52,16 @@ class AppStore {
 						subText: modal.subText,
 						ctaText: modal.ctaText ?? 'Got it',
 						showClose: modal.showClose ?? true
+					};
+				}
+				break;
+			case AppModals.DYNAMIC:
+				if (modal.open) {
+					this.dynamicModal = {
+						title: modal.title,
+						description: modal.description ?? '',
+						btnText: modal.btnText,
+						btnFn: modal.btnFn
 					};
 				}
 				break;

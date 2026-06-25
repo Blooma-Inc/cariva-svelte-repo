@@ -1,14 +1,18 @@
-<script lang="ts">
+<script lang="ts" module>
   import { cn, type WithElementRef, type WithoutChildren } from '$lib/utils.js';
   import type { HTMLTextareaAttributes } from 'svelte/elements';
 
+  export type TextareaProps = WithoutChildren<WithElementRef<HTMLTextareaAttributes>>;
+</script>
+
+<script lang="ts">
   let {
     ref = $bindable(null),
     value = $bindable(),
     class: className,
     'data-slot': dataSlot = 'textarea',
     ...restProps
-  }: WithoutChildren<WithElementRef<HTMLTextareaAttributes>> = $props();
+  }: TextareaProps = $props();
 </script>
 
 <textarea
