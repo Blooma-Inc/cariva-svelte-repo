@@ -6,11 +6,6 @@
     "allowArbitraryExtensions": true,
     "strictNullChecks": true,
     "types": ["svelte", "@sveltejs/kit"]
-    // "paths": {
-    //   "$lib": ["./src/lib"],
-    //   "$lib/*": ["./src/lib/*"],
-    //   "$lib/ui/*": ["./src/lib/components/ui/*"]
-    // }
   },
   "include": ["./src/**/*.svelte", "./src/**/*.ts"],
   "exclude": ["node_modules", ".svelte-kit", "dist"]

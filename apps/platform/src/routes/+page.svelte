@@ -1,7 +1,10 @@
 <script lang="ts">
-	import { Heading, Paragraph } from '@cariva/ui/components/typography/index.js';
-	import { Button } from '@cariva/ui/components/button/index.js';
-	import { Input } from '@cariva/ui/components/input/index.js';
+	import { Heading, Paragraph } from '@cariva/ui/components/ui/typography/index.js';
+	import { Button } from '@cariva/ui/components/ui/button/index.js';
+	import { stores } from '$lib/store/index.svelte';
+	import { AppModals } from '$lib/store/app/modalTypes';
+
+	const { AppStore } = stores;
 </script>
 
 <div class="mx-auto flex w-full max-w-xl flex-col gap-1 px-4">
@@ -12,8 +15,20 @@
 		> to read the documentation
 	</Paragraph>
 
-	<Button size="lg">Primary</Button>
-	<Button variant="info">Info</Button>
-	<Button variant="warning">Warning</Button>
-	<Input />
+	<Button
+		size="lg"
+		onclick={() =>
+			AppStore.toggleModals({
+				open: true,
+				name: AppModals.DYNAMIC,
+				title: 'Verification successful',
+				description: 'Your Phone Number has been verified. You can continue to your dashboard.',
+				btnText: 'Got it.',
+				btnFn: () => {
+					AppStore.toggleModals({});
+				}
+			})}
+	>
+		Button</Button
+	>
 </div>

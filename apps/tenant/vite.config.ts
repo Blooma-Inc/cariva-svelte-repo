@@ -23,6 +23,9 @@ export default defineConfig({
 			extensions: ['.svelte', '.svx', '.md']
 		})
 	],
+	ssr: {
+		noExternal: ['@lucide/svelte', '@cariva/ui']
+	},
 	test: {
 		expect: { requireAssertions: true },
 		projects: [
