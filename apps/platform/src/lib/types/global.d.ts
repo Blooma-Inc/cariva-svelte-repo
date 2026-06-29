@@ -1,3 +1,15 @@
+interface MenuItem {
+	title: string;
+	url?: string;
+	icon: LucideIcon;
+	isNestable?: boolean;
+	submenu?: Array<{
+		title: string;
+		url: string;
+		isNestable?: boolean;
+	}>;
+}
+
 type TIsAuthenticated = { ttl: number; token?: string; email?: string };
 
 type TResendTokenState = 'idle' | 'resending' | 'sent' | 'failed';

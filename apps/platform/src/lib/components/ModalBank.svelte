@@ -5,7 +5,16 @@
 
 	const ModalsMap = {
 		[AppModals.DONE]: () => import('$lib/components/modals/Done.svelte'),
-		[AppModals.DYNAMIC]: () => import('$lib/components/modals/Dynamic.svelte')
+		[AppModals.DYNAMIC]: () => import('$lib/components/modals/Dynamic.svelte'),
+		[AppModals.ACCOUNT_LOCKED_MODAL]: () =>
+			import('$lib/components/modals/AccountLockedModal.svelte'),
+		[AppModals.DEACTIVATED_ACCOUNT_MODAL]: () =>
+			import('$lib/components/modals/DeactivatedAccountModal.svelte'),
+		[AppModals.TFA_VERIFICATION_MODAL]: () =>
+			import('$lib/components/modals/TFAVerificationModal.svelte'),
+		[AppModals.FORGOT_PWD_MODAL]: () => import('$lib/components/modals/ForgotPwdModal.svelte'),
+		[AppModals.SESSION_TIMEOUT_MODAL]: () =>
+			import('$lib/components/modals/SessionTimeoutModal.svelte')
 	};
 
 	let { AppStore } = stores;

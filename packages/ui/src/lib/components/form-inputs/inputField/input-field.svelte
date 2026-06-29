@@ -26,7 +26,7 @@
   );
 </script>
 
-<div class="relative w-full">
+<div class="relative flex w-full flex-col gap-1">
   <Form.Control>
     {#snippet children({ props: controlProps })}
       <div class="relative flex w-full flex-col gap-1">

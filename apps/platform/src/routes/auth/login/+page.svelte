@@ -1,11 +1,6 @@
 <script lang="ts">
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
-	import {
-		Card,
-		CardContent,
-		CardFooter,
-		CardHeader
-	} from '@cariva/ui/components/ui/card/index.js';
+	import { Card, CardContent, CardHeader } from '@cariva/ui/components/ui/card/index.js';
 	import { Heading, Paragraph } from '@cariva/ui/components/ui/typography/index.js';
 	import { InputField } from '@cariva/ui/components/form-inputs/inputField/index.js';
 	import { FormField } from '@cariva/ui/components/ui/form/index.js';
@@ -13,9 +8,10 @@
 	import { zod4Client } from 'sveltekit-superforms/adapters';
 	import { LoginSchema } from './validator';
 	import { stores } from '$lib/store/index.svelte.js';
+	import { AppModals } from '$lib/store/app/modalTypes';
 
 	let { data } = $props();
-	let { AuthStore } = stores;
+	let { AuthStore, AppStore } = stores;
 
 	// svelte-ignore state_referenced_locally
 	const form = superForm(data.form, {
@@ -42,27 +38,37 @@
 	<CardContent>
 		<Card class="shadow-none">
 			<CardContent>
-				<form id="login-form" use:enhance>
+				<form id="login-form" use:enhance class="flex flex-col gap-3">
 					<fieldset class="flex flex-col gap-2">
 						<FormField {form} name="email">
 							<InputField label="Email Address" bind:value={$formData.email} required />
 						</FormField>
 
-						<FormField {form} name="password">
-							<InputField
-								label="Password"
-								bind:value={$formData.password}
-								required
-								type="password"
-							/>
-						</FormField>
+						<div class="flex flex-col items-end">
+							<FormField {form} name="password" class="w-full">
+								<InputField
+									label="Password"
+									bind:value={$formData.password}
+									required
+									type="password"
+								/>
+							</FormField>
+
+							<button
+								class="w-fit text-primary underline"
+								type="button"
+								onclick={() =>
+									AppStore.toggleModals({
+										open: true,
+										name: AppModals.DEACTIVATED_ACCOUNT_MODAL
+									})}>Forgot password ?</button
+							>
+						</div>
 					</fieldset>
+
+					<Button type="submit" form="login-form" size="lg" class="w-full">Login</Button>
 				</form>
 			</CardContent>
-
-			<CardFooter>
-				<Button type="submit" form="login-form" size="lg" class="w-full">Login</Button>
-			</CardFooter>
 		</Card>
 	</CardContent>
 </Card>

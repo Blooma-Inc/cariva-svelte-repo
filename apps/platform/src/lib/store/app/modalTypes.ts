@@ -1,7 +1,12 @@
 export enum AppModals {
 	RETAIL_USER = 'RETAIL_USER',
 	DONE = 'DONE',
-	DYNAMIC = 'DYNAMIC'
+	DYNAMIC = 'DYNAMIC',
+	ACCOUNT_LOCKED_MODAL = 'ACCOUNT_LOCKED_MODAL',
+	DEACTIVATED_ACCOUNT_MODAL = 'DEACTIVATED_ACCOUNT_MODAL',
+	TFA_VERIFICATION_MODAL = 'TFA_VERIFICATION_MODAL',
+	FORGOT_PWD_MODAL = 'FORGOT_PWD_MODAL',
+	SESSION_TIMEOUT_MODAL = 'SESSION_TIMEOUT_MODAL'
 }
 
 export type TAppModalsAction =
@@ -14,4 +19,12 @@ export type TAppModalsAction =
 	| ({ name: AppModals.DYNAMIC } & (
 			| { open: true; title: string; description?: string; btnText: string; btnFn: () => void }
 			| { open?: false }
-	  ));
+	  ))
+	| ({
+			name:
+				| AppModals.ACCOUNT_LOCKED_MODAL
+				| AppModals.DEACTIVATED_ACCOUNT_MODAL
+				| AppModals.TFA_VERIFICATION_MODAL
+				| AppModals.FORGOT_PWD_MODAL
+				| AppModals.SESSION_TIMEOUT_MODAL;
+	  } & ({ open: true } | { open?: false }));

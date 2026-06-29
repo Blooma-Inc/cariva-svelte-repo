@@ -1,9 +1,16 @@
+<script lang="ts" module>
+	import { z } from 'zod';
+
+	export const TFAVerificationSchema = z.object({
+		code: z.string({ error: 'Code is required' })
+	});
+</script>
+
 <script lang="ts">
 	import { Heading, Paragraph } from '@cariva/ui/components/ui/typography/index.js';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 	import { stores } from '$lib/store/index.svelte';
 	import { AppModals } from '$lib/store/app/modalTypes';
-
 	const { AppStore } = stores;
 </script>
 
@@ -20,13 +27,7 @@
 		onclick={() =>
 			AppStore.toggleModals({
 				open: true,
-				name: AppModals.DYNAMIC,
-				title: 'Verification successful',
-				description: 'Your Phone Number has been verified. You can continue to your dashboard.',
-				btnText: 'Got it.',
-				btnFn: () => {
-					AppStore.toggleModals({});
-				}
+				name: AppModals.TFA_VERIFICATION_MODAL
 			})}
 	>
 		Button</Button
