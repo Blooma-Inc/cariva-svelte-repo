@@ -12,6 +12,11 @@ class AuthStore {
 
 	isLoading = $state({ ...INIT_IS_LOADING });
 	error = $state(initializer(this.isLoading, ''));
+	user = $state({
+		name: 'Platform Admin',
+		email: 'admin@blooma.com',
+		avatar: ''
+	});
 
 	constructor(rootStore: RootStore) {
 		this.rootStore = rootStore;

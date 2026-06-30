@@ -26,7 +26,7 @@
 			</Paragraph>
 		</DialogHeader>
 
-		<div class="flex flex-col items-center gap-3 rounded-xl border p-4">
+		<div class="flex flex-col items-center gap-3 rounded-xl">
 			<Paragraph muted balance>Sining out in 00:24</Paragraph>
 
 			<div class="flex items-center justify-between">

@@ -215,45 +215,45 @@
 ───────────────────────────────────────────────────────────── */
 @layer components {
   .text-display {
-    font-size: 32px;
+    font-size: 2rem;
     font-weight: 700;
-    line-height: 40px;
+    line-height: 1.25;
     letter-spacing: -0.005em;
   }
   .text-h2 {
-    font-size: 24px;
+    font-size: 1.5rem;
     font-weight: 600;
-    line-height: 32px;
+    line-height: 1.333;
     letter-spacing: -0.0025em;
   }
   .text-h3 {
-    font-size: 20px;
+    font-size: 1.25rem;
     font-weight: 500;
-    line-height: 28px;
+    line-height: 1.4;
     letter-spacing: -0.0015em;
   }
   .text-body {
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 400;
-    line-height: 24px;
+    line-height: 1.5;
     letter-spacing: 0;
   }
   .text-body-sm {
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 400;
-    line-height: 20px;
+    line-height: 1.428;
     letter-spacing: 0;
   }
   .text-caption {
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 500;
-    line-height: 16px;
+    line-height: 1.333;
     letter-spacing: 0.005em;
   }
   .text-button {
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 700;
-    line-height: 20px;
+    line-height: 1.428;
     letter-spacing: 0.01em;
   }
 }
@@ -271,8 +271,8 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-sans);
-    font-size: 16px;
-    line-height: 24px;
+    font-size: 1rem;
+    line-height: 1.5;
   }
 
   input[type='password'] {

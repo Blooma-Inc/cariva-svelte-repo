@@ -10,6 +10,10 @@ interface MenuItem {
 	}>;
 }
 
+interface RoleMenuItem extends MenuItem {
+	roles: EnumRole[];
+}
+
 type TIsAuthenticated = { ttl: number; token?: string; email?: string };
 
 type TResendTokenState = 'idle' | 'resending' | 'sent' | 'failed';

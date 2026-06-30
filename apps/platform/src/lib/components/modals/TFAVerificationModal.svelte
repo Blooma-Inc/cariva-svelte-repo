@@ -52,35 +52,31 @@
 	>
 		<DialogHeader>
 			<Heading level="h1" class="text-primary!">Additional Verification</Heading>
-			<Heading level="h3" class="font-regular! text-neutral-500!">Enter authentication code</Heading
+			<Paragraph class=" text-neutral-500!"
+				>Open your authenticator app and enter the 6-digit verification code.</Paragraph
 			>
 		</DialogHeader>
 
-		<div class="flex flex-col gap-3 rounded-xl">
+		<div class="flex flex-col gap-4 rounded-xl">
 			<form id="login-form" use:enhance>
-				<fieldset class="w-3xs">
+				<fieldset>
 					<FormField {form} name="code">
 						<InputField
 							label=""
 							placeholder="Enter 6-digit code"
 							bind:value={$formData.code}
 							required
+							description="Code refreshes every 30 seconds"
 						/>
 					</FormField>
 				</fieldset>
-				<Paragraph size="sm" muted balance
-					>Open your authenticator app and enter the 6-digit verification code.</Paragraph
-				>
 			</form>
 
-			<div class="flex flex-col gap-2">
-				<Button size="lg" class="w-fit">Verify now</Button>
-				<Paragraph size="sm" muted balance>Code refreshes every 30 seconds</Paragraph>
-			</div>
+			<Button size="lg">Verify now</Button>
 
 			<DialogFooter class="border-t pt-3">
 				<div class="flex w-full justify-start">
-					<Button size="lg" variant="secondary">
+					<Button size="lg" variant="secondary" onclick={handleClose}>
 						<ArrowLeftIcon class="size-3" />
 						Back to login
 					</Button>

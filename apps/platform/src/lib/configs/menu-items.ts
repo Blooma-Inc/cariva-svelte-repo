@@ -7,47 +7,54 @@ import {
 	SettingsIcon
 } from '@cariva/ui/icons';
 import { EnumRole } from './roles';
-import ROUTES from './routes';
+import ROUTES from './routes.svelte';
 
-export const menuConfig: Record<string, MenuItem[]> = {
-	[EnumRole.PLATFORM_SUPER_ADMIN]: [
-		{
-			title: ROUTES.DASHBOARD.title,
-			url: ROUTES.DASHBOARD.path,
-			icon: LayoutDashboardIcon
-		},
-		{
-			title: ROUTES.TENANT.title,
-			url: ROUTES.TENANT.path,
-			icon: Building2Icon
-		},
-		{
-			title: ROUTES.SYSTEM_SETTINGS.title,
-			url: ROUTES.SYSTEM_SETTINGS.path,
-			icon: SettingsIcon
-		},
-		{
-			title: ROUTES.AUDIT_LOGS.title,
-			url: ROUTES.AUDIT_LOGS.path,
-			icon: LogsIcon
-		},
-		{
-			title: ROUTES.PLATFORM_ANALYTICS.title,
-			url: ROUTES.PLATFORM_ANALYTICS.path,
-			icon: ChartPieIcon
-		}
-	]
-};
+const ALL_MENU_ITEMS: RoleMenuItem[] = [
+	{
+		title: ROUTES.DASHBOARD.title,
+		url: ROUTES.DASHBOARD.href,
+		icon: LayoutDashboardIcon,
+		roles: [EnumRole.PLATFORM_SUPER_ADMIN]
+	},
+	{
+		title: ROUTES.TENANT.title,
+		url: ROUTES.TENANT.href,
+		icon: Building2Icon,
+		roles: [EnumRole.PLATFORM_SUPER_ADMIN]
+	},
+	{
+		title: ROUTES.SYSTEM_SETTINGS.title,
+		url: ROUTES.SYSTEM_SETTINGS.href,
+		icon: SettingsIcon,
+		roles: [EnumRole.PLATFORM_SUPER_ADMIN]
+	},
+	{
+		title: ROUTES.AUDIT_LOGS.title,
+		url: ROUTES.AUDIT_LOGS.href,
+		icon: LogsIcon,
+		roles: [EnumRole.PLATFORM_SUPER_ADMIN]
+	},
+	{
+		title: ROUTES.PLATFORM_ANALYTICS.title,
+		url: ROUTES.PLATFORM_ANALYTICS.href,
+		icon: ChartPieIcon,
+		roles: [EnumRole.PLATFORM_SUPER_ADMIN]
+	}
+];
+
+export function getMenuForRole(role: EnumRole): MenuItem[] {
+	return ALL_MENU_ITEMS.filter((item) => item.roles.includes(role)).map((item) => item);
+}
 
 export const menuCommon: MenuItem[] = [
 	{
 		title: ROUTES.NOTIFICATION.title,
-		url: ROUTES.NOTIFICATION.path,
+		url: ROUTES.NOTIFICATION.href,
 		icon: BellDotIcon
 	},
 	{
 		title: ROUTES.SETTINGS.title,
-		url: ROUTES.SETTINGS.path,
+		url: ROUTES.SETTINGS.href,
 		icon: SettingsIcon
 	}
 ];

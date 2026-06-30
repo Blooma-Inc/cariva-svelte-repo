@@ -1,11 +1,11 @@
 import axios, { AxiosError, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios';
 import { stores } from '$lib/store/index.svelte';
-import ROUTES from '$lib/configs/routes';
+import ROUTES from '$lib/configs/routes.svelte';
 import { browser } from '$app/environment';
 import { NETWORK_ERR, setOffline, setOnline } from '$lib/utils/network';
 import { PUBLIC_API_BASE_URL } from '$env/static/public';
 
-const NO_REDIRECT_ROUTES = [ROUTES.LOGIN.path] as string[];
+const NO_REDIRECT_ROUTES = [ROUTES.LOGIN.href] as string[];
 
 const resourceReqInterceptor = async (config: InternalAxiosRequestConfig) => {
 	const modifiedConfig = { ...config };
