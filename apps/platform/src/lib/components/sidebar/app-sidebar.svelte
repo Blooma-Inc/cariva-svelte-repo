@@ -1,6 +1,6 @@
 <script lang="ts">
-	// svelte/no-navigation-without-resolve
 	import { page } from '$app/state';
+	import { resolve } from '$app/paths';
 	import CarivaIcon from '$lib/assets/favicon.svg';
 
 	import {
@@ -62,7 +62,7 @@
 			<SidebarMenu>
 				{#each roleMenu as roleItem (roleItem.title)}
 					{#if !roleItem.submenu}
-						<a href={roleItem.url}>
+						<a href={resolve(roleItem.url)}>
 							<SidebarMenuItem>
 								<SidebarMenuButton
 									isActive={isCurrentPath(roleItem, page.url.pathname)}
@@ -93,7 +93,7 @@
 										{#each roleItem.submenu as subItem (subItem.title)}
 											<SidebarMenuSubItem>
 												<SidebarMenuSubButton isActive={page.url.pathname === subItem.url}>
-													<a href={subItem.url}>{subItem.title}</a>
+													<a href={resolve(subItem.url)}>{subItem.title}</a>
 												</SidebarMenuSubButton>
 											</SidebarMenuSubItem>
 										{/each}
@@ -110,7 +110,7 @@
 			<SidebarGroupLabel>Others</SidebarGroupLabel>
 			<SidebarMenu>
 				{#each menuCommon as item (item.title)}
-					<a href={item.url ?? ''}>
+					<a href={resolve(item.url)}>
 						<SidebarMenuItem>
 							<SidebarMenuButton
 								tooltipContent={item.title}

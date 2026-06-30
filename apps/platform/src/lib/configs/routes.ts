@@ -1,11 +1,11 @@
+import { type Pathname } from '$app/types';
+
 class Route {
-	path: string;
-
+	path: Pathname;
 	title: string;
-
 	description: string;
 
-	constructor(path: string, title: string, description: string) {
+	constructor(path: Pathname, title: string, description: string) {
 		this.path = path;
 		this.title = title;
 		this.description = description;

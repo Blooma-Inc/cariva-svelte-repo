@@ -1,11 +1,11 @@
 interface MenuItem {
 	title: string;
-	url?: string;
+	url?: Pathname;
 	icon: LucideIcon;
 	isNestable?: boolean;
 	submenu?: Array<{
 		title: string;
-		url: string;
+		url: Pathname;
 		isNestable?: boolean;
 	}>;
 }

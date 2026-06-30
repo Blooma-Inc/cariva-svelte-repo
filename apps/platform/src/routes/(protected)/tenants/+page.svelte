@@ -1,5 +1,15 @@
 <script lang="ts">
-	import { Paragraph } from '@cariva/ui/components/ui/typography/index.js';
+	import { Heading, Paragraph } from '@cariva/ui/components/ui/typography/index.js';
+	import NoTenants from './components/no-tenants.svelte';
 </script>
 
-<Paragraph>Tenants</Paragraph>
+<div class="flex w-full flex-col gap-4">
+	<div>
+		<Heading>Tenants</Heading>
+		<Paragraph size="sm" muted
+			>Manage hospitals, subscriptions, and operational access across the platform.</Paragraph
+		>
+	</div>
+
+	<NoTenants />
+</div>
