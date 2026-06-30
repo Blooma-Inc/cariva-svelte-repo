@@ -7,36 +7,36 @@ import {
 	SettingsIcon
 } from '@cariva/ui/icons';
 import { EnumRole } from './roles';
-import ROUTES from './routes.svelte';
+import ROUTES from './routes';
 
 const ALL_MENU_ITEMS: RoleMenuItem[] = [
 	{
 		title: ROUTES.DASHBOARD.title,
-		url: ROUTES.DASHBOARD.href,
+		url: ROUTES.DASHBOARD.path,
 		icon: LayoutDashboardIcon,
 		roles: [EnumRole.PLATFORM_SUPER_ADMIN]
 	},
 	{
 		title: ROUTES.TENANT.title,
-		url: ROUTES.TENANT.href,
+		url: ROUTES.TENANT.path,
 		icon: Building2Icon,
 		roles: [EnumRole.PLATFORM_SUPER_ADMIN]
 	},
 	{
 		title: ROUTES.SYSTEM_SETTINGS.title,
-		url: ROUTES.SYSTEM_SETTINGS.href,
+		url: ROUTES.SYSTEM_SETTINGS.path,
 		icon: SettingsIcon,
 		roles: [EnumRole.PLATFORM_SUPER_ADMIN]
 	},
 	{
 		title: ROUTES.AUDIT_LOGS.title,
-		url: ROUTES.AUDIT_LOGS.href,
+		url: ROUTES.AUDIT_LOGS.path,
 		icon: LogsIcon,
 		roles: [EnumRole.PLATFORM_SUPER_ADMIN]
 	},
 	{
 		title: ROUTES.PLATFORM_ANALYTICS.title,
-		url: ROUTES.PLATFORM_ANALYTICS.href,
+		url: ROUTES.PLATFORM_ANALYTICS.path,
 		icon: ChartPieIcon,
 		roles: [EnumRole.PLATFORM_SUPER_ADMIN]
 	}
@@ -49,12 +49,12 @@ export function getMenuForRole(role: EnumRole): MenuItem[] {
 export const menuCommon: MenuItem[] = [
 	{
 		title: ROUTES.NOTIFICATION.title,
-		url: ROUTES.NOTIFICATION.href,
+		url: ROUTES.NOTIFICATION.path,
 		icon: BellDotIcon
 	},
 	{
 		title: ROUTES.SETTINGS.title,
-		url: ROUTES.SETTINGS.href,
+		url: ROUTES.SETTINGS.path,
 		icon: SettingsIcon
 	}
 ];

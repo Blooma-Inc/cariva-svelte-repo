@@ -1,4 +1,5 @@
 <script lang="ts">
+	// svelte/no-navigation-without-resolve
 	import { page } from '$app/state';
 	import CarivaIcon from '$lib/assets/favicon.svg';
 
@@ -61,7 +62,7 @@
 			<SidebarMenu>
 				{#each roleMenu as roleItem (roleItem.title)}
 					{#if !roleItem.submenu}
-						<a href={roleItem.url ?? '/'}>
+						<a href={roleItem.url}>
 							<SidebarMenuItem>
 								<SidebarMenuButton
 									isActive={isCurrentPath(roleItem, page.url.pathname)}
