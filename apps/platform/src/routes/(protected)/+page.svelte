@@ -40,7 +40,7 @@
 		>
 	</div>
 
-	<div class="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-3">
+	<div class="auto-grid">
 		{#each stats as stat (stat.title)}
 			<StatsCard {...stat} />
 		{/each}

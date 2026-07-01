@@ -280,3 +280,9 @@
     letter-spacing: 0.1em;
   }
 }
+
+@utility auto-grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  display: grid;
+  gap: calc(var(--spacing) * 3);
+}

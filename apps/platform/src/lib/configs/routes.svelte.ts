@@ -1,4 +1,4 @@
-import { type Pathname } from '$app/types';
+import type { Pathname } from '$app/types';
 
 class Route {
 	path: Pathname;

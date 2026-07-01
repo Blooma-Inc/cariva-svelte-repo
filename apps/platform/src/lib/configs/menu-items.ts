@@ -7,7 +7,7 @@ import {
 	SettingsIcon
 } from '@cariva/ui/icons';
 import { EnumRole } from './roles';
-import ROUTES from './routes';
+import ROUTES from './routes.svelte';
 
 const ALL_MENU_ITEMS: RoleMenuItem[] = [
 	{
