@@ -1,3 +1,13 @@
+<script lang="ts" module>
+	export const hospitalTypeItem: TSelectables = [
+		{ label: 'Hospital', value: 'hospital' },
+		{ label: 'Clinic', value: 'clinic' },
+		{ label: 'Rehabilitation center', value: 'rehabilitation center' },
+		{ label: 'Specialist center', value: 'specialist center' },
+		{ label: 'Mental health', value: 'mental health' }
+	];
+</script>
+
 <script lang="ts">
 	import CarivaHospitalForm from '$lib/assets/icons/form.png';
 	import {
@@ -28,7 +38,11 @@
 	} from '@cariva/ui/components/ui/card/index.js';
 	import { FormField } from '@cariva/ui/components/ui/form/index.js';
 	import { InputField } from '@cariva/ui/components/form-inputs/inputField/index.js';
-	import { TextareaField } from '@cariva/ui/components/form-inputs/TextareaField/index.js';
+	import {
+		InputSelectField,
+		type TSelectables
+	} from '@cariva/ui/components/form-inputs/inputSelectField/index.js';
+	import { TextareaField } from '@cariva/ui/components/form-inputs/textareaField/index.js';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 
 	let { data } = $props();
@@ -93,12 +107,23 @@
 	</Item>
 
 	<form id="tenant-form" use:enhance class="flex flex-col gap-4">
+		<div class="flex items-center justify-end gap-2">
+			<Button size="lg" variant="warning">
+				<XIcon class="size-3" />
+				Cancel</Button
+			>
+			<Button size="lg">
+				<CheckIcon class="size-3" />
+				Provision Tenant</Button
+			>
+		</div>
 		<div class="auto-grid">
 			<Card class="self-start">
 				<CardHeader>
 					<CardTitle>Hospital Details</CardTitle>
 					<CardDescription>Provide full details of your hospital.</CardDescription>
 				</CardHeader>
+
 				<CardContent>
 					<fieldset class="flex flex-col gap-4">
 						<div class="grid grid-cols-1 gap-2 sm:grid-cols-[2fr_1fr] sm:items-end">
@@ -122,9 +147,11 @@
 
 						<div class="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_1fr_1fr] sm:items-end">
 							<FormField {form} name="tenant.hospital_type">
-								<InputField
+								<InputSelectField
 									label="Hospital Type"
-									placeholder="Select type"
+									type="single"
+									placeholder="Select hospital type"
+									selectables={hospitalTypeItem}
 									bind:value={$formData.tenant.hospital_type}
 									required
 								/>
@@ -271,17 +298,6 @@
 					</CardContent>
 				</Card>
 			</fieldset>
-		</div>
-
-		<div>
-			<Button size="lg" variant="warning">
-				<XIcon class="size-3" />
-				Cancel</Button
-			>
-			<Button size="lg">
-				<CheckIcon class="size-3" />
-				Provision Tenant</Button
-			>
 		</div>
 	</form>
 </section>

@@ -6,7 +6,7 @@
 	import { FormField } from '@cariva/ui/components/ui/form/index.js';
 	import { superForm } from 'sveltekit-superforms';
 	import { zod4Client } from 'sveltekit-superforms/adapters';
-	import { LoginSchema } from './validator';
+	import { LoginSchema } from '../validator.js';
 	import { stores } from '$lib/store/index.svelte.js';
 	import { AppModals } from '$lib/store/app/modalTypes';
 
@@ -20,7 +20,7 @@
 		validators: zod4Client(LoginSchema),
 		onUpdated: async ({ form }) => {
 			if (!form.valid) return;
-			await AuthStore.login(form.data);
+			AuthStore.login(form.data, () => {});
 		}
 	});
 

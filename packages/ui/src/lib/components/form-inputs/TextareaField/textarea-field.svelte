@@ -19,8 +19,8 @@
     {#snippet children({ props: controlProps })}
       <div class="relative flex w-full flex-col gap-2">
         {#if label}
-          <Form.Label class="flex items-center justify-start space-x-1">
-            <p>{label}</p>
+          <Form.Label>
+            {label}
             {#if props.required}
               <small class="text-destructive">*</small>
             {/if}

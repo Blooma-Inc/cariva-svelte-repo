@@ -1,24 +1,3 @@
-<script lang="ts" module>
-	import { z } from 'zod';
-	export const ResetPasswordSchema = z
-		.object({
-			token: z.string({ error: 'token required' }),
-			new_password: z.string().min(1, 'Password is required.').trim(),
-			confirm_password: z.string().min(1, 'Password is required').trim()
-		})
-		.superRefine((data, ctx) => {
-			const { new_password, confirm_password } = data;
-
-			if (new_password != confirm_password) {
-				ctx.addIssue({
-					code: 'custom',
-					path: ['confirm_password'],
-					message: 'Passwords do not match.'
-				});
-			}
-		});
-</script>
-
 <script lang="ts">
 	import { page } from '$app/state';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
@@ -28,6 +7,7 @@
 	import { FormField } from '@cariva/ui/components/ui/form/index.js';
 	import { superForm } from 'sveltekit-superforms';
 	import { zod4Client } from 'sveltekit-superforms/adapters';
+	import { ResetPasswordSchema } from '../../validator';
 
 	const form = superForm(
 		{ token: page.params.token, new_password: '', confirm_password: '' },

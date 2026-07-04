@@ -21,11 +21,16 @@
 						{...props}
 					>
 						<Avatar.Root class="size-8 rounded-lg">
-							<Avatar.Image src={AuthStore.user.avatar} alt={AuthStore.user.name} />
+							<Avatar.Image
+								src={AuthStore.user.profile_photo_url}
+								alt={AuthStore.user.profile_photo_url}
+							/>
 							<Avatar.Fallback class="rounded-lg">PA</Avatar.Fallback>
 						</Avatar.Root>
 						<div class="grid flex-1 text-start text-sm leading-tight">
-							<span class="truncate font-medium">{AuthStore.user.name}</span>
+							<span class="truncate font-medium"
+								>{AuthStore.user.first_name} {AuthStore.user.last_name}</span
+							>
 							<span class="truncate text-xs">{AuthStore.user.email}</span>
 						</div>
 						<ChevronDownIcon class="ms-auto size-4" />
@@ -41,11 +46,16 @@
 				<DropdownMenu.Label class="p-0 font-normal">
 					<div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
 						<Avatar.Root class="size-8 rounded-lg">
-							<Avatar.Image src={AuthStore.user.avatar} alt={AuthStore.user.name} />
+							<Avatar.Image
+								src={AuthStore.user.profile_photo_url}
+								alt={AuthStore.user.profile_photo_url}
+							/>
 							<Avatar.Fallback class="rounded-lg">CN</Avatar.Fallback>
 						</Avatar.Root>
 						<div class="grid flex-1 text-start text-sm leading-tight">
-							<span class="truncate font-medium">{AuthStore.user.name}</span>
+							<span class="truncate font-medium"
+								>{AuthStore.user.first_name} {AuthStore.user.last_name}</span
+							>
 							<span class="truncate text-xs">{AuthStore.user.email}</span>
 						</div>
 					</div>
