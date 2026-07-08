@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
+	import { goto } from '$app/navigation';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 	import { Card, CardContent, CardHeader } from '@cariva/ui/components/ui/card/index.js';
 	import { Heading, Paragraph } from '@cariva/ui/components/ui/typography/index.js';
@@ -9,6 +11,7 @@
 	import { LoginSchema } from '../validator.js';
 	import { stores } from '$lib/store/index.svelte.js';
 	import { AppModals } from '$lib/store/app/modalTypes';
+	import ROUTES from '$lib/configs/routes.svelte.js';
 
 	let { data } = $props();
 	let { AuthStore, AppStore } = stores;
@@ -20,7 +23,9 @@
 		validators: zod4Client(LoginSchema),
 		onUpdated: async ({ form }) => {
 			if (!form.valid) return;
-			AuthStore.login(form.data, () => {});
+			await AuthStore.login(form.data, () =>
+				goto(resolve(ROUTES.DASHBOARD.path), { replaceState: true })
+			);
 		}
 	});
 
@@ -66,7 +71,15 @@
 						</div>
 					</fieldset>
 
-					<Button type="submit" form="login-form" size="lg" class="w-full">Login</Button>
+					<Button
+						type="submit"
+						form="login-form"
+						size="lg"
+						class="w-full"
+						disabled={AuthStore.isLoading.login}
+					>
+						{AuthStore.isLoading.login ? 'Submitting...' : 'Login'}
+					</Button>
 				</form>
 			</CardContent>
 		</Card>

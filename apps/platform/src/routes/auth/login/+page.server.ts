@@ -1,6 +1,6 @@
 import { superValidate } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
-import { LoginSchema } from './validator';
+import { LoginSchema } from '../validator';
 
 export const load = async () => {
 	return {

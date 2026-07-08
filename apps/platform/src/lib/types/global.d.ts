@@ -51,5 +51,7 @@ interface QueryHookResponse<D> {
 	isLoading: boolean;
 	error: unknown;
 	status: 'error' | 'success' | 'pending';
-	refetch?: () => void;
+	refetch: (
+		options?: RefetchOptions
+	) => Promise<QueryObserverResult<CarivaServerResp<SubscriptionItem[], null>, Error>>;
 }

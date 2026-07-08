@@ -6,7 +6,7 @@
 	import { DialogContent, DialogHeader } from '@cariva/ui/components/ui/dialog/index.js';
 	import { Heading, Paragraph } from '@cariva/ui/components/ui/typography/index.js';
 
-	const { AppStore } = stores;
+	const { AppStore, AuthStore } = stores;
 
 	const handleClose = () => {
 		AppStore.toggleModals({ name: AppModals.SESSION_TIMEOUT_MODAL, open: false });
@@ -30,8 +30,23 @@
 			<Paragraph muted balance>Sining out in 00:24</Paragraph>
 
 			<div class="flex items-center justify-between">
-				<Button size="lg" variant="destructive" class="w-[48%]">Sign Out</Button>
-				<Button size="lg" class="w-[48%]" onclick={handleClose}>Stay Signed In</Button>
+				<Button
+					size="lg"
+					variant="destructive"
+					class="w-[48%]"
+					disabled={AuthStore.isLoading.logout}
+					onclick={() => {
+						AuthStore.logout(handleClose);
+					}}
+				>
+					{AuthStore.isLoading.logout ? 'Signing Out' : 'Sign Out'}
+				</Button>
+				<Button
+					size="lg"
+					class="w-[48%]"
+					disabled={AuthStore.isLoading.logout}
+					onclick={handleClose}>Stay Signed In</Button
+				>
 			</div>
 		</div>
 	</DialogContent>

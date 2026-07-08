@@ -14,31 +14,31 @@ const ALL_MENU_ITEMS: RoleMenuItem[] = [
 		title: ROUTES.DASHBOARD.title,
 		url: ROUTES.DASHBOARD.path,
 		icon: LayoutDashboardIcon,
-		roles: [EnumRole.PLATFORM_SUPER_ADMIN]
+		roles: ROUTES.DASHBOARD.roles
 	},
 	{
 		title: ROUTES.TENANT.title,
 		url: ROUTES.TENANT.path,
 		icon: Building2Icon,
-		roles: [EnumRole.PLATFORM_SUPER_ADMIN]
+		roles: ROUTES.TENANT.roles
 	},
 	{
 		title: ROUTES.SYSTEM_SETTINGS.title,
 		url: ROUTES.SYSTEM_SETTINGS.path,
 		icon: SettingsIcon,
-		roles: [EnumRole.PLATFORM_SUPER_ADMIN]
+		roles: ROUTES.SYSTEM_SETTINGS.roles
 	},
 	{
 		title: ROUTES.AUDIT_LOGS.title,
 		url: ROUTES.AUDIT_LOGS.path,
 		icon: LogsIcon,
-		roles: [EnumRole.PLATFORM_SUPER_ADMIN]
+		roles: ROUTES.AUDIT_LOGS.roles
 	},
 	{
 		title: ROUTES.PLATFORM_ANALYTICS.title,
 		url: ROUTES.PLATFORM_ANALYTICS.path,
 		icon: ChartPieIcon,
-		roles: [EnumRole.PLATFORM_SUPER_ADMIN]
+		roles: ROUTES.PLATFORM_ANALYTICS.roles
 	}
 ];
 

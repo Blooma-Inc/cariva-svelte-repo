@@ -14,7 +14,8 @@
 			import('$lib/components/modals/TFAVerificationModal.svelte'),
 		[AppModals.FORGOT_PWD_MODAL]: () => import('$lib/components/modals/ForgotPwdModal.svelte'),
 		[AppModals.SESSION_TIMEOUT_MODAL]: () =>
-			import('$lib/components/modals/SessionTimeoutModal.svelte')
+			import('$lib/components/modals/SessionTimeoutModal.svelte'),
+		[AppModals.LOGOUT_MODAL]: () => import('$lib/components/modals/LogoutModal.svelte')
 	};
 
 	let { AppStore } = stores;

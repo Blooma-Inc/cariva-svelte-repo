@@ -21,3 +21,9 @@ export const PLATFORM = {
 	ACTIVATE_TENANT: '/platform/activate-tenant',
 	REJECT_TENANT: '/platform/reject-tenant'
 } as const;
+
+export const SUBSCRIPTION = {
+	GET: '/subscription',
+	CREATE: '/subscription',
+	UPDATE: '/subscription/:uid'
+};

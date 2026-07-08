@@ -5,7 +5,8 @@ export enum AppModals {
 	DEACTIVATED_ACCOUNT_MODAL = 'DEACTIVATED_ACCOUNT_MODAL',
 	TFA_VERIFICATION_MODAL = 'TFA_VERIFICATION_MODAL',
 	FORGOT_PWD_MODAL = 'FORGOT_PWD_MODAL',
-	SESSION_TIMEOUT_MODAL = 'SESSION_TIMEOUT_MODAL'
+	SESSION_TIMEOUT_MODAL = 'SESSION_TIMEOUT_MODAL',
+	LOGOUT_MODAL = 'LOGOUT_MODAL'
 }
 
 export type TAppModalsAction =
@@ -21,9 +22,16 @@ export type TAppModalsAction =
 	  ))
 	| ({
 			name:
-				| AppModals.ACCOUNT_LOCKED_MODAL
 				| AppModals.DEACTIVATED_ACCOUNT_MODAL
 				| AppModals.TFA_VERIFICATION_MODAL
 				| AppModals.FORGOT_PWD_MODAL
-				| AppModals.SESSION_TIMEOUT_MODAL;
-	  } & ({ open: true } | { open?: false }));
+				| AppModals.SESSION_TIMEOUT_MODAL
+				| AppModals.LOGOUT_MODAL;
+	  } & ({ open: true } | { open?: false }))
+	| ({ name: AppModals.ACCOUNT_LOCKED_MODAL } & (
+			| {
+					open: true;
+					remaining_time_in_seconds: number;
+			  }
+			| { open?: false }
+	  ));

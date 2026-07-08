@@ -1,24 +1,19 @@
-import { Mangle } from '$lib/constants/mangle';
-import { postLogin } from '$lib/requests/auth';
+import { resolve } from '$app/paths';
+import { goto } from '$app/navigation';
+import ROUTES from '$lib/configs/routes.svelte';
+import {
+	getCurrentUser,
+	postLogout,
+	postLogoutAll,
+	getNewAccessToken,
+	postLogin
+} from '$lib/requests/auth';
 import { parseError } from '$lib/utils/errorHandler';
 import initializer from '$lib/utils/initializers';
+import { toast } from '@cariva/ui/components/toast/index.js';
 import type { TAuthSchema, TLoginSchema } from '../../../routes/auth/validator';
 import { AppModals } from '../app/modalTypes';
 import type { RootStore } from '../index.svelte';
-import store from 'store2';
-
-const persist = <T = string>(key: string, value: T) => {
-	store.namespace('auth').local.set(key, value);
-	return value;
-};
-
-const get = <T = string>(key: string, fallback?: T) => {
-	return store.namespace('auth').local.get(key, fallback) as T;
-};
-
-// const del = (key: string) => {
-// 	return store.namespace('auth').local.remove(key);
-// };
 
 const INIT_IS_LOADING = {
 	login: false,
@@ -29,8 +24,9 @@ const INIT_IS_LOADING = {
 class AuthStore {
 	rootStore: RootStore;
 
-	accessToken = $state(get(Mangle.AUTH_TOKEN));
-	user = $state(get<Partial<UserItem>>(Mangle.AUTH_USER, {}));
+	accessToken = $state<string>('');
+	refreshPromise: Promise<string> | null = $state(null);
+	user = $state<Partial<UserItem>>({});
 	isLoading = $state({ ...INIT_IS_LOADING });
 	errors = $state(initializer(this.isLoading, ''));
 
@@ -38,63 +34,124 @@ class AuthStore {
 		this.rootStore = rootStore;
 	}
 
-	isAuthenticated(): TIsAuthenticated {
-		return { ttl: 0, token: '', email: '' };
+	async grantAccess(data: CarivaServerResp<TAuthSchema>, cb?: (url?: string) => void) {
+		const result = data.data.result;
+		const _accessToken = data.data.access_token;
+		switch (result) {
+			case 'success': {
+				this.accessToken = _accessToken;
+				const { data: userData } = await getCurrentUser();
+				this.user = userData.data;
+				cb?.();
+				toast.success('Sucessful!');
+				break;
+			}
+			case 'account_inactive':
+				this.rootStore.AppStore.toggleModals({
+					open: true,
+					name: AppModals.DEACTIVATED_ACCOUNT_MODAL
+				});
+				break;
+			case 'email_not_verified':
+				// show email not verified modal
+				this.rootStore.AppStore.toggleModals({
+					open: true,
+					name: AppModals.TFA_VERIFICATION_MODAL
+				});
+				break;
+			case 'account_locked':
+				this.rootStore.AppStore.toggleModals({
+					open: true,
+					name: AppModals.ACCOUNT_LOCKED_MODAL,
+					remaining_time_in_seconds: data.meta as unknown as number
+				});
+				break;
+			case 'requires_2fa':
+				this.rootStore.AppStore.toggleModals({
+					open: true,
+					name: AppModals.TFA_VERIFICATION_MODAL
+				});
+				break;
+			case 'requires_password_reset':
+				// show password reset modal
+				break;
+			default:
+				toast.info('Unknown error.');
+		}
 	}
 
-	grantAccess(_accessToken: string, cb?: (url?: string) => void) {
-		this.accessToken = persist(Mangle.AUTH_TOKEN, _accessToken);
-		cb?.();
-	}
-
-	*login(payload: TLoginSchema, cb: () => void) {
+	async login(payload: TLoginSchema, cb: () => void) {
 		this.isLoading.login = true;
 		this.errors.login = '';
 		try {
-			const {
-				data: { data }
-			} = (yield postLogin(payload)) as { data: CarivaServerResp<TAuthSchema> };
-			const result = data.result;
-
-			switch (result) {
-				case 'success':
-					this.grantAccess(data.access_token, cb);
-					break;
-				case 'account_inactive':
-					this.rootStore.AppStore.toggleModals({
-						open: true,
-						name: AppModals.DEACTIVATED_ACCOUNT_MODAL
-					});
-					break;
-				case 'email_not_verified':
-					// show email not verified modal
-					break;
-				case 'account_locked':
-					this.rootStore.AppStore.toggleModals({
-						open: true,
-						name: AppModals.ACCOUNT_LOCKED_MODAL
-					});
-					break;
-				case 'requires_2fa':
-					this.rootStore.AppStore.toggleModals({
-						open: true,
-						name: AppModals.TFA_VERIFICATION_MODAL
-					});
-					break;
-				case 'requires_password_reset':
-					// show password reset modal
-					break;
-			}
+			const { data } = (await postLogin(payload)) as { data: CarivaServerResp<TAuthSchema> };
+			await this.grantAccess(data, cb);
 		} catch (error) {
-			parseError(error);
+			this.errors.login = parseError(error);
+			toast.error(this.errors.login);
+		} finally {
+			this.isLoading.login = false;
 		}
 	}
-	async getTokenFromCookie() {}
+
 	async fetchNewToken() {
-		return '';
+		if (this.refreshPromise) return this.refreshPromise;
+
+		this.isLoading.refresh = true;
+		this.refreshPromise = (async () => {
+			try {
+				const { data } = (await getNewAccessToken()) as { data: CarivaServerResp<TAuthSchema> };
+				this.accessToken = data.data.access_token;
+				return data.data.access_token;
+			} catch (error) {
+				this.errors.refresh = parseError(error);
+				throw error;
+			} finally {
+				this.isLoading.refresh = false;
+				this.refreshPromise = null;
+			}
+		})();
+
+		return this.refreshPromise;
 	}
-	async logout() {}
-	async logoutAll() {}
+
+	async bootstrap() {
+		try {
+			await this.fetchNewToken();
+			const { data } = await getCurrentUser();
+			this.user = data.data;
+		} catch {
+			goto(resolve(ROUTES.LOGIN.path), { replaceState: true });
+		}
+	}
+
+	async logout(cb?: () => void) {
+		try {
+			await postLogout();
+			this.rootStore.AppStore.toggleModals({});
+			cb?.();
+			goto(resolve(ROUTES.LOGIN.path), { replaceState: true });
+		} catch (error) {
+			this.errors.logout = parseError(error);
+		} finally {
+			this.accessToken = '';
+			this.user = {};
+			goto(resolve(ROUTES.LOGIN.path));
+		}
+	}
+
+	async logoutAll() {
+		try {
+			await postLogoutAll();
+			goto(resolve(ROUTES.LOGIN.path), { replaceState: true });
+		} catch (error) {
+			this.errors.logout = parseError(error);
+		} finally {
+			this.accessToken = '';
+			this.user = {};
+			goto(resolve(ROUTES.LOGIN.path));
+		}
+	}
 }
 
 export default AuthStore;

@@ -29,6 +29,10 @@ class AppStore {
 		btnFn: () => {}
 	});
 
+	accountLockedModal = $state({
+		remaining_time_in_seconds: 0
+	});
+
 	constructor(rootStore: RootStore) {
 		this.rootStore = rootStore;
 	}
@@ -62,6 +66,13 @@ class AppStore {
 						description: modal.description ?? '',
 						btnText: modal.btnText,
 						btnFn: modal.btnFn
+					};
+				}
+				break;
+			case AppModals.ACCOUNT_LOCKED_MODAL:
+				if (modal.open) {
+					this.accountLockedModal = {
+						remaining_time_in_seconds: modal.remaining_time_in_seconds
 					};
 				}
 				break;

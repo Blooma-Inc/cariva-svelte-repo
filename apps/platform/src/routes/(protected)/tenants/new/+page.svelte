@@ -25,7 +25,7 @@
 		ItemMedia,
 		ItemTitle
 	} from '@cariva/ui/components/ui/item/index.js';
-	import { CheckIcon, CircleCheckIcon, SlashIcon, XIcon } from '@cariva/ui/icons';
+	import { CheckIcon, CircleCheckIcon, SlashIcon } from '@cariva/ui/icons';
 	import { superForm } from 'sveltekit-superforms';
 	import { zod4Client } from 'sveltekit-superforms/adapters';
 	import { ProvisionTenantSchema } from './validation.js';
@@ -44,6 +44,7 @@
 	} from '@cariva/ui/components/form-inputs/inputSelectField/index.js';
 	import { TextareaField } from '@cariva/ui/components/form-inputs/textareaField/index.js';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
+	import { createFetchSubscriptions } from '$lib/hooks/subscriptions/createFetchSubscriptions.js';
 
 	let { data } = $props();
 
@@ -57,6 +58,7 @@
 	});
 
 	const { form: formData, enhance } = form;
+	const { data: subscriptionData, status } = createFetchSubscriptions();
 </script>
 
 <section class="flex w-full flex-col gap-4">
@@ -77,7 +79,7 @@
 	</div>
 
 	<Item class="bg-info/20 p-2">
-		<ItemMedia class="hidden h-36 w-28 p-1 md:block">
+		<ItemMedia class="hidden h-36 w-28 p-1 lg:block">
 			<img src={CarivaHospitalForm} alt="form" class="h-full w-full object-cover" />
 		</ItemMedia>
 		<ItemContent class="gap-2">
@@ -106,18 +108,8 @@
 		</ItemContent>
 	</Item>
 
-	<form id="tenant-form" use:enhance class="flex flex-col gap-4">
-		<div class="flex items-center justify-end gap-2">
-			<Button size="lg" variant="warning">
-				<XIcon class="size-3" />
-				Cancel</Button
-			>
-			<Button size="lg">
-				<CheckIcon class="size-3" />
-				Provision Tenant</Button
-			>
-		</div>
-		<div class="auto-grid">
+	<form id="tenant-form" use:enhance class="flex w-full flex-col gap-4 pb-28">
+		<div class="grid grid-cols-1 gap-3 lg:grid-cols-2">
 			<Card class="self-start">
 				<CardHeader>
 					<CardTitle>Hospital Details</CardTitle>
@@ -126,7 +118,7 @@
 
 				<CardContent>
 					<fieldset class="flex flex-col gap-4">
-						<div class="grid grid-cols-1 gap-2 sm:grid-cols-[2fr_1fr] sm:items-end">
+						<div class="grid grid-cols-1 gap-2 lg:grid-cols-[2fr_1fr] lg:items-end">
 							<FormField {form} name="tenant.name">
 								<InputField
 									label="Hospital Name"
@@ -145,7 +137,7 @@
 							</FormField>
 						</div>
 
-						<div class="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_1fr_1fr] sm:items-end">
+						<div class="grid grid-cols-1 gap-2 lg:grid-cols-[1fr_1fr_1fr] lg:items-end">
 							<FormField {form} name="tenant.hospital_type">
 								<InputSelectField
 									label="Hospital Type"
@@ -174,7 +166,7 @@
 							</FormField>
 						</div>
 
-						<div class="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_1fr] sm:items-end">
+						<div class="grid grid-cols-1 gap-2 lg:grid-cols-[1fr_1fr] lg:items-end">
 							<FormField {form} name="tenant.email">
 								<InputField
 									label="Main Email"
@@ -193,7 +185,7 @@
 							</FormField>
 						</div>
 
-						<div class="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_1fr_1fr] sm:items-end">
+						<div class="grid grid-cols-1 gap-2 lg:grid-cols-[1fr_1fr_1fr] lg:items-end">
 							<FormField {form} name="main_branch.city">
 								<InputField
 									label="City"
@@ -238,7 +230,16 @@
 						<CardTitle>Subscription Details</CardTitle>
 						<CardDescription>You can change this later in tenant settings</CardDescription>
 					</CardHeader>
-					<CardContent>Subscription card</CardContent>
+					<CardContent>
+						{#if status === 'pending'}
+							<p>Fetching subscription data...</p>
+						{:else if status === 'error'}
+							<p>Error Page</p>
+							<p>Might need to reload</p>
+						{:else}
+							<p>{subscriptionData?.data.length}</p>
+						{/if}
+					</CardContent>
 				</Card>
 				<Card>
 					<CardHeader>
@@ -250,7 +251,7 @@
 					</CardHeader>
 					<CardContent>
 						<fieldset class="flex flex-col gap-4">
-							<div class="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_1fr_1fr] sm:items-end">
+							<div class="grid grid-cols-1 gap-2 lg:grid-cols-[1fr_1fr_1fr] lg:items-end">
 								<FormField {form} name="admin.first_name">
 									<InputField
 										label="First Name"
@@ -276,7 +277,7 @@
 								</FormField>
 							</div>
 
-							<div class="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_1fr] sm:items-end">
+							<div class="grid grid-cols-1 gap-2 lg:grid-cols-[1fr_1fr] lg:items-end">
 								<FormField {form} name="admin.email">
 									<InputField
 										label="Email Address"
@@ -299,5 +300,10 @@
 				</Card>
 			</fieldset>
 		</div>
+
+		<Button size="lg" class="lg:w-fit">
+			<CheckIcon class="size-3" />
+			Provision Tenant
+		</Button>
 	</form>
 </section>

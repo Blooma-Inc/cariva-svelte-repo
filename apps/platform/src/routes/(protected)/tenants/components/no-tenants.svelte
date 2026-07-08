@@ -1,8 +1,11 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
+	import { goto } from '$app/navigation';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 	import { Card, CardContent } from '@cariva/ui/components/ui/card/index.js';
 	import { Heading, Paragraph } from '@cariva/ui/components/ui/typography/index.js';
 	import { PlusIcon } from '@cariva/ui/icons';
+	import ROUTES from '$lib/configs/routes.svelte';
 </script>
 
 <Card>
@@ -18,7 +21,7 @@
 				>
 			</div>
 
-			<Button size="lg" onclick={() => window.location.assign('/tenants/new')}>
+			<Button size="lg" onclick={() => goto(resolve(ROUTES.NEW_TENANT.path))}>
 				<PlusIcon class="size-3" />
 				Provision New Tenant
 			</Button>

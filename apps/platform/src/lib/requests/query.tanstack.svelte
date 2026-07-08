@@ -56,4 +56,6 @@
 	);
 </script>
 
-<QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+<QueryClientProvider client={queryClient}>
+	{@render children()}
+</QueryClientProvider>

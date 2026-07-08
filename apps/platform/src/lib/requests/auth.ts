@@ -6,10 +6,10 @@ import type {
 	TLoginSchema,
 	TResetPasswordSchema
 } from '../../routes/auth/validator';
-import server from './index';
+import server, { serverwithoutInterceptor } from './index';
 
 export const postLogin = async (payload: TLoginSchema) =>
-	await server.post<CarivaServerResp<TAuthSchema>>(AUTH.LOGIN, payload);
+	await server.post<CarivaServerResp<TAuthSchema, number | null>>(AUTH.LOGIN, payload);
 
 export const postForgotPwd = async (payload: { email: string }) =>
 	await server.post<CarivaServerResp<boolean>>(AUTH.FORGOT_PWD, payload);
@@ -38,15 +38,16 @@ export const postVerify2FATOTP = async (payload: TTFACodeSchema) =>
 export const postVerify2FACode = async (payload: TTFACodeSchema) =>
 	await server.post<CarivaServerResp<TAuthSchema>>(AUTH.VERIFY_CODE_2FA, payload);
 
+export const postLogout = async () => await server.post<CarivaServerResp<boolean>>(AUTH.LOGOUT);
+
+export const postLogoutAll = async () =>
+	await server.post<CarivaServerResp<boolean>>(AUTH.LOGOUT_ALL);
+
 export const getActiveSessions = async () =>
 	await server.get<CarivaServerResp<Array<SessionItem>>>(AUTH.ACTIVE_SESSION);
 
 export const getNewAccessToken = async () =>
-	await server.get<CarivaServerResp<TAuthSchema>>(AUTH.NEW_ACCESS_TOKEN);
+	await serverwithoutInterceptor.get<CarivaServerResp<TAuthSchema>>(AUTH.NEW_ACCESS_TOKEN);
 
 export const getCurrentUser = async () =>
 	await server.get<CarivaServerResp<UserItem>>(AUTH.CURRENT_USER);
-
-export const getLogout = async () => await server.get<CarivaServerResp<boolean>>(AUTH.LOGOUT);
-export const getLogoutAll = async () =>
-	await server.get<CarivaServerResp<boolean>>(AUTH.LOGOUT_ALL);

@@ -69,8 +69,7 @@
 				<DropdownMenu.Separator />
 				<DropdownMenu.Item
 					variant="destructive"
-					onclick={() =>
-						AppStore.toggleModals({ name: AppModals.SESSION_TIMEOUT_MODAL, open: true })}
+					onclick={() => AppStore.toggleModals({ name: AppModals.LOGOUT_MODAL, open: true })}
 				>
 					<LogOutIcon />
 					Log out
