@@ -15,7 +15,9 @@
 		[AppModals.FORGOT_PWD_MODAL]: () => import('$lib/components/modals/ForgotPwdModal.svelte'),
 		[AppModals.SESSION_TIMEOUT_MODAL]: () =>
 			import('$lib/components/modals/SessionTimeoutModal.svelte'),
-		[AppModals.LOGOUT_MODAL]: () => import('$lib/components/modals/LogoutModal.svelte')
+		[AppModals.LOGOUT_MODAL]: () => import('$lib/components/modals/LogoutModal.svelte'),
+		[AppModals.PLANS_FORM_MODAL]: () =>
+			import('$routes/(protected)/system-settings/components/subscriptions/modals/plans-form-modal.svelte')
 	};
 
 	let { AppStore } = stores;

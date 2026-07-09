@@ -20,11 +20,14 @@ export default defineConfig({
 			// See https://svelte.dev/docs/kit/adapters for more information about adapters.
 			adapter: adapter(),
 			preprocess: [mdsvex({ extensions: ['.svx', '.md'] })],
-			extensions: ['.svelte', '.svx', '.md']
+			extensions: ['.svelte', '.svx', '.md'],
+			alias: {
+				$routes: 'src/routes'
+			}
 		})
 	],
 	ssr: {
-		noExternal: ['@lucide/svelte', '@cariva/ui']
+		noExternal: ['bits-ui', '@lucide/svelte', '@cariva/ui']
 	},
 	test: {
 		expect: { requireAssertions: true },

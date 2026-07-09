@@ -6,7 +6,8 @@ export enum AppModals {
 	TFA_VERIFICATION_MODAL = 'TFA_VERIFICATION_MODAL',
 	FORGOT_PWD_MODAL = 'FORGOT_PWD_MODAL',
 	SESSION_TIMEOUT_MODAL = 'SESSION_TIMEOUT_MODAL',
-	LOGOUT_MODAL = 'LOGOUT_MODAL'
+	LOGOUT_MODAL = 'LOGOUT_MODAL',
+	PLANS_FORM_MODAL = 'PLANS_FORM_MODAL'
 }
 
 export type TAppModalsAction =
@@ -32,6 +33,13 @@ export type TAppModalsAction =
 			| {
 					open: true;
 					remaining_time_in_seconds: number;
+			  }
+			| { open?: false }
+	  ))
+	| ({ name: AppModals.PLANS_FORM_MODAL } & (
+			| {
+					open: true;
+					plan_uid: string;
 			  }
 			| { open?: false }
 	  ));

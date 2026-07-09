@@ -4,12 +4,26 @@ import { auth } from './FetchKeyFactory';
 export function createFetchCurrentUser(enabled = true): QueryHookResponse<UserItem | undefined> {
 	const meta = auth.getCurrentUser();
 
-	const { data, isLoading, error, status, refetch } = createQuery(() => ({
+	const query = createQuery(() => ({
 		queryKey: meta.keys(),
 		meta,
 		enabled,
 		select: (resp: CarivaServerResp<UserItem>) => resp.data
 	}));
 
-	return { data, isLoading, error, status, refetch };
+	return {
+		get data() {
+			return query.data;
+		},
+		get isLoading() {
+			return query.isLoading;
+		},
+		get error() {
+			return query.error;
+		},
+		get status() {
+			return query.status;
+		},
+		refetch: query.refetch
+	};
 }

@@ -33,6 +33,10 @@ class AppStore {
 		remaining_time_in_seconds: 0
 	});
 
+	plansFormModal = $state({
+		plan_uid: ''
+	});
+
 	constructor(rootStore: RootStore) {
 		this.rootStore = rootStore;
 	}
@@ -73,6 +77,13 @@ class AppStore {
 				if (modal.open) {
 					this.accountLockedModal = {
 						remaining_time_in_seconds: modal.remaining_time_in_seconds
+					};
+				}
+				break;
+			case AppModals.PLANS_FORM_MODAL:
+				if (modal.open) {
+					this.plansFormModal = {
+						plan_uid: modal.plan_uid
 					};
 				}
 				break;

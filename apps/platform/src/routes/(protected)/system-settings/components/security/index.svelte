@@ -1,5 +1,9 @@
 <script lang="ts">
-	import { Paragraph } from '@cariva/ui/components/ui/typography/index.js';
+	import { Card, CardHeader, CardTitle } from '@cariva/ui/components/ui/card/index.js';
 </script>
 
-<Paragraph>Security tab</Paragraph>
+<Card>
+	<CardHeader>
+		<CardTitle>Security settings</CardTitle>
+	</CardHeader>
+</Card>

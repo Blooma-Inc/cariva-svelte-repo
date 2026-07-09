@@ -2,7 +2,7 @@
   import { Select as SelectPrimitive } from 'bits-ui';
   import type { Snippet } from 'svelte';
 
-  export type TSelectables = Array<{ value: string; label: string }>;
+  export type TSelectables = Array<{ label: string; value: string }>;
   export type TInputSelectFieldProps = SelectPrimitive.RootProps & {
     label: string;
     placeholder: string;
