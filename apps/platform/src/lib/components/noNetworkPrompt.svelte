@@ -10,7 +10,7 @@
 {#if !hidePrompt}
 	<div
 		data-isServer={networkStatus.lastError === NETWORK_ERR}
-		class="data-[isServer=true]:border-error data-[isServer=true]:bg-error w-full border-b bg-info py-4 text-info-foreground data-[isServer=true]:text-white"
+		class="data-[isServer=true]:border-error data-[isServer=true]:bg-error w-full border-b bg-warning py-2 text-info-foreground data-[isServer=true]:text-white"
 	>
 		<div class="max-w-desktop mx-auto flex h-full w-11/12 items-center justify-between">
 			<div class="mx-auto flex w-fit items-center justify-center gap-3">

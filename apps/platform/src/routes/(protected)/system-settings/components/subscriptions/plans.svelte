@@ -6,6 +6,7 @@
 	import { createFetchSubscriptions } from '$lib/hooks/subscriptions/createFetchSubscriptions';
 	import { stores } from '$lib/store/index.svelte';
 	import { AppModals } from '$lib/store/app/modalTypes';
+	import PlanItem from './plan-item.svelte';
 
 	const { AppStore } = stores;
 	const query = createFetchSubscriptions();
@@ -44,19 +45,27 @@
 						>
 					</div>
 
-					<Button
-						size="lg"
-						onclick={() =>
-							AppStore.toggleModals({ open: true, name: AppModals.PLANS_FORM_MODAL, plan_uid: '' })}
-					>
-						<PlusIcon class="size-3" />
-						Add subscription plan
-					</Button>
+					{#if query.data.data.length > 0}
+						<Button
+							size="lg"
+							onclick={() =>
+								AppStore.toggleModals({
+									open: true,
+									name: AppModals.PLANS_FORM_MODAL,
+									plan_uid: ''
+								})}
+						>
+							<PlusIcon class="size-3" />
+							Add subscription plan
+						</Button>
+					{/if}
 				</div>
 			{:else}
-				{#each query.data.data as plan (plan.uid)}
-					<p>Plan {plan.plan}</p>
-				{/each}
+				<div class="grid grid-cols-1 gap-2 md:grid-cols-[1fr_1fr] lg:grid-cols-[1fr_1fr_1fr]">
+					{#each query.data.data as plan (plan.uid)}
+						<PlanItem {...plan} />
+					{/each}
+				</div>
 			{/if}
 		{/if}
 	</CardContent>

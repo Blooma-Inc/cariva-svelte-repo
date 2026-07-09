@@ -1,10 +1,16 @@
 import type { RootStore } from '../index.svelte';
 import initializer from '$lib/utils/initializers';
 import { AppModals, type TAppModalsAction } from './modalTypes';
+import type { PlanSchemaType } from '$routes/(protected)/system-settings/components/subscriptions/modals/plans-form-modal.svelte';
+import { toast } from '@cariva/ui/components/toast/index.js';
+import { parseError } from '$lib/utils/errorHandler';
+import { putEditPlan } from '$lib/requests/sub_plan';
 
 const INIT_IS_OPEN = initializer(AppModals, false);
 
-const INIT_IS_LOADING = {};
+const INIT_IS_LOADING = {
+	editSubPlan: false
+};
 
 class AppStore {
 	rootStore: RootStore;
@@ -36,6 +42,8 @@ class AppStore {
 	plansFormModal = $state({
 		plan_uid: ''
 	});
+
+	loadingSubPlanUid: string | null = $state(null);
 
 	constructor(rootStore: RootStore) {
 		this.rootStore = rootStore;
@@ -98,6 +106,24 @@ class AppStore {
 		}
 
 		this.nonce = Date.now() + Math.random();
+	}
+
+	async updateSubPlan(subscription_uid: string, payload: Partial<PlanSchemaType>, cb?: () => void) {
+		this.isLoading.editSubPlan = true;
+		this.loadingSubPlanUid = subscription_uid;
+		try {
+			const { data } = (await putEditPlan(subscription_uid, payload)) as {
+				data: CarivaServerResp<boolean>;
+			};
+
+			toast.success(data.message);
+			cb?.();
+		} catch (error) {
+			toast.error(parseError(error));
+		} finally {
+			this.isLoading.editSubPlan = false;
+			this.loadingSubPlanUid = null;
+		}
 	}
 }
 

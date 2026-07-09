@@ -6,9 +6,11 @@
 		max_branches: z.number({ error: 'Number of branches is required' }),
 		max_users: z.number({ error: 'Number of users is required' }),
 		duration_days: z.string({ error: 'Subscription duration is required' }),
-		amount: z.number({ error: 'Price is required' }),
+		amount: z.number({ error: 'Price is required' }).min(0),
 		is_active: z.string({ error: 'Plan status is required' })
 	});
+
+	export type PlanSchemaType = z.infer<typeof PlanSchema>;
 
 	export const statusItem = [
 		{
@@ -54,14 +56,22 @@
 		DialogHeader
 	} from '@cariva/ui/components/ui/dialog/index.js';
 	import { Heading } from '@cariva/ui/components/ui/typography/index.js';
-	import { ArrowLeftIcon } from '@cariva/ui/icons';
 	import { InputField } from '@cariva/ui/components/form-inputs/inputField/index.js';
+	import { AmountField } from '@cariva/ui/components/form-inputs/amount-field/index.js';
 	import { FormField } from '@cariva/ui/components/ui/form/index.js';
 	import { superForm } from 'sveltekit-superforms';
 	import { zod4Client } from 'sveltekit-superforms/adapters';
 	import { InputSelectField } from '@cariva/ui/components/form-inputs/inputSelectField/index.js';
+	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
+	import { postNewPlan } from '$lib/requests/sub_plan';
+	import { toast } from '@cariva/ui/components/toast/index.js';
+	import { parseError } from '$lib/utils/errorHandler';
+	import { SUBSCRIPTION } from '$lib/constants/api';
+	import { ccyConverter } from '$lib/utils/numbers';
+	import { pickBy, isEqual } from 'lodash';
 
 	const { AppStore } = stores;
+	const queryClient = useQueryClient();
 
 	const blankPlan = {
 		plan: '',
@@ -72,33 +82,75 @@
 		is_active: 'true'
 	};
 
-	const form = superForm<z.infer<typeof PlanSchema>>(blankPlan, {
+	let editablePlan = $state<Partial<PlanSchemaType>>({});
+
+	const cbFn = () => {
+		queryClient.invalidateQueries({
+			predicate: (query) => query.queryKey[0] === SUBSCRIPTION.GET
+		});
+		AppStore.toggleModals({});
+	};
+
+	const getChangedFields = (original: Partial<PlanSchemaType>, current: PlanSchemaType) => {
+		return pickBy(current, (value: keyof PlanSchemaType, key: string) => {
+			return !isEqual(original[key as keyof typeof original], value);
+		});
+	};
+
+	const form = superForm<PlanSchemaType>(blankPlan, {
 		SPA: true,
 		resetForm: false,
 		validators: zod4Client(PlanSchema),
 		onUpdate: async ({ form }) => {
-			console.log(form.data);
+			if (AppStore.plansFormModal.plan_uid) {
+				const changedValue = getChangedFields(editablePlan, form.data);
+				const planDetails = JSON.parse(AppStore.plansFormModal.plan_uid) as SubscriptionItem;
+				console.log(changedValue);
+				await AppStore.updateSubPlan(planDetails.uid, changedValue, cbFn);
+				return;
+			}
+			await newPlanMutation.mutateAsync(form.data);
 		}
 	});
 
 	const { form: formData, enhance, reset } = form;
+	const hasChanged = $derived(isEqual(editablePlan, $formData));
 
-	// Re-seed the form whenever the modal opens for a different plan (or for create)
+	const newPlanMutation = createMutation(() => ({
+		mutationFn: postNewPlan,
+		onError: (error) => {
+			toast.error(parseError(error));
+		},
+		onSuccess: () => {
+			toast.success('Plan created successfully');
+			cbFn();
+		}
+	}));
+
+	const isLoading = $derived(newPlanMutation.isPending);
+
 	$effect(() => {
 		const uid = AppStore.plansFormModal.plan_uid;
-
-		if (!AppStore.isOpen.PLANS_FORM_MODAL) return;
 
 		if (!uid) {
 			reset({ data: blankPlan });
 			return;
-		}
+		} else {
+			const planDetails = JSON.parse(uid) as SubscriptionItem;
+			const data = {
+				plan: planDetails.plan,
+				is_active: planDetails.is_active.toString(),
+				max_branches: planDetails.max_branches,
+				max_users: planDetails.max_users,
+				duration_days: planDetails.duration_days.toString(),
+				amount: ccyConverter(Number(planDetails.amount), 'naira')
+			};
+			editablePlan = data;
 
-		// fetch the plan for edit mode and seed the form once it arrives
-		(async () => {
-			// const plan = await fetchPlanByUid(uid); // however you're fetching a single plan
-			// reset({ data: plan });
-		})();
+			reset({
+				data
+			});
+		}
 	});
 
 	const handleClose = () => {
@@ -118,7 +170,7 @@
 		</DialogHeader>
 
 		<div class="flex flex-col gap-4 rounded-xl">
-			<form id="login-form" use:enhance>
+			<form id="plan-form" use:enhance>
 				<fieldset class="flex flex-col gap-3">
 					<div class="grid grid-cols-[1fr_1fr] gap-2">
 						<FormField {form} name="plan">
@@ -177,10 +229,10 @@
 						</FormField>
 
 						<FormField {form} name="amount">
-							<InputField
+							<AmountField
 								label="amount"
 								type="number"
-								placeholder="e.g 250000"
+								placeholder="e.g 250,000"
 								bind:value={$formData.amount}
 								required
 							/>
@@ -189,15 +241,16 @@
 				</fieldset>
 			</form>
 
-			<Button size="lg">Verify now</Button>
-
 			<DialogFooter class="border-t pt-3">
-				<div class="flex w-full justify-start">
-					<Button size="lg" variant="secondary" onclick={handleClose}>
-						<ArrowLeftIcon class="size-3" />
-						Back to login
-					</Button>
-				</div>
+				<Button type="submit" form="plan-form" disabled={hasChanged || isLoading} size="lg">
+					{AppStore.plansFormModal.plan_uid
+						? isLoading
+							? 'Editing'
+							: 'Edit'
+						: isLoading
+							? 'Creating'
+							: 'Create'}
+				</Button>
 			</DialogFooter>
 		</div>
 	</DialogContent>

@@ -13,7 +13,7 @@
         secondary:
           'bg-secondary text-secondary-foreground hover:bg-secondary/80 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground',
         info: 'bg-info text-info-foreground hover:bg-info/80',
-        warning: 'bg-warning text-warning-foreground hover:bg-warning/80',
+        warning: 'bg-warning text-white hover:bg-warning/80',
         ghost:
           'hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 aria-expanded:bg-muted aria-expanded:text-foreground',
         destructive:
