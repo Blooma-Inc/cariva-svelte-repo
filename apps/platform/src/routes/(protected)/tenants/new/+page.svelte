@@ -50,6 +50,7 @@
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 	import { createFetchSubscriptions } from '$lib/hooks/subscriptions/createFetchSubscriptions.js';
 	import { ccyFormatter } from '$lib/utils/numbers.js';
+	import { SvelteDate } from 'svelte/reactivity';
 
 	let { data } = $props();
 
@@ -168,7 +169,7 @@
 									label="Date Established"
 									placeholder="January 01 2001"
 									bind:value={$formData.tenant.date_established}
-									max={new Date()}
+									max={new SvelteDate()}
 									required
 								/>
 							</FormField>

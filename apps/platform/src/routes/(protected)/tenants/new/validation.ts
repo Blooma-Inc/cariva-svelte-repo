@@ -1,4 +1,5 @@
 import { email } from '$lib/validators';
+import { SvelteDate } from 'svelte/reactivity';
 import { z } from 'zod';
 
 export const CreateTenantSchema = z.object({
@@ -6,7 +7,9 @@ export const CreateTenantSchema = z.object({
 	code: z.string({ error: 'Tenant code is needed.' }).trim(),
 	hospital_type: z.string({ error: 'Tenant hospital type is needed.' }).trim(),
 	registration_number: z.string({ error: 'Registration no is needed.' }).trim(),
-	date_established: z.date({ error: 'Date Established is needed.' }),
+	date_established: z
+		.date({ error: 'Date Established is needed.' })
+		.transform((args) => new SvelteDate(args)),
 	website_url: z.string({ error: 'Tenant website url is needed.' }).trim(),
 	email: z.string({ error: 'Tenant email is needed.' }).trim()
 });
