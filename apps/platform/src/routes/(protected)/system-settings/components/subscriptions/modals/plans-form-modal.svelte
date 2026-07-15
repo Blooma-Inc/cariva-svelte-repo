@@ -56,12 +56,12 @@
 		DialogHeader
 	} from '@cariva/ui/components/ui/dialog/index.js';
 	import { Heading } from '@cariva/ui/components/ui/typography/index.js';
-	import { InputField } from '@cariva/ui/components/form-inputs/inputField/index.js';
+	import { InputField } from '@cariva/ui/components/form-inputs/input-field/index.js';
 	import { AmountField } from '@cariva/ui/components/form-inputs/amount-field/index.js';
 	import { FormField } from '@cariva/ui/components/ui/form/index.js';
 	import { superForm } from 'sveltekit-superforms';
 	import { zod4Client } from 'sveltekit-superforms/adapters';
-	import { InputSelectField } from '@cariva/ui/components/form-inputs/inputSelectField/index.js';
+	import { SelectField } from '@cariva/ui/components/form-inputs/select-field/index.js';
 	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
 	import { postNewPlan } from '$lib/requests/sub_plan';
 	import { toast } from '@cariva/ui/components/toast/index.js';
@@ -183,7 +183,7 @@
 							/>
 						</FormField>
 						<FormField {form} name="is_active">
-							<InputSelectField
+							<SelectField
 								label="Status"
 								selectables={statusItem}
 								type="single"
@@ -218,7 +218,7 @@
 
 					<div class="grid grid-cols-[1fr_1fr] gap-2">
 						<FormField {form} name="duration_days">
-							<InputSelectField
+							<SelectField
 								label="Duration in days"
 								type="single"
 								selectables={durationItem}

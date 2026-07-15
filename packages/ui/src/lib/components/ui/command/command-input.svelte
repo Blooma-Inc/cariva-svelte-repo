@@ -19,7 +19,7 @@
     <CommandPrimitive.Input
       data-slot="command-input"
       class={cn(
-        'w-full text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50',
+        'w-full text-sm ring-1 outline-hidden focus:ring-0 disabled:cursor-not-allowed disabled:opacity-50',
         className
       )}
       bind:ref
@@ -27,7 +27,7 @@
       bind:value
     />
     <InputGroup.Addon>
-      <SearchIcon class="size-4 shrink-0 opacity-50" />
+      <SearchIcon class="size-3 shrink-0 opacity-50" />
     </InputGroup.Addon>
   </InputGroup.Root>
 </div>

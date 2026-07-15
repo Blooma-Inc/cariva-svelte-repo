@@ -18,7 +18,7 @@
 	} from '@cariva/ui/components/ui/dialog/index.js';
 	import { Heading, Paragraph } from '@cariva/ui/components/ui/typography/index.js';
 	import { ArrowLeftIcon } from '@cariva/ui/icons';
-	import { InputField } from '@cariva/ui/components/form-inputs/inputField/index.js';
+	import { InputField } from '@cariva/ui/components/form-inputs/input-field/index.js';
 	import { FormField } from '@cariva/ui/components/ui/form/index.js';
 	import { superForm } from 'sveltekit-superforms';
 	import { zod4Client } from 'sveltekit-superforms/adapters';

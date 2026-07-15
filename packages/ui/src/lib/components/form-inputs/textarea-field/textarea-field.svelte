@@ -1,9 +1,13 @@
-<script lang="ts">
+<script lang="ts" module>
   import type { FieldInputs } from '$lib/types';
-  import { Textarea, type TextareaProps } from '$lib/components/ui/textarea';
-  import * as Form from '$lib/components/ui/form';
+  import { type TextareaProps } from '$lib/components/ui/textarea';
 
-  type TextareaFieldProps = FieldInputs<TextareaProps>;
+  export type TextareaFieldProps = FieldInputs<TextareaProps>;
+</script>
+
+<script lang="ts">
+  import { Textarea } from '$lib/components/ui/textarea';
+  import * as Form from '$lib/components/ui/form';
 
   let {
     ref = $bindable(null),

@@ -1,5 +1,6 @@
 <script lang="ts" module>
-	export const hospitalTypeItem: TSelectables = [
+	import { type Selectables } from '@cariva/ui/components/form-inputs/select-field/index.js';
+	export const hospitalTypeItem: Selectables = [
 		{ label: 'Hospital', value: 'hospital' },
 		{ label: 'Clinic', value: 'clinic' },
 		{ label: 'Rehabilitation center', value: 'rehabilitation center' },
@@ -37,14 +38,18 @@
 		CardTitle
 	} from '@cariva/ui/components/ui/card/index.js';
 	import { FormField } from '@cariva/ui/components/ui/form/index.js';
-	import { InputField } from '@cariva/ui/components/form-inputs/inputField/index.js';
+	import { InputField } from '@cariva/ui/components/form-inputs/input-field/index.js';
+	import { SelectField } from '@cariva/ui/components/form-inputs/select-field/index.js';
+	import { TextareaField } from '@cariva/ui/components/form-inputs/textarea-field/index.js';
 	import {
-		InputSelectField,
-		type TSelectables
-	} from '@cariva/ui/components/form-inputs/inputSelectField/index.js';
-	import { TextareaField } from '@cariva/ui/components/form-inputs/textareaField/index.js';
+		RadioField,
+		type RadioItemDataProps
+	} from '@cariva/ui/components/form-inputs/radio-field/index.js';
+	import { DateField } from '@cariva/ui/components/form-inputs/date-field/index.js';
+	import { TelField } from '@cariva/ui/components/form-inputs/tel-field/index.js';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 	import { createFetchSubscriptions } from '$lib/hooks/subscriptions/createFetchSubscriptions.js';
+	import { ccyFormatter } from '$lib/utils/numbers.js';
 
 	let { data } = $props();
 
@@ -54,11 +59,13 @@
 		dataType: 'json',
 		resetForm: false,
 		validators: zod4Client(ProvisionTenantSchema),
-		onUpdated: async () => {}
+		onUpdated: async ({ form }) => {
+			console.log(form.data);
+		}
 	});
 
 	const { form: formData, enhance } = form;
-	const { data: subscriptionData, status } = createFetchSubscriptions();
+	const subscriptionPlansQuery = createFetchSubscriptions();
 </script>
 
 <section class="flex w-full flex-col gap-4">
@@ -139,7 +146,7 @@
 
 						<div class="grid grid-cols-1 gap-2 lg:grid-cols-[1fr_1fr_1fr] lg:items-end">
 							<FormField {form} name="tenant.hospital_type">
-								<InputSelectField
+								<SelectField
 									label="Hospital Type"
 									type="single"
 									placeholder="Select hospital type"
@@ -157,10 +164,11 @@
 								/>
 							</FormField>
 							<FormField {form} name="tenant.date_established">
-								<InputField
+								<DateField
 									label="Date Established"
-									placeholder="01/01/2001"
+									placeholder="January 01 2001"
 									bind:value={$formData.tenant.date_established}
+									max={new Date()}
 									required
 								/>
 							</FormField>
@@ -231,13 +239,31 @@
 						<CardDescription>You can change this later in tenant settings</CardDescription>
 					</CardHeader>
 					<CardContent>
-						{#if status === 'pending'}
+						{#if subscriptionPlansQuery.status === 'pending'}
 							<p>Fetching subscription data...</p>
-						{:else if status === 'error'}
+						{:else if subscriptionPlansQuery.status === 'error'}
 							<p>Error Page</p>
 							<p>Might need to reload</p>
-						{:else}
-							<p>{subscriptionData?.data.length}</p>
+						{:else if subscriptionPlansQuery.data}
+							{@const plans = subscriptionPlansQuery.data.data.map((subscription) => {
+								const { plan, uid, max_branches, max_users, duration_days, amount } = subscription;
+								const item: RadioItemDataProps = {
+									label: `${plan} - ${Number(amount) == 0 ? 'Free' : ccyFormatter(Number(amount))}`,
+									value: uid,
+									description: `${duration_days} days, ${max_branches} ${max_branches == 1 ? 'branch' : 'branches'}, ${max_users} ${max_users == 1 ? 'user' : 'users'}`
+								};
+
+								return item;
+							})}
+
+							<FormField {form} name="subscription_uid">
+								<RadioField
+									items={plans.reverse()}
+									class="grid grid-cols-1 gap-2"
+									bind:value={$formData.subscription_uid}
+									required
+								/>
+							</FormField>
 						{/if}
 					</CardContent>
 				</Card>
@@ -287,9 +313,10 @@
 									/>
 								</FormField>
 								<FormField {form} name="admin.phone">
-									<InputField
-										label="Phone Number"
-										placeholder="(234) 8123456789"
+									<TelField
+										label="Phone number"
+										defaultCountry="NG"
+										placeholder="08123456789"
 										bind:value={$formData.admin.phone}
 										required
 									/>
@@ -301,7 +328,7 @@
 			</fieldset>
 		</div>
 
-		<Button size="lg" class="lg:w-fit">
+		<Button size="lg" type="submit" form="tenant-form" class="lg:w-fit">
 			<CheckIcon class="size-3" />
 			Provision Tenant
 		</Button>

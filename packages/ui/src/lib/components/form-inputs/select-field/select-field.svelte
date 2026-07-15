@@ -2,11 +2,11 @@
   import { Select as SelectPrimitive } from 'bits-ui';
   import type { Snippet } from 'svelte';
 
-  export type TSelectables = Array<{ label: string; value: string }>;
-  export type TInputSelectFieldProps = SelectPrimitive.RootProps & {
+  export type Selectables = Array<{ label: string; value: string }>;
+  export type SelectFieldProps = SelectPrimitive.RootProps & {
     label: string;
     placeholder: string;
-    selectables: TSelectables;
+    selectables: Selectables;
     description?: Snippet | string;
   };
 </script>
@@ -23,7 +23,7 @@
     description,
     selectables,
     ...props
-  }: TInputSelectFieldProps = $props();
+  }: SelectFieldProps = $props();
 
   const triggerContent = $derived(selectables.find((f) => f.value === value)?.label ?? placeholder);
 </script>

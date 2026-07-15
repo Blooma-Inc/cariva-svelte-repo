@@ -1,15 +1,18 @@
-<script lang="ts">
+<script lang="ts" module>
   import type { FieldInputs } from '$lib/types';
   import type { InputProps } from '$lib/components/ui/input';
-  import * as Form from '$lib/components/ui/form';
-  import { InputGroup, InputGroupAddon, InputGroupInput } from '$lib/components/ui/input-group';
 
-  type TAmountFieldProps = FieldInputs<InputProps> & {
+  export type AmountFieldProps = FieldInputs<InputProps> & {
     currencySymbol?: string;
     locale?: string;
     maxDecimals?: number;
     allowNegative?: boolean;
   };
+</script>
+
+<script lang="ts">
+  import * as Form from '$lib/components/ui/form';
+  import { InputGroup, InputGroupAddon, InputGroupInput } from '$lib/components/ui/input-group';
 
   let {
     ref = $bindable(null),
@@ -21,7 +24,7 @@
     maxDecimals = 2,
     allowNegative = false,
     ...props
-  }: TAmountFieldProps = $props();
+  }: AmountFieldProps = $props();
 
   let focused = $state(false);
   let displayValue = $state('');

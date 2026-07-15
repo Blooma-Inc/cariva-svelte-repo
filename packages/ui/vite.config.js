@@ -12,6 +12,6 @@ export default defineConfig({
     },
   },
   ssr: {
-		noExternal: ['bits-ui', 'svelte-sonner']
+		noExternal: ['bits-ui', 'svelte-sonner', '']
 	}
 });

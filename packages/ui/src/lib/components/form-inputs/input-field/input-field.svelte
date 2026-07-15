@@ -1,6 +1,11 @@
-<script lang="ts">
+<script lang="ts" module>
   import type { FieldInputs } from '$lib/types';
   import type { InputProps, InputType } from '$lib/components/ui/input';
+
+  export type InputFieldProps = FieldInputs<InputProps>;
+</script>
+
+<script lang="ts">
   import * as Form from '$lib/components/ui/form';
   import {
     InputGroup,
@@ -10,8 +15,6 @@
   } from '$lib/components/ui/input-group';
   import { EyeClosedIcon, EyeIcon } from '@lucide/svelte';
 
-  type TInputFieldProps = FieldInputs<InputProps>;
-
   let {
     ref = $bindable(null),
     value = $bindable(),
@@ -19,7 +22,7 @@
     description,
     type,
     ...props
-  }: TInputFieldProps = $props();
+  }: InputFieldProps = $props();
   let showPassword = $state(false);
   let derivedType = $derived(
     (type === 'password' ? (showPassword ? 'text' : 'password') : type) as InputType
@@ -48,9 +51,9 @@
                 onclick={() => (showPassword = !showPassword)}
               >
                 {#if showPassword}
-                  <EyeIcon class="h-4 w-4" />
+                  <EyeIcon class="size-3" />
                 {:else}
-                  <EyeClosedIcon class="h-4 w-4" />
+                  <EyeClosedIcon class="size-3" />
                 {/if}
               </InputGroupButton>
             </InputGroupAddon>
