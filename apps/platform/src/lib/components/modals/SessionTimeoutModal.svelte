@@ -34,17 +34,18 @@
 					size="lg"
 					variant="destructive"
 					class="w-[48%]"
-					disabled={AuthStore.isLoading.logout}
+					disabled={AuthStore.loaders.isLogingOut}
+					isLoading={AuthStore.loaders.isLogingOut}
 					onclick={() => {
 						AuthStore.logout(handleClose);
 					}}
 				>
-					{AuthStore.isLoading.logout ? 'Signing Out' : 'Sign Out'}
+					Sign Out
 				</Button>
 				<Button
 					size="lg"
 					class="w-[48%]"
-					disabled={AuthStore.isLoading.logout}
+					disabled={AuthStore.loaders.isLogingOut}
 					onclick={handleClose}>Stay Signed In</Button
 				>
 			</div>

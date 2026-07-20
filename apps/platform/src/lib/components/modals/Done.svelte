@@ -5,7 +5,7 @@
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 	import { DialogContent, DialogHeader } from '@cariva/ui/components/ui/dialog/index.js';
 	import { Heading, Paragraph } from '@cariva/ui/components/ui/typography/index.js';
-	import { LucideDoorOpen } from '@cariva/ui/icons';
+	import DoorOpenIcon from '@lucide/svelte/icons/door-open';
 
 	const { AppStore } = stores;
 
@@ -18,7 +18,7 @@
 	<DialogContent>
 		<DialogHeader>
 			<div class="my-14 flex w-full flex-col items-center justify-center gap-8 text-center">
-				<LucideDoorOpen className="h-5 w-5" />
+				<DoorOpenIcon className="h-5 w-5" />
 				<Heading class="text-center">{AppStore.doneModal.text ?? 'Done!'}</Heading>
 				<Paragraph>{AppStore.doneModal.subText}</Paragraph>
 				<Button onclick={handleClose}>

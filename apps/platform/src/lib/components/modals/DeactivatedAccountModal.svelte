@@ -5,7 +5,7 @@
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 	import { DialogContent, DialogHeader } from '@cariva/ui/components/ui/dialog/index.js';
 	import { Heading, Paragraph } from '@cariva/ui/components/ui/typography/index.js';
-	import { ArrowLeftIcon } from '@cariva/ui/icons';
+	import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
 
 	const { AppStore } = stores;
 

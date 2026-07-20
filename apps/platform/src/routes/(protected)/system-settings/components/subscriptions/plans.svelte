@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { Heading, Paragraph } from '@cariva/ui/components/ui/typography/index.js';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
-	import { PlusIcon } from '@cariva/ui/icons';
+	import PlusIcon from '@lucide/svelte/icons/plus';
 	import { Card, CardContent, CardHeader, CardTitle } from '@cariva/ui/components/ui/card/index.js';
-	import { createFetchSubscriptions } from '$lib/hooks/subscriptions/createFetchSubscriptions';
+	import { useFetchSubscriptions } from '$lib/hooks/subscriptions/useFetchSubscriptions';
 	import { stores } from '$lib/store/index.svelte';
 	import { AppModals } from '$lib/store/app/modalTypes';
 	import PlanItem from './plan-item.svelte';
 
 	const { AppStore } = stores;
-	const query = createFetchSubscriptions();
+	const query = useFetchSubscriptions();
 </script>
 
 <Card>

@@ -1,13 +1,11 @@
 <script lang="ts">
   import { Toaster as Sonner, type ToasterProps as SonnerProps } from 'svelte-sonner';
   import { mode } from 'mode-watcher';
-  import {
-    LoaderCircleIcon,
-    CircleCheckIcon,
-    OctagonXIcon,
-    InfoIcon,
-    TriangleAlertIcon
-  } from '$lib/icons';
+  import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
+  import CircleCheckIcon from '@lucide/svelte/icons/circle-check';
+  import OctagonXIcon from '@lucide/svelte/icons/octagon-x';
+  import InfoIcon from '@lucide/svelte/icons/info';
+  import TriangleAlertIcon from '@lucide/svelte/icons/triangle-alert';
 
   let { ...restProps }: SonnerProps = $props();
 </script>

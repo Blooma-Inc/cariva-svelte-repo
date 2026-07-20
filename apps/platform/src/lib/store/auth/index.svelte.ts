@@ -16,9 +16,9 @@ import { AppModals } from '../app/modalTypes';
 import type { RootStore } from '../index.svelte';
 
 const INIT_IS_LOADING = {
-	login: false,
-	logout: false,
-	refresh: false
+	isLogingIn: false,
+	isLogingOut: false,
+	isRefreshing: false
 };
 
 class AuthStore {
@@ -27,8 +27,8 @@ class AuthStore {
 	accessToken = $state<string>('');
 	refreshPromise: Promise<string> | null = $state(null);
 	user = $state<Partial<UserItem>>({});
-	isLoading = $state({ ...INIT_IS_LOADING });
-	errors = $state(initializer(this.isLoading, ''));
+	loaders = $state({ ...INIT_IS_LOADING });
+	errors = $state(initializer(this.loaders, ''));
 
 	constructor(rootStore: RootStore) {
 		this.rootStore = rootStore;
@@ -81,33 +81,33 @@ class AuthStore {
 	}
 
 	async login(payload: TLoginSchema, cb: () => void) {
-		this.isLoading.login = true;
-		this.errors.login = '';
+		this.loaders.isLogingIn = true;
+		this.errors.isLogingIn = '';
 		try {
 			const { data } = (await postLogin(payload)) as { data: CarivaServerResp<TAuthSchema> };
 			await this.grantAccess(data, cb);
 		} catch (error) {
-			this.errors.login = parseError(error);
-			toast.error(this.errors.login);
+			this.errors.isLogingIn = parseError(error);
+			toast.error(this.errors.isLogingIn);
 		} finally {
-			this.isLoading.login = false;
+			this.loaders.isLogingIn = false;
 		}
 	}
 
 	async fetchNewToken() {
 		if (this.refreshPromise) return this.refreshPromise;
 
-		this.isLoading.refresh = true;
+		this.loaders.isRefreshing = true;
 		this.refreshPromise = (async () => {
 			try {
 				const { data } = (await getNewAccessToken()) as { data: CarivaServerResp<TAuthSchema> };
 				this.accessToken = data.data.access_token;
 				return data.data.access_token;
 			} catch (error) {
-				this.errors.refresh = parseError(error);
+				this.errors.isRefreshing = parseError(error);
 				throw error;
 			} finally {
-				this.isLoading.refresh = false;
+				this.loaders.isRefreshing = false;
 				this.refreshPromise = null;
 			}
 		})();
@@ -132,7 +132,7 @@ class AuthStore {
 			cb?.();
 			goto(resolve(ROUTES.LOGIN.path), { replaceState: true });
 		} catch (error) {
-			this.errors.logout = parseError(error);
+			this.errors.isLogingOut = parseError(error);
 		} finally {
 			this.accessToken = '';
 			this.user = {};
@@ -145,7 +145,7 @@ class AuthStore {
 			await postLogoutAll();
 			goto(resolve(ROUTES.LOGIN.path), { replaceState: true });
 		} catch (error) {
-			this.errors.logout = parseError(error);
+			this.errors.isLogingOut = parseError(error);
 		} finally {
 			this.accessToken = '';
 			this.user = {};

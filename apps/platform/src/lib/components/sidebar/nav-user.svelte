@@ -3,7 +3,8 @@
 	import * as DropdownMenu from '@cariva/ui/components/ui/dropdown-menu/index.js';
 	import * as Sidebar from '@cariva/ui/components/ui/sidebar/index.js';
 	import { useSidebar } from '@cariva/ui/components/ui/sidebar/index.js';
-	import { ChevronDownIcon, LogOutIcon } from '@cariva/ui/icons';
+	import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
+	import LogOutIcon from '@lucide/svelte/icons/log-out';
 	import { stores } from '$lib/store/index.svelte';
 	import { AppModals } from '$lib/store/app/modalTypes';
 	let { AuthStore, AppStore } = stores;

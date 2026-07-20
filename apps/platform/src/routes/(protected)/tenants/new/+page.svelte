@@ -26,7 +26,10 @@
 		ItemMedia,
 		ItemTitle
 	} from '@cariva/ui/components/ui/item/index.js';
-	import { CheckIcon, CircleCheckIcon, SlashIcon } from '@cariva/ui/icons';
+	import CheckIcon from '@lucide/svelte/icons/check';
+	import CircleCheckIcon from '@lucide/svelte/icons/circle-check';
+	import SlashIcon from '@lucide/svelte/icons/slash';
+	import XIcon from '@lucide/svelte/icons/x';
 	import { superForm } from 'sveltekit-superforms';
 	import { zod4Client } from 'sveltekit-superforms/adapters';
 	import { ProvisionTenantSchema } from './validation.js';
@@ -48,11 +51,15 @@
 	import { DateField } from '@cariva/ui/components/form-inputs/date-field/index.js';
 	import { TelField } from '@cariva/ui/components/form-inputs/tel-field/index.js';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
-	import { createFetchSubscriptions } from '$lib/hooks/subscriptions/createFetchSubscriptions.js';
+	import { useFetchSubscriptions } from '$lib/hooks/subscriptions/useFetchSubscriptions.js';
 	import { ccyFormatter } from '$lib/utils/numbers.js';
 	import { SvelteDate } from 'svelte/reactivity';
+	import { useFetchTenantSuggestedCode } from '$lib/hooks/tenant/useFetchTenantSuggestedCode.svelte.js';
+	import { useDebounce } from '$lib/hooks/app/use-debounce.svelte.js';
+	import { stores } from '$lib/store/index.svelte.js';
 
 	let { data } = $props();
+	const { TenantStore } = stores;
 
 	// svelte-ignore state_referenced_locally
 	const form = superForm(data.form, {
@@ -62,11 +69,41 @@
 		validators: zod4Client(ProvisionTenantSchema),
 		onUpdated: async ({ form }) => {
 			console.log(form.data);
+			const payload = structuredClone(form.data);
+
+			if (payload.tenant?.date_established) {
+				const dateObj = payload.tenant.date_established;
+
+				const year = dateObj.getFullYear();
+				const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+				const day = String(dateObj.getDate()).padStart(2, '0');
+				const cleanPythonDate = `${year}-${month}-${day}`;
+				payload.tenant.date_established = cleanPythonDate as unknown as SvelteDate;
+			}
+
+			await TenantStore.submitTenantRequest(payload);
 		}
 	});
 
 	const { form: formData, enhance } = form;
-	const subscriptionPlansQuery = createFetchSubscriptions();
+	const subscriptionPlansQuery = useFetchSubscriptions();
+
+	const hospital_name = $derived($formData.tenant.name);
+	const city = $derived($formData.main_branch.city);
+
+	const debouncedHospitalName = useDebounce(() => hospital_name, 500);
+	const debouncedCity = useDebounce(() => city, 500);
+
+	const tenantSuggestedCodeQuery = useFetchTenantSuggestedCode(
+		() => debouncedHospitalName.value,
+		() => debouncedCity.value
+	);
+
+	$effect(() => {
+		if (tenantSuggestedCodeQuery.status === 'success' && tenantSuggestedCodeQuery.data) {
+			$formData.tenant.code = tenantSuggestedCodeQuery.data;
+		}
+	});
 </script>
 
 <section class="flex w-full flex-col gap-4">
@@ -116,8 +153,35 @@
 		</ItemContent>
 	</Item>
 
+	<div class="flex w-full flex-col justify-end gap-2 sm:flex-row">
+		<Button
+			size="lg"
+			type="button"
+			class="lg:w-fit"
+			variant="warning"
+			disabled={TenantStore.loaders.isTenantRequest}
+		>
+			<XIcon class="size-3" />
+			Cancel
+		</Button>
+		<Button
+			size="lg"
+			type="submit"
+			form="tenant-form"
+			class="lg:w-fit"
+			disabled={TenantStore.loaders.isTenantRequest}
+			isLoading={TenantStore.loaders.isTenantRequest}
+		>
+			<CheckIcon class="size-3" />
+			Provision Tenant
+		</Button>
+	</div>
+
 	<form id="tenant-form" use:enhance class="flex w-full flex-col gap-4 pb-28">
-		<div class="grid grid-cols-1 gap-3 lg:grid-cols-2">
+		<fieldset
+			disabled={TenantStore.loaders.isTenantRequest}
+			class="grid grid-cols-1 gap-3 lg:grid-cols-2"
+		>
 			<Card class="self-start">
 				<CardHeader>
 					<CardTitle>Hospital Details</CardTitle>
@@ -125,8 +189,8 @@
 				</CardHeader>
 
 				<CardContent>
-					<fieldset class="flex flex-col gap-4">
-						<div class="grid grid-cols-1 gap-2 lg:grid-cols-[2fr_1fr] lg:items-end">
+					<fieldset class="flex flex-col gap-3">
+						<div class="grid grid-cols-1 gap-2 lg:grid-cols-[2fr_1fr]">
 							<FormField {form} name="tenant.name">
 								<InputField
 									label="Hospital Name"
@@ -139,11 +203,50 @@
 								<InputField
 									label="Code"
 									placeholder="e.g LUTH"
+									disabled
 									bind:value={$formData.tenant.code}
+									required
+									description="Auto generated field."
+									isLoading={tenantSuggestedCodeQuery.isLoading}
+								/>
+							</FormField>
+						</div>
+
+						<div class="grid grid-cols-1 gap-2 lg:grid-cols-[1fr_1fr_1fr] lg:items-end">
+							<FormField {form} name="main_branch.city">
+								<InputField
+									label="City"
+									placeholder="Select city"
+									bind:value={$formData.main_branch.city}
+									required
+								/>
+							</FormField>
+							<FormField {form} name="main_branch.state">
+								<InputField
+									label="State"
+									placeholder="Select state"
+									bind:value={$formData.main_branch.state}
+									required
+								/>
+							</FormField>
+							<FormField {form} name="main_branch.country">
+								<InputField
+									label="Country"
+									placeholder="Select country"
+									bind:value={$formData.main_branch.country}
 									required
 								/>
 							</FormField>
 						</div>
+
+						<FormField {form} name="main_branch.address">
+							<TextareaField
+								label="Physical Address (Main branch location)"
+								placeholder="123 Medical Avenue, Idi-Araba"
+								bind:value={$formData.main_branch.address}
+								required
+							/>
+						</FormField>
 
 						<div class="grid grid-cols-1 gap-2 lg:grid-cols-[1fr_1fr_1fr] lg:items-end">
 							<FormField {form} name="tenant.hospital_type">
@@ -193,42 +296,6 @@
 								/>
 							</FormField>
 						</div>
-
-						<div class="grid grid-cols-1 gap-2 lg:grid-cols-[1fr_1fr_1fr] lg:items-end">
-							<FormField {form} name="main_branch.city">
-								<InputField
-									label="City"
-									placeholder="Select city"
-									bind:value={$formData.main_branch.city}
-									required
-								/>
-							</FormField>
-							<FormField {form} name="main_branch.state">
-								<InputField
-									label="State"
-									placeholder="Select state"
-									bind:value={$formData.main_branch.state}
-									required
-								/>
-							</FormField>
-							<FormField {form} name="main_branch.country">
-								<InputField
-									label="Country"
-									placeholder="Select country"
-									bind:value={$formData.main_branch.country}
-									required
-								/>
-							</FormField>
-						</div>
-
-						<FormField {form} name="main_branch.address">
-							<TextareaField
-								label="Physical Address (Main branch location)"
-								placeholder="123 Medical Avenue, Idi-Araba"
-								bind:value={$formData.main_branch.address}
-								required
-							/>
-						</FormField>
 					</fieldset>
 				</CardContent>
 			</Card>
@@ -327,11 +394,6 @@
 					</CardContent>
 				</Card>
 			</fieldset>
-		</div>
-
-		<Button size="lg" type="submit" form="tenant-form" class="lg:w-fit">
-			<CheckIcon class="size-3" />
-			Provision Tenant
-		</Button>
+		</fieldset>
 	</form>
 </section>

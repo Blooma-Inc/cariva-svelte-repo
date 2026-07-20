@@ -36,7 +36,7 @@
 		<AppSidebar />
 		<SidebarInset>
 			<Header />
-			<div class="flex flex-1 flex-col gap-4 bg-primary/5 p-4 py-3">
+			<div class="flex min-w-0 flex-1 flex-col gap-4 bg-primary/5 p-4 py-3">
 				{@render children()}
 			</div>
 		</SidebarInset>

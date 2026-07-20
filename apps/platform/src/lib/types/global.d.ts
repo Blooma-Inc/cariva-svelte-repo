@@ -33,6 +33,13 @@ interface IJwtPayloadExt extends jwt.JwtPayload {
 	vendor_id: string;
 }
 
+interface OffsetPagination {
+	total: number;
+	page: number;
+	per_page: number;
+	total_pages: number;
+}
+
 interface CarivaServerResp<D, M = null> {
 	data: D;
 	meta: M;
@@ -54,4 +61,10 @@ interface QueryHookResponse<D> {
 	refetch: (
 		options?: RefetchOptions
 	) => Promise<QueryObserverResult<CarivaServerResp<SubscriptionItem[], null>, Error>>;
+}
+
+interface CarivaBaseQuery {
+	q?: string;
+	limit?: number;
+	offset?: number;
 }

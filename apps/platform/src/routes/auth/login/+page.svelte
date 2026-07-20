@@ -69,9 +69,10 @@
 				form="login-form"
 				size="lg"
 				class="w-full"
-				disabled={AuthStore.isLoading.login}
+				disabled={AuthStore.loaders.isLogingIn}
+				isLoading={AuthStore.loaders.isLogingIn}
 			>
-				{AuthStore.isLoading.login ? 'Submitting...' : 'Login'}
+				Login
 			</Button>
 		</form>
 	</CardContent>

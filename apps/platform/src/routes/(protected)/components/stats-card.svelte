@@ -1,5 +1,5 @@
 <script lang="ts" module>
-	import { type LucideIcon } from '@cariva/ui/icons';
+	import { type LucideIcon } from '@lucide/svelte';
 	export interface IStatsCardProps {
 		icon: LucideIcon;
 		title: string;

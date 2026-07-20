@@ -1,7 +1,10 @@
 <script lang="ts">
 	import { Heading, Paragraph } from '@cariva/ui/components/ui/typography/index.js';
 	import type { IStatsCardProps } from './components/stats-card.svelte';
-	import { Building2Icon, DatabaseIcon, UserPlusIcon, UsersIcon } from '@cariva/ui/icons';
+	import Building2Icon from '@lucide/svelte/icons/building-2';
+	import DatabaseIcon from '@lucide/svelte/icons/database';
+	import UserPlusIcon from '@lucide/svelte/icons/user-plus';
+	import UsersIcon from '@lucide/svelte/icons/users';
 	import StatsCard from './components/stats-card.svelte';
 
 	const stats: Array<IStatsCardProps> = [

@@ -19,8 +19,13 @@ export const AUTH = {
 export const PLATFORM = {
 	TENANCY_REQUEST: '/platform/tenancy-request',
 	ACTIVATE_TENANT: '/platform/activate-tenant',
-	REJECT_TENANT: '/platform/reject-tenant'
+	REJECT_TENANT: '/platform/reject-tenant',
+	TENANTS: '/platform/tenants'
 } as const;
+
+export const TENANT = {
+	SUGGEST_CODE: '/tenant/suggest-code'
+};
 
 export const SUBSCRIPTION = {
 	GET: '/subscription',

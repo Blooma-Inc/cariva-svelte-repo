@@ -1,4 +1,4 @@
-import type { Component, ComponentProps, Snippet } from 'svelte';
+import { createRawSnippet, type Component, type ComponentProps, type Snippet } from 'svelte';
 
 /**
  * A helper class to make it easy to identify Svelte components in
@@ -108,4 +108,29 @@ export function renderComponent<
  */
 export function renderSnippet<TProps>(snippet: Snippet<[TProps]>, params: TProps = {} as TProps) {
   return new RenderSnippetConfig(snippet, params);
+}
+
+/**
+ * A helper function to help create text snippets for cells.
+ *
+ * The snippet must only take one parameter.
+ *
+ * @param text
+ * @param params
+ * @returns - A `createRawSnippet` object that helps svelte-table know how to render the header/cell snippet.
+ * @example
+ * ```ts
+ * // +page.svelte
+ * const defaultColumns = [
+ *   columnHelper.accessor('state', {
+ *     cell: cell =>  textSnippet(toTitleCase(info.row.original.state)),
+ *   }),
+ * ]
+ * ```
+ * @see {@link https://tanstack.com/table/latest/docs/guide/column-defs}
+ */
+export function textSnippet(text: string) {
+  return createRawSnippet(() => ({
+    render: () => `<span>${text}</span>`
+  }));
 }

@@ -23,7 +23,7 @@
 	import { FormField } from '@cariva/ui/components/ui/form/index.js';
 	import { superForm } from 'sveltekit-superforms';
 	import { zod4Client } from 'sveltekit-superforms/adapters';
-	import { ArrowLeftIcon } from '@cariva/ui/icons';
+	import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
 
 	const { AppStore } = stores;
 

@@ -9,7 +9,7 @@
 	import Email from './components/email/index.svelte';
 	import Integrations from './components/integrations/index.svelte';
 	import Advanced from './components/advanced/index.svelte';
-	import { useScrollActiveTab } from '$lib/hooks/app/useScrollIntoView.svelte';
+	import { useScrollActiveTab } from '$lib/hooks/app/use-scroll-into-view.svelte';
 
 	const tabs = [
 		{ tab: 'General', value: 'general', Content: General },

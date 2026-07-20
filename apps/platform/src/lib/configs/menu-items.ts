@@ -1,11 +1,9 @@
-import {
-	BellDotIcon,
-	Building2Icon,
-	ChartPieIcon,
-	LayoutDashboardIcon,
-	LogsIcon,
-	SettingsIcon
-} from '@cariva/ui/icons';
+import BellDotIcon from '@lucide/svelte/icons/bell-dot';
+import Building2Icon from '@lucide/svelte/icons/building';
+import ChartPieIcon from '@lucide/svelte/icons/chart-pie';
+import LayoutDashboardIcon from '@lucide/svelte/icons/layout-dashboard';
+import LogsIcon from '@lucide/svelte/icons/logs';
+import SettingsIcon from '@lucide/svelte/icons/settings';
 import { EnumRole } from './roles';
 import ROUTES from './routes.svelte';
 

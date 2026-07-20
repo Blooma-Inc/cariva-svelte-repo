@@ -4,7 +4,7 @@
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 	import { DialogContent } from '@cariva/ui/components/ui/dialog/index.js';
 	import { Heading, Paragraph } from '@cariva/ui/components/ui/typography/index.js';
-	import { CircleCheckBigIcon } from '@cariva/ui/icons';
+	import CircleCheckBigIcon from '@lucide/svelte/icons/circle-check-big';
 
 	const { AppStore } = stores;
 </script>

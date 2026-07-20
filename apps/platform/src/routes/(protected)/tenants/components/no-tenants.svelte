@@ -4,7 +4,7 @@
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 	import { Card, CardContent } from '@cariva/ui/components/ui/card/index.js';
 	import { Heading, Paragraph } from '@cariva/ui/components/ui/typography/index.js';
-	import { PlusIcon } from '@cariva/ui/icons';
+	import PlusIcon from '@lucide/svelte/icons/plus';
 	import ROUTES from '$lib/configs/routes.svelte';
 </script>
 

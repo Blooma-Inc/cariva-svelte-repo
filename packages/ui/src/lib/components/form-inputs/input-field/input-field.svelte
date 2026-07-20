@@ -13,7 +13,7 @@
     InputGroupButton,
     InputGroupInput
   } from '$lib/components/ui/input-group';
-  import { EyeClosedIcon, EyeIcon } from '@lucide/svelte';
+  import { EyeClosedIcon, EyeIcon, LoaderCircleIcon } from '@lucide/svelte';
 
   let {
     ref = $bindable(null),
@@ -21,6 +21,7 @@
     label,
     description,
     type,
+    isLoading,
     ...props
   }: InputFieldProps = $props();
   let showPassword = $state(false);
@@ -55,6 +56,14 @@
                 {:else}
                   <EyeClosedIcon class="size-3" />
                 {/if}
+              </InputGroupButton>
+            </InputGroupAddon>
+          {/if}
+
+          {#if isLoading}
+            <InputGroupAddon align="inline-end">
+              <InputGroupButton size="icon-xs" variant="ghost">
+                <LoaderCircleIcon class="text-primary size-3 animate-spin" />
               </InputGroupButton>
             </InputGroupAddon>
           {/if}

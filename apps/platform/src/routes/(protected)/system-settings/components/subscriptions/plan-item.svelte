@@ -11,7 +11,9 @@
 	import { Badge } from '@cariva/ui/components/ui/badge/index.js';
 	import { stores } from '$lib/store/index.svelte';
 	import { ccyFormatter } from '$lib/utils/numbers';
-	import { Building2Icon, CalendarDaysIcon, UsersIcon } from '@cariva/ui/icons';
+	import Building2Icon from '@lucide/svelte/icons/building-2';
+	import CalendarDaysIcon from '@lucide/svelte/icons/calendar-days';
+	import UsersIcon from '@lucide/svelte/icons/users';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import { SUBSCRIPTION } from '$lib/constants/api';
 	import { AppModals } from '$lib/store/app/modalTypes';

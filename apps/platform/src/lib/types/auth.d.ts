@@ -7,7 +7,6 @@ interface BaseItem {
 	uid: string;
 	created_at: string;
 	updated_at: string;
-	deleted_at?: string;
 }
 
 interface SessionItem extends BaseItem {

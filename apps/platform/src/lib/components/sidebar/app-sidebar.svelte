@@ -20,7 +20,7 @@
 	} from '@cariva/ui/components/ui/sidebar/index.js';
 	import { EnumRole } from '$lib/configs/roles';
 	import { menuCommon, getMenuForRole } from '$lib/configs/menu-items';
-	import { ChevronRight } from '@cariva/ui/icons';
+	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
 	import {
 		Collapsible,
 		CollapsibleContent,
@@ -83,7 +83,7 @@
 									>
 										<roleItem.icon class="size-4 shrink-0" />
 										<span>{roleItem.title}</span>
-										<ChevronRight
+										<ChevronRightIcon
 											class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
 										/>
 									</SidebarMenuButton>
