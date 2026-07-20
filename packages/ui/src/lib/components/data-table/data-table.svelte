@@ -141,15 +141,18 @@
         </Table>
 
         <CardFooter>
-          <DataTablePagination
-            meta={paginationProps.meta}
-            isLoading={paginationProps.isLoading}
-            perPageOptions={paginationProps.perPageOptions}
-            onPageChange={paginationProps.onPageChange}
-            onPerPageChange={paginationProps.onPerPageChange}
-            onCursorChange={paginationProps.onCursorChange}
-          />
-        </CardFooter>
+          <div class="flex w-full justify-end">
+            <DataTablePagination
+              meta={paginationProps.meta}
+              isLoading={paginationProps.isLoading}
+              perPageOptions={paginationProps.perPageOptions}
+              onPageChange={paginationProps.onPageChange}
+              onPerPageChange={paginationProps.onPerPageChange}
+              onCursorChange={paginationProps.onCursorChange}
+            />
+            <div></div>
+          </div></CardFooter
+        >
       </Card>
     {/if}
   {:else if status === 'error'}

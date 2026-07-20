@@ -91,8 +91,12 @@
   <div class="flex items-center gap-6">
     <div class="flex items-center gap-2">
       <span class="text-muted-foreground text-sm">Rows per page</span>
-      <Select.Root type="single" value={String(meta.perPage)} onValueChange={() => onPerPageChange}>
-        <Select.Trigger class="h-8 w-17.5">
+      <Select.Root
+        type="single"
+        value={String(meta.perPage)}
+        onValueChange={(value) => onPerPageChange?.(Number(value))}
+      >
+        <Select.Trigger size="sm" class="w-fit">
           {meta.perPage}
         </Select.Trigger>
         <Select.Content>
@@ -111,38 +115,34 @@
         <Button
           variant="outline"
           size="icon"
-          class="ml-2 h-8 w-8"
           disabled={isLoading || meta.page <= 1}
           onclick={() => onPageChange?.(1)}
         >
-          <ChevronsLeft class="h-4 w-4" />
+          <ChevronsLeft class="size-3" />
         </Button>
         <Button
           variant="outline"
           size="icon"
-          class="h-8 w-8"
           disabled={isLoading || meta.page <= 1}
           onclick={() => onPageChange?.(meta.page - 1)}
         >
-          <ChevronLeft class="h-4 w-4" />
+          <ChevronLeft class="size-3" />
         </Button>
         <Button
           variant="outline"
           size="icon"
-          class="h-8 w-8"
           disabled={isLoading || meta.page >= meta.totalPages}
           onclick={() => onPageChange?.(meta.page + 1)}
         >
-          <ChevronRight class="h-4 w-4" />
+          <ChevronRight class="size-3" />
         </Button>
         <Button
           variant="outline"
           size="icon"
-          class="h-8 w-8"
           disabled={isLoading || meta.page >= meta.totalPages}
           onclick={() => onPageChange?.(meta.totalPages)}
         >
-          <ChevronsRight class="h-4 w-4" />
+          <ChevronsRight class="size-3" />
         </Button>
       </div>
     {:else}
@@ -150,11 +150,10 @@
         <Button
           variant="outline"
           size="icon"
-          class="h-8 w-8"
           disabled={isLoading || !meta.prevCursor}
           onclick={() => onCursorChange?.('prev')}
         >
-          <ChevronLeft class="h-4 w-4" />
+          <ChevronLeft class="size-3" />
         </Button>
         <Button
           variant="outline"
@@ -163,7 +162,7 @@
           disabled={isLoading || !meta.nextCursor}
           onclick={() => onCursorChange?.('next')}
         >
-          <ChevronRight class="h-4 w-4" />
+          <ChevronRight class="size-3" />
         </Button>
       </div>
     {/if}

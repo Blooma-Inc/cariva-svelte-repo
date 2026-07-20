@@ -27,7 +27,7 @@
 
     {#if onRetry}
       <Button variant="outline" onclick={() => onRetry()} class="gap-2">
-        <RefreshCwIcon class="h-4 w-4" />
+        <RefreshCwIcon class="size-3" />
         Retry
       </Button>
     {/if}
