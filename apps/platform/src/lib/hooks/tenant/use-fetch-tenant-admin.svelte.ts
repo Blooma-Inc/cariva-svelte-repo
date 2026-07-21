@@ -1,16 +1,18 @@
 import { createQuery } from '@tanstack/svelte-query';
-import { platform } from './FetchKeyFactory';
+import { tenant } from './fetch-key-factory';
 
-export function useFetchTenants(
-	params: Partial<TenantQuery>
-): QueryHookResponse<CarivaServerResp<Array<PlatformTenantItem>, OffsetPagination> | undefined> {
+export function useFetchTenantAdmin(
+	getTenantUuid: () => string = () => ''
+): QueryHookResponse<PlatformTenantUserItem | undefined> {
 	const query = createQuery(() => {
-		const meta = platform.getTenants(params);
+		const tenant_uid = getTenantUuid();
+		const meta = tenant.getTenantAdmin(tenant_uid);
 
 		return {
 			queryKey: meta.keys(),
 			meta,
-			select: (resp: CarivaServerResp<Array<PlatformTenantItem>, OffsetPagination>) => resp
+			enabled: !!tenant_uid,
+			select: (resp: CarivaServerResp<PlatformTenantUserItem>) => resp.data
 		};
 	});
 
@@ -18,9 +20,11 @@ export function useFetchTenants(
 		get data() {
 			return query.data;
 		},
+
 		get isLoading() {
 			return query.isLoading;
 		},
+
 		get error() {
 			return query.error;
 		},

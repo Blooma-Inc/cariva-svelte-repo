@@ -51,8 +51,8 @@ class Routes {
 		isProtected: true,
 		roles: [EnumRole.PLATFORM_SUPER_ADMIN]
 	});
-	NEW_TENANT = new Route({
-		path: '/tenants/new',
+	TENANT_DETAILS = new Route({
+		path: '/tenants/:uid',
 		title: 'New Tenants',
 		isProtected: true,
 		roles: [EnumRole.PLATFORM_SUPER_ADMIN]
@@ -94,7 +94,7 @@ class Routes {
 			this.LOGIN,
 			this.DASHBOARD,
 			this.TENANT,
-			this.NEW_TENANT,
+			this.TENANT_DETAILS,
 			this.SYSTEM_SETTINGS,
 			this.AUDIT_LOGS,
 			this.PLATFORM_ANALYTICS,

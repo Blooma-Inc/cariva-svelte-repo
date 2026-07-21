@@ -7,7 +7,9 @@ export enum AppModals {
 	FORGOT_PWD_MODAL = 'FORGOT_PWD_MODAL',
 	SESSION_TIMEOUT_MODAL = 'SESSION_TIMEOUT_MODAL',
 	LOGOUT_MODAL = 'LOGOUT_MODAL',
-	PLANS_FORM_MODAL = 'PLANS_FORM_MODAL'
+	PLANS_FORM_MODAL = 'PLANS_FORM_MODAL',
+	TENANT_FORM_MODAL = 'TENANT_FORM_MODAL',
+	ACTIVATE_TENANT_MODAL = 'ACTIVATE_TENANT_MODAL'
 }
 
 export type TAppModalsAction =
@@ -40,6 +42,21 @@ export type TAppModalsAction =
 			| {
 					open: true;
 					plan_uid: string;
+			  }
+			| { open?: false }
+	  ))
+	| ({ name: AppModals.TENANT_FORM_MODAL } & (
+			| {
+					open: true;
+					tenant_uid: string;
+			  }
+			| { open?: false }
+	  ))
+	| ({ name: AppModals.ACTIVATE_TENANT_MODAL } & (
+			| {
+					open: true;
+					tenant_uid: string;
+					tenant_name: string;
 			  }
 			| { open?: false }
 	  ));

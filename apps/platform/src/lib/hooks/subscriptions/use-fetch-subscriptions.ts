@@ -1,5 +1,5 @@
 import { createQuery } from '@tanstack/svelte-query';
-import { subscription } from './FetchKeyFactory';
+import { subscription } from './fetch-key-factory';
 
 export function useFetchSubscriptions(
 	enabled: boolean = true

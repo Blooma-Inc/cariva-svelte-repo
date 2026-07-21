@@ -16,15 +16,16 @@ export const AUTH = {
 	LOGOUT_ALL: '/auth/logout-all'
 } as const;
 
-export const PLATFORM = {
+export const TENANT = {
+	SUGGEST_CODE: '/tenant/suggest-code',
 	TENANCY_REQUEST: '/platform/tenancy-request',
 	ACTIVATE_TENANT: '/platform/activate-tenant',
 	REJECT_TENANT: '/platform/reject-tenant',
-	TENANTS: '/platform/tenants'
-} as const;
-
-export const TENANT = {
-	SUGGEST_CODE: '/tenant/suggest-code'
+	TENANTS: '/platform/tenants',
+	STATS: '/platform/tenant/:uid/stats',
+	ADMIN: '/platform/tenant/:uid/admin',
+	DETAILS: '/platform/tenant/:uid/details',
+	BRANCHES: '/platform/tenant/:uid/branches'
 };
 
 export const SUBSCRIPTION = {

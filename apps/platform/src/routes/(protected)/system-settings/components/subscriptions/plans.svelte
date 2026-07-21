@@ -3,9 +3,9 @@
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 	import PlusIcon from '@lucide/svelte/icons/plus';
 	import { Card, CardContent, CardHeader, CardTitle } from '@cariva/ui/components/ui/card/index.js';
-	import { useFetchSubscriptions } from '$lib/hooks/subscriptions/useFetchSubscriptions';
+	import { useFetchSubscriptions } from '$lib/hooks/subscriptions/use-fetch-subscriptions';
 	import { stores } from '$lib/store/index.svelte';
-	import { AppModals } from '$lib/store/app/modalTypes';
+	import { AppModals } from '$lib/store/app/modal-types';
 	import PlanItem from './plan-item.svelte';
 
 	const { AppStore } = stores;

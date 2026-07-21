@@ -26,7 +26,7 @@
     <CardDescription class="text-muted-foreground">{errorDescription}</CardDescription>
 
     {#if onRetry}
-      <Button variant="outline" onclick={() => onRetry()} class="gap-2">
+      <Button variant="info" onclick={() => onRetry()}>
         <RefreshCwIcon class="size-3" />
         Retry
       </Button>

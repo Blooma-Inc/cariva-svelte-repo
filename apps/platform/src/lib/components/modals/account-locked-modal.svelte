@@ -1,11 +1,11 @@
 <script lang="ts">
 	import DialogModal from '$lib/atoms/modals/dialogModal.svelte';
-	import { AppModals } from '$lib/store/app/modalTypes';
+	import { AppModals } from '$lib/store/app/modal-types';
 	import { stores } from '$lib/store/index.svelte';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 	import { DialogContent, DialogHeader } from '@cariva/ui/components/ui/dialog/index.js';
 	import { Heading, Paragraph } from '@cariva/ui/components/ui/typography/index.js';
-	import { createCountdown } from '$lib/hooks/app/createCountdown.svelte';
+	import { createCountdown } from '$lib/hooks/app/create-count-down.svelte';
 	const { AppStore } = stores;
 
 	const countdown = createCountdown(AppStore.accountLockedModal.remaining_time_in_seconds);

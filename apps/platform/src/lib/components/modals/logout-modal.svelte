@@ -1,6 +1,6 @@
 <script lang="ts">
 	import DialogModal from '$lib/atoms/modals/dialogModal.svelte';
-	import { AppModals } from '$lib/store/app/modalTypes';
+	import { AppModals } from '$lib/store/app/modal-types';
 	import { stores } from '$lib/store/index.svelte';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 	import {
@@ -24,7 +24,7 @@
 		onInteractOutside={(e) => e.preventDefault()}
 	>
 		<DialogHeader>
-			<Heading level="h1" class="text-red-600!">Logout now</Heading>
+			<Heading level="h2" class="text-red-600!">Logout now</Heading>
 			<Paragraph class="text-neutral-500!">Are you sure you want to logout ?</Paragraph>
 		</DialogHeader>
 
@@ -32,7 +32,7 @@
 			<Button
 				size="lg"
 				variant="destructive"
-				class="w-[48%]"
+				class="w-fit"
 				disabled={AuthStore.loaders.isLogingOut}
 				onclick={() => {
 					AuthStore.logout(handleClose);
@@ -40,11 +40,8 @@
 			>
 				{AuthStore.loaders.isLogingOut ? 'Signing Out' : 'Log out'}
 			</Button>
-			<Button
-				size="lg"
-				class="w-[48%]"
-				disabled={AuthStore.loaders.isLogingOut}
-				onclick={handleClose}>Stay Signed In</Button
+			<Button size="lg" class="w-fit" disabled={AuthStore.loaders.isLogingOut} onclick={handleClose}
+				>Stay Signed In</Button
 			>
 		</DialogFooter>
 	</DialogContent>

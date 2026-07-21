@@ -1,6 +1,6 @@
 import type { RootStore } from '../index.svelte';
 import initializer from '$lib/utils/initializers';
-import { AppModals, type TAppModalsAction } from './modalTypes';
+import { AppModals, type TAppModalsAction } from './modal-types';
 import type { PlanSchemaType } from '$routes/(protected)/system-settings/components/subscriptions/modals/plans-form-modal.svelte';
 import { toast } from '@cariva/ui/components/toast/index.js';
 import { parseError } from '$lib/utils/errorHandler';
@@ -41,6 +41,11 @@ class AppStore {
 
 	plansFormModal = $state({
 		plan_uid: ''
+	});
+
+	tenantModal = $state({
+		tenant_uid: '',
+		tenant_name: ''
 	});
 
 	loadingSubPlanUid: string | null = $state(null);
@@ -92,6 +97,19 @@ class AppStore {
 				if (modal.open) {
 					this.plansFormModal = {
 						plan_uid: modal.plan_uid
+					};
+				}
+				break;
+			case AppModals.TENANT_FORM_MODAL:
+				if (modal.open) {
+					this.tenantModal.tenant_uid = modal.tenant_uid;
+				}
+				break;
+			case AppModals.ACTIVATE_TENANT_MODAL:
+				if (modal.open) {
+					this.tenantModal = {
+						tenant_uid: modal.tenant_uid,
+						tenant_name: modal.tenant_name
 					};
 				}
 				break;

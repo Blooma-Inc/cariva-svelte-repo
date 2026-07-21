@@ -1,4 +1,9 @@
-export type TenantStatuses = 'onboarding' | 'active' | 'suspended' | 'rejected';
+export enum TenantStatusEnum {
+	ONBOARDING = 'onboarding',
+	ACTIVE = 'active',
+	SUSPENDED = 'suspended',
+	REJECTED = 'rejected'
+}
 
 export const tenantStatusBadge = new Map<string, string>([
 	['onboarding', 'bg-info text-white hover:bg-info hover:text-white'],

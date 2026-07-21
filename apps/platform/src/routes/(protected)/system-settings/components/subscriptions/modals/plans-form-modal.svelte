@@ -47,7 +47,7 @@
 
 <script lang="ts">
 	import DialogModal from '$lib/atoms/modals/dialogModal.svelte';
-	import { AppModals } from '$lib/store/app/modalTypes';
+	import { AppModals } from '$lib/store/app/modal-types';
 	import { stores } from '$lib/store/index.svelte';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 	import {
@@ -105,7 +105,6 @@
 			if (AppStore.plansFormModal.plan_uid) {
 				const changedValue = getChangedFields(editablePlan, form.data);
 				const planDetails = JSON.parse(AppStore.plansFormModal.plan_uid) as SubscriptionItem;
-				console.log(changedValue);
 				await AppStore.updateSubPlan(planDetails.uid, changedValue, cbFn);
 				return;
 			}

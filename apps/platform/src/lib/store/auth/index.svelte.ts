@@ -12,7 +12,7 @@ import { parseError } from '$lib/utils/errorHandler';
 import initializer from '$lib/utils/initializers';
 import { toast } from '@cariva/ui/components/toast/index.js';
 import type { TAuthSchema, TLoginSchema } from '../../../routes/auth/validator';
-import { AppModals } from '../app/modalTypes';
+import { AppModals } from '../app/modal-types';
 import type { RootStore } from '../index.svelte';
 
 const INIT_IS_LOADING = {

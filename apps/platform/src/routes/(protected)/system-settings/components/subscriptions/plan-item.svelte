@@ -16,7 +16,7 @@
 	import UsersIcon from '@lucide/svelte/icons/users';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import { SUBSCRIPTION } from '$lib/constants/api';
-	import { AppModals } from '$lib/store/app/modalTypes';
+	import { AppModals } from '$lib/store/app/modal-types';
 
 	let { AppStore } = stores;
 	let { uid, plan, is_active, amount, max_branches, max_users, duration_days }: SubscriptionItem =

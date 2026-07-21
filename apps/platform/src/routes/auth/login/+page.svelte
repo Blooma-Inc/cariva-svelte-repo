@@ -10,7 +10,7 @@
 	import { zod4Client } from 'sveltekit-superforms/adapters';
 	import { LoginSchema } from '../validator.js';
 	import { stores } from '$lib/store/index.svelte.js';
-	import { AppModals } from '$lib/store/app/modalTypes';
+	import { AppModals } from '$lib/store/app/modal-types.js';
 	import ROUTES from '$lib/configs/routes.svelte.js';
 
 	let { data } = $props();

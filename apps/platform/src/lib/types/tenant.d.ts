@@ -20,6 +20,17 @@ interface PlatformSubscriptionHistoryItem extends BaseItem {
 	subscription_plan: PlatformSubscriptionPlanItem;
 }
 
+interface PlatformBranchItem extends BaseItem {
+	name: string;
+	address: string;
+	city: string;
+	state: string;
+	country: string;
+	is_active: boolean;
+	is_main: boolean;
+	timezone: string;
+}
+
 interface PlatformTenantItem extends BaseItem {
 	name: string;
 	code: string;
@@ -30,5 +41,34 @@ interface PlatformTenantItem extends BaseItem {
 	email: string | null;
 	status: string;
 	onboarded_at: string | null;
+	main_branch: PlatformBranchItem;
 	latest_subscription: PlatformSubscriptionHistoryItem;
+}
+
+interface PlatformTenantRoleItem extends BaseItem {
+	code: string;
+	name: string;
+	description: string;
+	scope: string;
+	is_system: boolean;
+}
+
+interface PlatformTenantUserRoleItem extends BaseItem {
+	user_uid: string;
+	role_uid: string;
+	role: PlatformTenantRoleItem;
+}
+
+interface PlatformTenantUserItem extends BaseItem {
+	tenant_uid: string;
+	email: string;
+	first_name: string;
+	last_name: string;
+	middle_name: Optional[string];
+	phone: string;
+	gender: Optional[string];
+	profile_photo_url: Optional[string];
+	is_active: boolean;
+	designation: Optional[string];
+	user_roles: List[PlatformTenantUserRoleItem];
 }

@@ -183,7 +183,7 @@ export const columns: ColumnDef<PlatformTenantItem, unknown>[] = [
 		cell: (info) => {
 			const onboardedAt = info.row.original.onboarded_at;
 			if (onboardedAt) {
-				return textSnippet(formatDate(onboardedAt));
+				return formatDate(onboardedAt);
 			}
 			return renderComponent(Badge, { variant: 'default', children: textSnippet('Pending') });
 		},

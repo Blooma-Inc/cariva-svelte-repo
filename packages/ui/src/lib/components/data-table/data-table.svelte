@@ -115,7 +115,7 @@
   {@render children?.()}
 
   {#if status === 'pending'}
-    <Card class="w-full overflow-hidden border">
+    <Card class="w-full overflow-hidden">
       <Table>
         <DataTableHeader headers={table.getHeaderGroups()} />
         <DataTableLoading columnLength={table.getAllLeafColumns().length} rowLength={limit} />
@@ -134,7 +134,7 @@
         />
       {/if}
     {:else}
-      <Card class="w-full overflow-hidden border">
+      <Card class="w-full overflow-hidden">
         <Table>
           <DataTableHeader headers={table.getHeaderGroups()} />
           <DataTableBody rows={table.getRowModel().rows} />

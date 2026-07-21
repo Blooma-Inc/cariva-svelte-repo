@@ -1,16 +1,14 @@
 <script lang="ts" module>
 	import { z } from 'zod';
-	import { email } from '$lib/validators';
 
-	export const ForgotPwdSchema = z.object({
-		hospital_code: z.string({ error: 'Code is required' }),
-		email
+	export const TFAVerificationSchema = z.object({
+		code: z.string({ error: 'Code is required' })
 	});
 </script>
 
 <script lang="ts">
 	import DialogModal from '$lib/atoms/modals/dialogModal.svelte';
-	import { AppModals } from '$lib/store/app/modalTypes';
+	import { AppModals } from '$lib/store/app/modal-types';
 	import { stores } from '$lib/store/index.svelte';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 	import {
@@ -19,20 +17,20 @@
 		DialogHeader
 	} from '@cariva/ui/components/ui/dialog/index.js';
 	import { Heading, Paragraph } from '@cariva/ui/components/ui/typography/index.js';
+	import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
 	import { InputField } from '@cariva/ui/components/form-inputs/input-field/index.js';
 	import { FormField } from '@cariva/ui/components/ui/form/index.js';
 	import { superForm } from 'sveltekit-superforms';
 	import { zod4Client } from 'sveltekit-superforms/adapters';
-	import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
 
 	const { AppStore } = stores;
 
 	const form = superForm(
-		{ hospital_code: '', email: '' },
+		{ code: '' },
 		{
 			SPA: true,
 			resetForm: false,
-			validators: zod4Client(ForgotPwdSchema),
+			validators: zod4Client(TFAVerificationSchema),
 			onUpdate: async ({ form }) => {
 				console.log(form.data);
 			}
@@ -42,51 +40,43 @@
 	const { form: formData, enhance } = form;
 
 	const handleClose = () => {
-		AppStore.toggleModals({ name: AppModals.FORGOT_PWD_MODAL, open: false });
+		AppStore.toggleModals({ name: AppModals.TFA_VERIFICATION_MODAL, open: false });
 	};
 </script>
 
-<DialogModal isOpen={AppStore.isOpen.FORGOT_PWD_MODAL} closeModal={handleClose}>
+<DialogModal isOpen={AppStore.isOpen.TFA_VERIFICATION_MODAL} closeModal={handleClose}>
 	<DialogContent
 		showCloseButton={false}
 		onEscapeKeydown={(e) => e.preventDefault()}
 		onInteractOutside={(e) => e.preventDefault()}
 	>
 		<DialogHeader>
-			<Heading level="h1">Secure Password Recovery</Heading>
-			<Paragraph class="text-neutral-500!">
-				Enter your hospital code and email address to receive a secure reset link.
-			</Paragraph>
+			<Heading level="h1" class="text-primary!">Additional Verification</Heading>
+			<Paragraph class=" text-neutral-500!"
+				>Open your authenticator app and enter the 6-digit verification code.</Paragraph
+			>
 		</DialogHeader>
 
-		<div class="flex flex-col gap-3 rounded-xl">
-			<form use:enhance class="flex flex-col gap-3">
-				<fieldset class="flex flex-col gap-3">
-					<FormField {form} name="hospital_code">
+		<div class="flex flex-col gap-4 rounded-xl">
+			<form id="login-form" use:enhance>
+				<fieldset>
+					<FormField {form} name="code">
 						<InputField
-							label="Hospital Code"
-							placeholder="Enter Hospital code"
-							bind:value={$formData.hospital_code}
+							label=""
+							placeholder="Enter 6-digit code"
+							bind:value={$formData.code}
 							required
-						/>
-					</FormField>
-
-					<FormField {form} name="email">
-						<InputField
-							label="Work Email Address"
-							placeholder="Enter your work email"
-							bind:value={$formData.email}
-							required
+							description="Code refreshes every 30 seconds"
 						/>
 					</FormField>
 				</fieldset>
-
-				<Button size="lg" type="submit" class="w-fit">Send Reset Link</Button>
 			</form>
+
+			<Button size="lg">Verify now</Button>
 
 			<DialogFooter class="border-t pt-3">
 				<div class="flex w-full justify-start">
-					<Button size="lg" type="button" variant="secondary" onclick={handleClose}>
+					<Button size="lg" variant="secondary" onclick={handleClose}>
 						<ArrowLeftIcon class="size-3" />
 						Back to login
 					</Button>

@@ -1,6 +1,15 @@
 import { email } from '$lib/validators';
 import { SvelteDate } from 'svelte/reactivity';
 import { z } from 'zod';
+import { type Selectables } from '@cariva/ui/components/form-inputs/select-field/index.js';
+
+export const hospitalTypeItem: Selectables = [
+	{ label: 'Hospital', value: 'hospital' },
+	{ label: 'Clinic', value: 'clinic' },
+	{ label: 'Rehabilitation center', value: 'rehabilitation center' },
+	{ label: 'Specialist center', value: 'specialist center' },
+	{ label: 'Mental health', value: 'mental health' }
+];
 
 export const CreateTenantSchema = z.object({
 	name: z.string({ error: 'Tenant name is needed.' }).trim(),

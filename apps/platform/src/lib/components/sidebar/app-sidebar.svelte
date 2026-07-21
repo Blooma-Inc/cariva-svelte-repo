@@ -28,8 +28,7 @@
 	} from '@cariva/ui/components/ui/collapsible/index.js';
 	import NavUser from './nav-user.svelte';
 
-	const isActive = (url: string) =>
-		page.url.pathname === url || page.url.pathname.startsWith(`${url}/`);
+	const isActive = (url: string) => page.url.pathname === url || page.url.pathname.startsWith(url);
 
 	const isSubmenuActive = (submenu: { url: string }[]) =>
 		submenu.some((item) => isActive(item.url));
@@ -39,7 +38,10 @@
 
 		if (!menuItem.isNestable) return menuItem.url === currentPath;
 
-		return currentPath.startsWith(menuItem.url);
+		return (
+			currentPath === menuItem.url ||
+			currentPath.startsWith(menuItem.url.endsWith('/') ? menuItem.url : `${menuItem.url}/`)
+		);
 	};
 
 	const roleMenu = $derived(getMenuForRole(EnumRole.PLATFORM_SUPER_ADMIN));
@@ -92,7 +94,9 @@
 									<SidebarMenuSub>
 										{#each roleItem.submenu as subItem (subItem.title)}
 											<SidebarMenuSubItem>
-												<SidebarMenuSubButton isActive={page.url.pathname === subItem.url}>
+												<SidebarMenuSubButton
+													isActive={isCurrentPath(subItem as MenuItem, page.url.pathname)}
+												>
 													<a href={resolve(subItem.url)}>{subItem.title}</a>
 												</SidebarMenuSubButton>
 											</SidebarMenuSubItem>

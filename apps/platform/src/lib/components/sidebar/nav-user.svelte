@@ -6,7 +6,7 @@
 	import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
 	import LogOutIcon from '@lucide/svelte/icons/log-out';
 	import { stores } from '$lib/store/index.svelte';
-	import { AppModals } from '$lib/store/app/modalTypes';
+	import { AppModals } from '$lib/store/app/modal-types';
 	let { AuthStore, AppStore } = stores;
 	const sidebar = useSidebar();
 </script>

@@ -1,5 +1,5 @@
 import { createQuery } from '@tanstack/svelte-query';
-import { auth } from './FetchKeyFactory';
+import { auth } from './fetch-key-factory';
 
 export function createFetchCurrentUser(enabled = true): QueryHookResponse<UserItem | undefined> {
 	const meta = auth.getCurrentUser();

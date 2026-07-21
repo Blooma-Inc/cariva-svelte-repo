@@ -1,6 +1,6 @@
 <script lang="ts">
 	import DialogModal from '$lib/atoms/modals/dialogModal.svelte';
-	import { AppModals } from '$lib/store/app/modalTypes';
+	import { AppModals } from '$lib/store/app/modal-types';
 	import { stores } from '$lib/store/index.svelte';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 	import { DialogContent, DialogHeader } from '@cariva/ui/components/ui/dialog/index.js';

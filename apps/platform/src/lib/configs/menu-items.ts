@@ -18,7 +18,8 @@ const ALL_MENU_ITEMS: RoleMenuItem[] = [
 		title: ROUTES.TENANT.title,
 		url: ROUTES.TENANT.path,
 		icon: Building2Icon,
-		roles: ROUTES.TENANT.roles
+		roles: ROUTES.TENANT.roles,
+		isNestable: true
 	},
 	{
 		title: ROUTES.SYSTEM_SETTINGS.title,
