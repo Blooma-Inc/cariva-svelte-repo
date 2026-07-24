@@ -3,13 +3,17 @@ export enum AppModals {
 	DYNAMIC = 'DYNAMIC',
 	ACCOUNT_LOCKED_MODAL = 'ACCOUNT_LOCKED_MODAL',
 	DEACTIVATED_ACCOUNT_MODAL = 'DEACTIVATED_ACCOUNT_MODAL',
+	SETUP_TFA_MODAL = 'SETUP_TFA_MODAL',
+	ENABLE_TFA_MODAL = 'ENABLE_TFA_MODAL',
+	TFA_BACKUP_CODES = 'TFA_BACKUP_CODES',
 	TFA_VERIFICATION_MODAL = 'TFA_VERIFICATION_MODAL',
 	FORGOT_PWD_MODAL = 'FORGOT_PWD_MODAL',
 	SESSION_TIMEOUT_MODAL = 'SESSION_TIMEOUT_MODAL',
 	LOGOUT_MODAL = 'LOGOUT_MODAL',
 	PLANS_FORM_MODAL = 'PLANS_FORM_MODAL',
 	TENANT_FORM_MODAL = 'TENANT_FORM_MODAL',
-	ACTIVATE_TENANT_MODAL = 'ACTIVATE_TENANT_MODAL'
+	ACTIVATE_TENANT_MODAL = 'ACTIVATE_TENANT_MODAL',
+	PROFILE_FORM_MODAL = 'PROFILE_FORM_MODAL'
 }
 
 export type TAppModalsAction =
@@ -29,7 +33,9 @@ export type TAppModalsAction =
 				| AppModals.TFA_VERIFICATION_MODAL
 				| AppModals.FORGOT_PWD_MODAL
 				| AppModals.SESSION_TIMEOUT_MODAL
-				| AppModals.LOGOUT_MODAL;
+				| AppModals.LOGOUT_MODAL
+				| AppModals.PROFILE_FORM_MODAL
+				| AppModals.ENABLE_TFA_MODAL;
 	  } & ({ open: true } | { open?: false }))
 	| ({ name: AppModals.ACCOUNT_LOCKED_MODAL } & (
 			| {
@@ -57,6 +63,20 @@ export type TAppModalsAction =
 					open: true;
 					tenant_uid: string;
 					tenant_name: string;
+			  }
+			| { open?: false }
+	  ))
+	| ({ name: AppModals.SETUP_TFA_MODAL } & (
+			| {
+					open: true;
+					qr_code_url: string;
+			  }
+			| { open?: false }
+	  ))
+	| ({ name: AppModals.TFA_BACKUP_CODES } & (
+			| {
+					open: true;
+					codes: string;
 			  }
 			| { open?: false }
 	  ));

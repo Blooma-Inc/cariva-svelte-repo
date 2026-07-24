@@ -4,9 +4,13 @@
 	export const TFAVerificationSchema = z.object({
 		code: z.string({ error: 'Code is required' })
 	});
+
+	export type TFAVerificationSchemaType = z.infer<typeof TFAVerificationSchema>;
 </script>
 
 <script lang="ts">
+	import { resolve } from '$app/paths';
+	import { goto } from '$app/navigation';
 	import DialogModal from '$lib/atoms/modals/dialogModal.svelte';
 	import { AppModals } from '$lib/store/app/modal-types';
 	import { stores } from '$lib/store/index.svelte';
@@ -22,8 +26,9 @@
 	import { FormField } from '@cariva/ui/components/ui/form/index.js';
 	import { superForm } from 'sveltekit-superforms';
 	import { zod4Client } from 'sveltekit-superforms/adapters';
+	import ROUTES from '$lib/configs/routes.svelte';
 
-	const { AppStore } = stores;
+	const { AppStore, AuthStore } = stores;
 
 	const form = superForm(
 		{ code: '' },
@@ -32,7 +37,12 @@
 			resetForm: false,
 			validators: zod4Client(TFAVerificationSchema),
 			onUpdate: async ({ form }) => {
-				console.log(form.data);
+				if (form.valid) {
+					AuthStore.verifyTFATOTP(form.data, () => {
+						goto(resolve(ROUTES.DASHBOARD.path), { replaceState: true });
+					});
+					AppStore.toggleModals({});
+				}
 			}
 		}
 	);
@@ -51,15 +61,15 @@
 		onInteractOutside={(e) => e.preventDefault()}
 	>
 		<DialogHeader>
-			<Heading level="h1" class="text-primary!">Additional Verification</Heading>
+			<Heading level="h2" class="text-primary!">Additional Verification</Heading>
 			<Paragraph class=" text-neutral-500!"
 				>Open your authenticator app and enter the 6-digit verification code.</Paragraph
 			>
 		</DialogHeader>
 
 		<div class="flex flex-col gap-4 rounded-xl">
-			<form id="login-form" use:enhance>
-				<fieldset>
+			<form id="verify-tfa-form" use:enhance>
+				<fieldset disabled={AuthStore.loaders.isLogingIn}>
 					<FormField {form} name="code">
 						<InputField
 							label=""
@@ -72,11 +82,22 @@
 				</fieldset>
 			</form>
 
-			<Button size="lg">Verify now</Button>
+			<Button
+				size="lg"
+				type="submit"
+				form="verify-tfa-form"
+				disabled={AuthStore.loaders.isLogingIn}
+				isLoading={AuthStore.loaders.isLogingIn}>Verify now</Button
+			>
 
 			<DialogFooter class="border-t pt-3">
 				<div class="flex w-full justify-start">
-					<Button size="lg" variant="secondary" onclick={handleClose}>
+					<Button
+						size="lg"
+						variant="secondary"
+						disabled={AuthStore.loaders.isLogingIn}
+						onclick={handleClose}
+					>
 						<ArrowLeftIcon class="size-3" />
 						Back to login
 					</Button>

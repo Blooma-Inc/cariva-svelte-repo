@@ -4,11 +4,6 @@ export const AUTH = {
 	RESET_PWD: '/auth/reset-password',
 	VERIFY_ACCT: '/auth/verify-account',
 	CHANGE_PWD: '/auth/change-password',
-	SETUP_2FA: '/auth/2fa/setup',
-	ENABLE_2FA: '/auth/2fa/enable',
-	DISABLE_2FA: '/auth/2fa/disable',
-	VERIFY_TOTP_2FA: '/auth/2fa/verify/totp',
-	VERIFY_CODE_2FA: '/auth/2fa/verify/code',
 	ACTIVE_SESSION: '/auth/sessions',
 	NEW_ACCESS_TOKEN: '/auth/refresh',
 	CURRENT_USER: '/auth/current-user',
@@ -32,4 +27,17 @@ export const SUBSCRIPTION = {
 	GET: '/subscription',
 	CREATE: '/subscription',
 	UPDATE: '/subscription/:uid'
+};
+
+export const USER = {
+	PROFILE: '/user/profile'
+};
+
+export const TFA = {
+	GET_2FA: '/tfa',
+	SETUP_2FA: '/tfa/setup',
+	ENABLE_2FA: '/tfa/enable',
+	DISABLE_2FA: '/tfa/disable',
+	VERIFY_TOTP_2FA: '/tfa/verify/totp',
+	VERIFY_CODE_2FA: '/tfa/verify/code'
 };

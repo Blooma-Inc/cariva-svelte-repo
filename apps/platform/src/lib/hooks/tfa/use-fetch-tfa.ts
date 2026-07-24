@@ -1,14 +1,14 @@
 import { createQuery } from '@tanstack/svelte-query';
-import { auth } from './fetch-key-factory';
+import { tfa } from './fetch-key-factory';
 
-export function createFetchCurrentUser(enabled = true): QueryHookResponse<UserItem | undefined> {
-	const meta = auth.getCurrentUser();
+export function useFetchTFA(enabled = true): QueryHookResponse<TFASecurityItem | null | undefined> {
+	const meta = tfa.get2FA();
 
 	const query = createQuery(() => ({
 		queryKey: meta.keys(),
 		meta,
-		enabled,
-		select: (resp: CarivaServerResp<UserItem>) => resp.data
+		enabled: enabled,
+		select: (resp: CarivaServerResp<TFASecurityItem | null>) => resp.data
 	}));
 
 	return {

@@ -82,6 +82,12 @@ class Routes {
 		description: 'Users Notification',
 		isProtected: true
 	});
+	PROFILE = new Route({
+		path: '/profile',
+		title: 'Profile',
+		description: 'User Profile',
+		isProtected: true
+	});
 	SETTINGS = new Route({
 		path: '/settings',
 		title: 'Settings',
@@ -98,6 +104,7 @@ class Routes {
 			this.SYSTEM_SETTINGS,
 			this.AUDIT_LOGS,
 			this.PLATFORM_ANALYTICS,
+			this.PROFILE,
 			this.NOTIFICATION,
 			this.SETTINGS
 		];

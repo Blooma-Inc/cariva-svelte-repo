@@ -24,7 +24,7 @@
 		onInteractOutside={(e) => e.preventDefault()}
 	>
 		<DialogHeader>
-			<Heading level="h2" class="text-red-600!">Logout now</Heading>
+			<Heading level="h3">Logout now</Heading>
 			<Paragraph class="text-neutral-500!">Are you sure you want to logout ?</Paragraph>
 		</DialogHeader>
 

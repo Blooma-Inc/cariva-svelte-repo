@@ -46,11 +46,11 @@
         {#snippet child({ props })}
           <Button
             variant="ghost"
-            class="bg-secondary absolute top-4 right-4"
+            class="bg-secondary absolute top-2 right-2"
             size="icon-sm"
             {...props}
           >
-            <XIcon />
+            <XIcon class="size-3" />
             <span class="sr-only">Close</span>
           </Button>
         {/snippet}

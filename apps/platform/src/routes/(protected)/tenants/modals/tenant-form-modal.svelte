@@ -93,7 +93,8 @@
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import { useFetchTenantAdmin } from '$lib/hooks/tenant/use-fetch-tenant-admin.svelte';
 	import { TENANT } from '$lib/constants/api.js';
-	import { isEqual } from 'lodash';
+	import { getChangedFields } from '$lib/utils';
+	import { svelteDateToYearMonthDay } from '$lib/utils/date';
 
 	const { TenantStore, AppStore } = stores;
 	let editableTenant = $state<Partial<TProvisionTenantSchema>>({});
@@ -144,56 +145,12 @@
 		AppStore.toggleModals({});
 	};
 
-	const isPlainObj = (val: unknown): val is Record<string, unknown> =>
-		typeof val === 'object' && val !== null && !Array.isArray(val);
-
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const getChangedFields = <T extends Record<string, any>>(
-		original: Partial<T>,
-		current: T
-	): Partial<T> => {
-		return Object.keys(current).reduce(
-			(acc, key) => {
-				const currentValue = current[key];
-				const originalValue = original?.[key];
-
-				if (isPlainObj(currentValue)) {
-					const nestedChanges = getChangedFields(
-						// eslint-disable-next-line @typescript-eslint/no-explicit-any
-						(originalValue as Record<string, any>) ?? {},
-						currentValue
-					);
-					if (Object.keys(nestedChanges).length > 0) {
-						acc[key] = nestedChanges;
-					}
-				} else if (!isEqual(originalValue, currentValue)) {
-					acc[key] = currentValue;
-				}
-
-				return acc;
-			},
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			{} as Record<string, any>
-		) as Partial<T>;
-	};
-
-	const changedFields = $derived.by(() => {
-		if (!AppStore.tenantModal.tenant_uid) return $formData;
-		return getChangedFields(editableTenant, $formData);
-	});
-
-	const hasChanges = $derived(Object.keys(changedFields).length > 0);
-
-	function transformDate(formData: Partial<TProvisionTenantSchema>) {
+	function sanitizeFormData(formData: Partial<TProvisionTenantSchema>) {
 		const payload = structuredClone(formData);
 		if (payload.tenant?.date_established) {
-			const dateObj = payload.tenant.date_established;
-
-			const year = dateObj.getFullYear();
-			const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-			const day = String(dateObj.getDate()).padStart(2, '0');
-			const cleanPythonDate = `${year}-${month}-${day}`;
-			payload.tenant.date_established = cleanPythonDate as unknown as SvelteDate;
+			payload.tenant.date_established = svelteDateToYearMonthDay(
+				payload.tenant.date_established
+			) as unknown as SvelteDate;
 		}
 
 		return payload as TProvisionTenantSchema;
@@ -208,16 +165,23 @@
 			if (AppStore.tenantModal.tenant_uid) {
 				const changedValue = getChangedFields(editableTenant, form.data);
 				const tenantDetails = JSON.parse(AppStore.tenantModal.tenant_uid) as PlatformTenantItem;
-				const payload = transformDate(changedValue);
+				const payload = sanitizeFormData(changedValue);
 				await TenantStore.editTenantRequest(tenantDetails.uid, payload);
 			} else {
-				const payload = transformDate(form.data);
+				const payload = sanitizeFormData(form.data);
 				await TenantStore.submitTenantRequest(payload, cbFn);
 			}
 		}
 	});
 
 	const { form: formData, enhance, reset } = form;
+
+	const changedFields = $derived.by(() => {
+		if (!AppStore.tenantModal.tenant_uid) return $formData;
+		return getChangedFields<TProvisionTenantSchema>(editableTenant, $formData);
+	});
+
+	const hasChanges = $derived(Object.keys(changedFields).length > 0);
 	const subscriptionPlansQuery = useFetchSubscriptions();
 
 	const hospital_name = $derived($formData.tenant.name);
@@ -314,13 +278,12 @@
 
 <SheetModal isOpen={AppStore.isOpen.TENANT_FORM_MODAL} closeModal={handleClose}>
 	<SheetContent
-		showCloseButton={false}
 		onEscapeKeydown={(e) => e.preventDefault()}
 		onInteractOutside={(e) => e.preventDefault()}
 		class="flex h-svh w-full max-w-xl! flex-col overflow-clip "
 	>
 		<SheetHeader class="border">
-			<Heading level="h2">{isEditMode ? 'Edit' : 'Provision'} Tenant</Heading>
+			<Heading level="h3">{isEditMode ? 'Edit' : 'Provision'} Tenant</Heading>
 		</SheetHeader>
 
 		<section class="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-2">

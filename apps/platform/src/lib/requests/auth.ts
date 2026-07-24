@@ -1,4 +1,6 @@
-import { AUTH } from '$lib/constants/api';
+import type { EnableTFASchemaType } from '$lib/components/modals/enable-tfa-modal.svelte';
+import type { TFAVerificationSchemaType } from '$lib/components/modals/tfa-verification-modal.svelte';
+import { AUTH, TFA } from '$lib/constants/api';
 import type {
 	TAuthSchema,
 	TChangePasswordSchema,
@@ -23,20 +25,21 @@ export const postVerifyAcct = async (payload: { email: string }) =>
 export const postChangePwd = async (payload: TChangePasswordSchema) =>
 	await server.post<CarivaServerResp<boolean>>(AUTH.CHANGE_PWD, payload);
 
-export const getSetup2FA = async () =>
-	await server.get<CarivaServerResp<Enable2FA>>(AUTH.SETUP_2FA);
+export const getSetup2FA = async () => await server.get<CarivaServerResp<Enable2FA>>(TFA.SETUP_2FA);
 
-export const postEnable2FA = async (payload: TTFACodeSchema) =>
-	await server.post<CarivaServerResp<Array<string>>>(AUTH.ENABLE_2FA, payload);
+export const postEnable2FA = async (payload: EnableTFASchemaType) =>
+	await server.post<CarivaServerResp<Array<string>>>(TFA.ENABLE_2FA, payload);
 
 export const postDisable2FA = async (payload: TTFACodeSchema) =>
-	await server.post<CarivaServerResp<boolean>>(AUTH.DISABLE_2FA, payload);
+	await server.post<CarivaServerResp<boolean>>(TFA.DISABLE_2FA, payload);
 
-export const postVerify2FATOTP = async (payload: TTFACodeSchema) =>
-	await server.post<CarivaServerResp<TAuthSchema>>(AUTH.VERIFY_TOTP_2FA, payload);
+export const postVerify2FATOTP = async (payload: TFAVerificationSchemaType, token: string) =>
+	await server.post<CarivaServerResp<TAuthSchema>>(TFA.VERIFY_TOTP_2FA, payload, {
+		headers: { Authorization: `Bearer ${token}` }
+	});
 
 export const postVerify2FACode = async (payload: TTFACodeSchema) =>
-	await server.post<CarivaServerResp<TAuthSchema>>(AUTH.VERIFY_CODE_2FA, payload);
+	await server.post<CarivaServerResp<TAuthSchema>>(TFA.VERIFY_CODE_2FA, payload);
 
 export const postLogout = async () => await server.post<CarivaServerResp<boolean>>(AUTH.LOGOUT);
 

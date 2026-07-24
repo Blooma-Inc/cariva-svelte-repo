@@ -6,7 +6,10 @@ import {
 	postLogout,
 	postLogoutAll,
 	getNewAccessToken,
-	postLogin
+	postLogin,
+	postVerify2FATOTP,
+	getSetup2FA,
+	postEnable2FA
 } from '$lib/requests/auth';
 import { parseError } from '$lib/utils/errorHandler';
 import initializer from '$lib/utils/initializers';
@@ -14,11 +17,17 @@ import { toast } from '@cariva/ui/components/toast/index.js';
 import type { TAuthSchema, TLoginSchema } from '../../../routes/auth/validator';
 import { AppModals } from '../app/modal-types';
 import type { RootStore } from '../index.svelte';
+import type { UserProfileType } from '$routes/(protected)/profile/modals/profile-form-modal.svelte';
+import { patchUpdateUser } from '$lib/requests/user';
+import type { EnableTFASchemaType } from '$lib/components/modals/enable-tfa-modal.svelte';
+import type { TFAVerificationSchemaType } from '$lib/components/modals/tfa-verification-modal.svelte';
 
 const INIT_IS_LOADING = {
 	isLogingIn: false,
 	isLogingOut: false,
-	isRefreshing: false
+	isRefreshing: false,
+	isUpdatingProfile: false,
+	isEnablingTFA: false
 };
 
 class AuthStore {
@@ -36,10 +45,11 @@ class AuthStore {
 
 	async grantAccess(data: CarivaServerResp<TAuthSchema>, cb?: (url?: string) => void) {
 		const result = data.data.result;
-		const _accessToken = data.data.access_token;
+		if (data.data.access_token) {
+			this.accessToken = data.data.access_token;
+		}
 		switch (result) {
 			case 'success': {
-				this.accessToken = _accessToken;
 				const { data: userData } = await getCurrentUser();
 				this.user = userData.data;
 				cb?.();
@@ -150,6 +160,77 @@ class AuthStore {
 			this.accessToken = '';
 			this.user = {};
 			goto(resolve(ROUTES.LOGIN.path));
+		}
+	}
+
+	async updateUser(payload: Partial<UserProfileType>, cb?: () => void) {
+		this.loaders.isUpdatingProfile = true;
+		this.errors.isUpdatingProfile = '';
+		try {
+			const { data } = (await patchUpdateUser(payload)) as { data: CarivaServerResp<boolean> };
+			toast.success(data.message);
+			cb?.();
+		} catch (error) {
+			this.errors.isUpdatingProfile = parseError(error);
+			toast.error(this.errors.isUpdatingProfile);
+		} finally {
+			this.loaders.isUpdatingProfile = false;
+		}
+	}
+
+	async setup2FA() {
+		this.loaders.isEnablingTFA = true;
+		this.errors.isEnablingTFA = '';
+		try {
+			const { data } = (await getSetup2FA()) as { data: CarivaServerResp<Enable2FA> };
+			toast.success(data.message);
+			this.rootStore.AppStore.toggleModals({
+				open: true,
+				name: AppModals.SETUP_TFA_MODAL,
+				qr_code_url: data.data.qr_code_url
+			});
+		} catch (error) {
+			this.errors.isEnablingTFA = parseError(error);
+			toast.error(this.errors.isEnablingTFA);
+		} finally {
+			this.loaders.isEnablingTFA = false;
+		}
+	}
+
+	async enable2FA(payload: EnableTFASchemaType, cb?: () => void) {
+		this.loaders.isEnablingTFA = true;
+		this.errors.isEnablingTFA = '';
+		try {
+			const { data } = (await postEnable2FA(payload)) as { data: CarivaServerResp<Array<string>> };
+			toast.success(data.message);
+			cb?.();
+			this.rootStore.AppStore.toggleModals({
+				open: true,
+				name: AppModals.TFA_BACKUP_CODES,
+				codes: data.data.join(' ')
+			});
+		} catch (error) {
+			this.errors.isEnablingTFA = parseError(error);
+			toast.error(this.errors.isEnablingTFA);
+		} finally {
+			this.loaders.isEnablingTFA = false;
+		}
+	}
+
+	async verifyTFATOTP(payload: TFAVerificationSchemaType, cb?: () => void) {
+		this.loaders.isLogingIn = true;
+		this.errors.isLogingIn = '';
+		try {
+			const { data } = (await postVerify2FATOTP(payload, this.accessToken)) as {
+				data: CarivaServerResp<TAuthSchema>;
+			};
+			toast.success(data.message);
+			await this.grantAccess(data, cb);
+		} catch (error) {
+			this.errors.isLogingIn = parseError(error);
+			toast.error(this.errors.isLogingIn);
+		} finally {
+			this.loaders.isLogingIn = false;
 		}
 	}
 }

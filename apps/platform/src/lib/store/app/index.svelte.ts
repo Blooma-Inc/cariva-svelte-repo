@@ -48,6 +48,11 @@ class AppStore {
 		tenant_name: ''
 	});
 
+	tfaModal = $state({
+		qr_code_url: '',
+		codes: ''
+	});
+
 	loadingSubPlanUid: string | null = $state(null);
 
 	constructor(rootStore: RootStore) {
@@ -111,6 +116,16 @@ class AppStore {
 						tenant_uid: modal.tenant_uid,
 						tenant_name: modal.tenant_name
 					};
+				}
+				break;
+			case AppModals.SETUP_TFA_MODAL:
+				if (modal.open) {
+					this.tfaModal.qr_code_url = modal.qr_code_url;
+				}
+				break;
+			case AppModals.TFA_BACKUP_CODES:
+				if (modal.open) {
+					this.tfaModal.codes = modal.codes;
 				}
 				break;
 			default:

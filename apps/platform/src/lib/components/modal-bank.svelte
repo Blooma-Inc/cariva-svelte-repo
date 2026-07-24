@@ -10,6 +10,10 @@
 			import('$lib/components/modals/account-locked-modal.svelte'),
 		[AppModals.DEACTIVATED_ACCOUNT_MODAL]: () =>
 			import('$lib/components/modals/deactivated-account-modal.svelte'),
+		[AppModals.SETUP_TFA_MODAL]: () => import('$lib/components/modals/setup-tfa-modal.svelte'),
+		[AppModals.ENABLE_TFA_MODAL]: () => import('$lib/components/modals/enable-tfa-modal.svelte'),
+		[AppModals.TFA_BACKUP_CODES]: () =>
+			import('$lib/components/modals/tfa-backup-codes-modal.svelte'),
 		[AppModals.TFA_VERIFICATION_MODAL]: () =>
 			import('$lib/components/modals/tfa-verification-modal.svelte'),
 		[AppModals.FORGOT_PWD_MODAL]: () => import('$lib/components/modals/forgot-pwd-modal.svelte'),
@@ -19,9 +23,11 @@
 		[AppModals.PLANS_FORM_MODAL]: () =>
 			import('$routes/(protected)/system-settings/components/subscriptions/modals/plans-form-modal.svelte'),
 		[AppModals.TENANT_FORM_MODAL]: () =>
-			import('$routes/(protected)/tenants/modals/tenant-form-modal/index.svelte'),
+			import('$routes/(protected)/tenants/modals/tenant-form-modal.svelte'),
 		[AppModals.ACTIVATE_TENANT_MODAL]: () =>
-			import('$routes/(protected)/tenants/modals/activate-tenant-modal.svelte')
+			import('$routes/(protected)/tenants/modals/activate-tenant-modal.svelte'),
+		[AppModals.PROFILE_FORM_MODAL]: () =>
+			import('$routes/(protected)/profile/modals/profile-form-modal.svelte')
 	};
 
 	let { AppStore } = stores;

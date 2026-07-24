@@ -70,7 +70,7 @@ export const columns: ColumnDef<PlatformTenantItem, unknown>[] = [
 		header: 'Type',
 		cell: (info) =>
 			renderComponent(Badge, {
-				class: cn('w-fit justify-between space-x-1 capitalize'),
+				class: cn('w-fit'),
 				children: textSnippet(toTitleCase(info.row.original.hospital_type))
 			}),
 		enableSorting: false,
@@ -167,10 +167,8 @@ export const columns: ColumnDef<PlatformTenantItem, unknown>[] = [
 		header: 'Status',
 		cell: (info) =>
 			renderComponent(Badge, {
-				class: cn(
-					'w-fit justify-between space-x-1 capitalize',
-					tenantStatusBadge.get(info.row.original.status)
-				),
+				class: cn('w-fit'),
+				variant: tenantStatusBadge.get(info.row.original.status) as 'default',
 				children: textSnippet(toTitleCase(info.row.original.status))
 			}),
 		enableSorting: false,
@@ -185,7 +183,7 @@ export const columns: ColumnDef<PlatformTenantItem, unknown>[] = [
 			if (onboardedAt) {
 				return formatDate(onboardedAt);
 			}
-			return renderComponent(Badge, { variant: 'default', children: textSnippet('Pending') });
+			return renderComponent(Badge, { children: textSnippet('Pending') });
 		},
 		enableSorting: false,
 		enableHiding: true

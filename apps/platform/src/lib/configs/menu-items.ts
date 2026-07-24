@@ -6,6 +6,7 @@ import LogsIcon from '@lucide/svelte/icons/logs';
 import SettingsIcon from '@lucide/svelte/icons/settings';
 import { EnumRole } from './roles';
 import ROUTES from './routes.svelte';
+import UserRoundPenIcon from '@lucide/svelte/icons/user-round-pen';
 
 const ALL_MENU_ITEMS: RoleMenuItem[] = [
 	{
@@ -46,6 +47,11 @@ export function getMenuForRole(role: EnumRole): MenuItem[] {
 }
 
 export const menuCommon: MenuItem[] = [
+	{
+		title: ROUTES.PROFILE.title,
+		url: ROUTES.PROFILE.path,
+		icon: UserRoundPenIcon
+	},
 	{
 		title: ROUTES.NOTIFICATION.title,
 		url: ROUTES.NOTIFICATION.path,
