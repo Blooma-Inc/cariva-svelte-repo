@@ -64,18 +64,27 @@
 	</div>
 
 	<div class="flex w-full flex-col gap-2">
-		<div class="flex w-full flex-col justify-between gap-2 md:flex-row md:items-center">
-			<DataTableSearch placeholder="search by name, status e.t.c" />
+		{#if query.status === 'success' && query.data}
+			{#if query.data.data.length}
+				<div class="flex w-full flex-col justify-between gap-2 md:flex-row md:items-center">
+					<DataTableSearch placeholder="search by name, status e.t.c" />
 
-			<Button
-				size="sm"
-				onclick={() =>
-					AppStore.toggleModals({ open: true, name: AppModals.TENANT_FORM_MODAL, tenant_uid: '' })}
-			>
-				<PlusIcon class="size-3" />
-				Provision Tenant
-			</Button>
-		</div>
+					<Button
+						size="sm"
+						onclick={() =>
+							AppStore.toggleModals({
+								open: true,
+								name: AppModals.TENANT_FORM_MODAL,
+								tenant_uid: ''
+							})}
+					>
+						<PlusIcon class="size-3" />
+						Provision Tenant
+					</Button>
+				</div>
+			{/if}
+		{/if}
+
 		<DataTable
 			limit={params.limit}
 			status={query.status}
