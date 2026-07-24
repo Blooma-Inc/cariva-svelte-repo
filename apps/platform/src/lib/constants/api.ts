@@ -1,23 +1,43 @@
 export const AUTH = {
-	LOGIN: '/platform/login',
-	FORGOT_PWD: '/forgot-password',
-	RESET_PWD: '/reset-password',
-	VERIFY_ACCT: '/verify-account',
-	CHANGE_PWD: '/change-password',
-	SETUP_2FA: '/2fa/setup',
-	ENABLE_2FA: '/2fa/enable',
-	DISABLE_2FA: '/2fa/disable',
-	VERIFY_TOTP_2FA: '/2fa/verify/totp',
-	VERIFY_CODE_2FA: '/2fa/verify/code',
-	ACTIVE_SESSION: '/sessions',
-	NEW_ACCESS_TOKEN: '/refresh',
-	CURRENT_USER: '/current-user',
-	LOGOUT: '/logout',
-	LOGOUT_ALL: '/logout'
+	LOGIN: '/auth/platform/login',
+	FORGOT_PWD: '/auth/forgot-password',
+	RESET_PWD: '/auth/reset-password',
+	VERIFY_ACCT: '/auth/verify-account',
+	CHANGE_PWD: '/auth/change-password',
+	ACTIVE_SESSION: '/auth/sessions',
+	NEW_ACCESS_TOKEN: '/auth/refresh',
+	CURRENT_USER: '/auth/current-user',
+	LOGOUT: '/auth/logout',
+	LOGOUT_ALL: '/auth/logout-all'
 } as const;
 
-export const PLATFORM = {
-	TENANCY_REQUEST: '/tenancy-request',
-	ACTIVATE_TENANT: '/activate-tenant',
-	REJECT_TENANT: '/reject-tenant'
-} as const;
+export const TENANT = {
+	SUGGEST_CODE: '/tenant/suggest-code',
+	TENANCY_REQUEST: '/platform/tenancy-request',
+	ACTIVATE_TENANT: '/platform/activate-tenant',
+	REJECT_TENANT: '/platform/reject-tenant',
+	TENANTS: '/platform/tenants',
+	STATS: '/platform/tenant/:uid/stats',
+	ADMIN: '/platform/tenant/:uid/admin',
+	DETAILS: '/platform/tenant/:uid/details',
+	BRANCHES: '/platform/tenant/:uid/branches'
+};
+
+export const SUBSCRIPTION = {
+	GET: '/subscription',
+	CREATE: '/subscription',
+	UPDATE: '/subscription/:uid'
+};
+
+export const USER = {
+	PROFILE: '/user/profile'
+};
+
+export const TFA = {
+	GET_2FA: '/tfa',
+	SETUP_2FA: '/tfa/setup',
+	ENABLE_2FA: '/tfa/enable',
+	DISABLE_2FA: '/tfa/disable',
+	VERIFY_TOTP_2FA: '/tfa/verify/totp',
+	VERIFY_CODE_2FA: '/tfa/verify/code'
+};

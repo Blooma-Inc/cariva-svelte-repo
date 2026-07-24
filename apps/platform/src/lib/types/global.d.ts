@@ -33,8 +33,38 @@ interface IJwtPayloadExt extends jwt.JwtPayload {
 	vendor_id: string;
 }
 
-interface GnLApiError {
+interface OffsetPagination {
+	total: number;
+	page: number;
+	per_page: number;
+	total_pages: number;
+}
+
+interface CarivaServerResp<D, M = null> {
+	data: D;
+	meta: M;
+	message: string;
+	status: string;
+}
+
+interface CarivaApiError {
 	errors: string;
 	message: string;
 	status: number;
+}
+
+interface QueryHookResponse<D> {
+	data: D;
+	isLoading: boolean;
+	error: unknown;
+	status: 'error' | 'success' | 'pending';
+	refetch: (
+		options?: RefetchOptions
+	) => Promise<QueryObserverResult<CarivaServerResp<SubscriptionItem[], null>, Error>>;
+}
+
+interface CarivaBaseQuery {
+	q?: string;
+	limit?: number;
+	offset?: number;
 }

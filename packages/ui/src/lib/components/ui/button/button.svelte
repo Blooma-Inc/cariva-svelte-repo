@@ -1,5 +1,6 @@
 <script lang="ts" module>
   import { cn, type WithElementRef } from '$lib/utils.js';
+  import { LoaderCircleIcon } from '@lucide/svelte';
   import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
   import { type VariantProps, tv } from 'tailwind-variants';
 
@@ -13,7 +14,7 @@
         secondary:
           'bg-secondary text-secondary-foreground hover:bg-secondary/80 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground',
         info: 'bg-info text-info-foreground hover:bg-info/80',
-        warning: 'bg-warning text-warning-foreground hover:bg-warning/80',
+        warning: 'bg-warning text-white hover:bg-warning/80',
         ghost:
           'hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 aria-expanded:bg-muted aria-expanded:text-foreground',
         destructive:
@@ -23,7 +24,7 @@
       size: {
         default:
           'h-9 gap-1.5 px-3 has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5',
-        xs: "h-6 gap-1 px-2.5 text-xs has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 [&_svg:not([class*='size-'])]:size-3",
+        xs: "h-4 rounded font-regular text-xs gap-1 px-2.5 text-xs has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 [&_svg:not([class*='size-'])]:size-3",
         sm: 'h-8 gap-1 px-3 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2',
         lg: 'h-11 gap-1.5 px-6 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3',
         icon: 'size-9',
@@ -45,6 +46,7 @@
     WithElementRef<HTMLAnchorAttributes> & {
       variant?: ButtonVariant;
       size?: ButtonSize;
+      isLoading?: boolean;
     };
 </script>
 
@@ -57,6 +59,7 @@
     href = undefined,
     type = 'button',
     disabled,
+    isLoading,
     children,
     ...restProps
   }: ButtonProps = $props();
@@ -84,6 +87,10 @@
     {disabled}
     {...restProps}
   >
-    {@render children?.()}
+    {#if isLoading}
+      <LoaderCircleIcon class="size-3 animate-spin" />
+    {:else}
+      {@render children?.()}
+    {/if}
   </button>
 {/if}

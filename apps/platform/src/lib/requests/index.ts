@@ -9,24 +9,12 @@ const NO_REDIRECT_ROUTES = [ROUTES.LOGIN.path] as string[];
 
 const resourceReqInterceptor = async (config: InternalAxiosRequestConfig) => {
 	const modifiedConfig = { ...config };
+	const token = stores.AuthStore.accessToken;
 
-	if (typeof window !== 'undefined' && stores?.AuthStore) {
-		const { ttl, token } = stores.AuthStore.isAuthenticated();
-		const treshold = 5 * 60 * 1000;
-		let _token = token;
-
-		if (!_token) {
-			_token = (await stores.AuthStore.getTokenFromCookie()) as unknown as string;
-		}
-
-		if (stores.AuthStore.isLoading.refresh === false && ttl < treshold && ttl > 0) {
-			_token = await stores.AuthStore.fetchNewToken();
-		}
-
-		if (_token && modifiedConfig.headers) {
-			modifiedConfig.headers.Authorization = `Bearer ${_token}`;
-		}
+	if (token && modifiedConfig.headers) {
+		modifiedConfig.headers.Authorization = `Bearer ${token}`;
 	}
+
 	return modifiedConfig;
 };
 
@@ -38,36 +26,28 @@ const resourceResInterceptor = (response: AxiosResponse) => {
 const resourceResErrorInterceptor = async (error: AxiosError) => {
 	if (error.code === AxiosError.ERR_NETWORK) {
 		setOffline(NETWORK_ERR);
-	} else if (
-		!browser &&
+		return Promise.reject(error);
+	}
+
+	if (
+		browser &&
 		!NO_REDIRECT_ROUTES.some((p) => window.location.pathname.includes(p)) &&
-		error.response &&
-		error.config
+		error.response?.status === 401 &&
+		error.config &&
+		!(error.config as InternalAxiosRequestConfig & { _retry?: boolean })._retry
 	) {
 		const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+		originalRequest._retry = true;
 
-		if (error.response.status == 401 && !originalRequest._retry) {
-			originalRequest._retry = true;
-
-			try {
-				const newAccessToken = await stores.AuthStore.fetchNewToken();
-
-				if (newAccessToken) {
-					originalRequest.headers = originalRequest.headers || {};
-					originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-
-					return server(originalRequest);
-				} else {
-					throw new Error('No access token received');
-				}
-			} catch (refreshError) {
-				console.error('Token refresh failed:', refreshError);
-
-				localStorage.setItem('fromPath', window.location.pathname);
-				stores.AuthStore.logout();
-
-				return Promise.reject(refreshError);
-			}
+		try {
+			const newToken = await stores.AuthStore.fetchNewToken();
+			originalRequest.headers = originalRequest.headers || {};
+			originalRequest.headers.Authorization = `Bearer ${newToken}`;
+			return server(originalRequest);
+		} catch (refreshError) {
+			localStorage.setItem('fromPath', window.location.pathname);
+			stores.AuthStore.logout();
+			return Promise.reject(refreshError);
 		}
 	}
 

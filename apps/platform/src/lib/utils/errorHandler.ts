@@ -3,7 +3,7 @@ import logger from './logger';
 import { AxiosError } from 'axios';
 
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const isAxiosError = (error: any): error is AxiosError<Partial<GnLApiError>> => {
+export const isAxiosError = (error: any): error is AxiosError<Partial<CarivaApiError>> => {
 	return error.isAxiosError === true;
 };
 

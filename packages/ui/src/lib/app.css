@@ -279,6 +279,28 @@
     font-family: 'Courier New', monospace;
     letter-spacing: 0.1em;
   }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* WebKit (Chrome, Safari, Edge) */
+  .no-spinner::-webkit-outer-spin-button,
+  .no-spinner::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  .no-spinner {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
 }
 
 @utility auto-grid {
