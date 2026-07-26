@@ -27,7 +27,9 @@
 		CollapsibleTrigger
 	} from '@cariva/ui/components/ui/collapsible/index.js';
 	import NavUser from './nav-user.svelte';
+	import { stores } from '$lib/store/index.svelte';
 
+	const { AuthStore } = stores;
 	const isActive = (url: string) => page.url.pathname === url || page.url.pathname.startsWith(url);
 
 	const isSubmenuActive = (submenu: { url: string }[]) =>
@@ -44,7 +46,7 @@
 		);
 	};
 
-	const roleMenu = $derived(getMenuForRole(EnumRole.PLATFORM_SUPER_ADMIN));
+	const roleMenu = $derived(getMenuForRole(AuthStore.user.roles?.at(0) as EnumRole));
 </script>
 
 <Sidebar collapsible="icon">

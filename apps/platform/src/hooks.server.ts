@@ -33,10 +33,12 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 
 	try {
-		await jwtVerify(token, await getPublicKey(), { algorithms: ['RS256'] });
+		await jwtVerify<TokenModel>(token, await getPublicKey(), {
+			algorithms: ['RS256']
+		});
 		event.locals.hasValidSession = true;
-	} catch {
-		logger.debug('Terminating Page Req', 'ASSERTION_INVALID_OR_EXPIRED', { pathname });
+	} catch (error) {
+		logger.debug('Terminating Page Req', 'ASSERTION_INVALID_OR_EXPIRED', { pathname, error });
 		event.cookies.delete(Mangle.SESSION_ASSERTION_KEY, { path: '/' });
 		throw redirectToLogin(event);
 	}

@@ -2,7 +2,7 @@
 	import { resolve } from '$app/paths';
 	import { goto } from '$app/navigation';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
-	import { Card, CardContent, CardHeader } from '@cariva/ui/components/ui/card/index.js';
+	import { Card, CardContent } from '@cariva/ui/components/ui/card/index.js';
 	import { Heading, Paragraph } from '@cariva/ui/components/ui/typography/index.js';
 	import { InputField } from '@cariva/ui/components/form-inputs/input-field/index.js';
 	import { FormField } from '@cariva/ui/components/ui/form/index.js';
@@ -32,48 +32,59 @@
 	const { form: formData, enhance } = form;
 </script>
 
-<Card class="w-full">
-	<CardHeader>
-		<Heading level="h1">Login</Heading>
+<div class="flex flex-col gap-3">
+	<div>
+		<Heading level="h1">Welcome back</Heading>
 		<Paragraph muted>
-			Sign in to securely access all hospital workspace and management tools.
+			Sign in to securely access to all hospital workspace and management tools.
 		</Paragraph>
-	</CardHeader>
-
-	<CardContent>
-		<form id="login-form" use:enhance class="flex flex-col gap-3">
-			<fieldset class="flex flex-col gap-2">
-				<FormField {form} name="email">
-					<InputField label="Email Address" bind:value={$formData.email} required />
-				</FormField>
-
-				<div class="flex flex-col items-end">
-					<FormField {form} name="password" class="w-full">
-						<InputField label="Password" bind:value={$formData.password} required type="password" />
+	</div>
+	<Card class="w-full">
+		<CardContent>
+			<form id="login-form" use:enhance class="flex flex-col gap-3">
+				<fieldset class="flex flex-col gap-2">
+					<FormField {form} name="email">
+						<InputField
+							label="Email Address"
+							placeholder="admin@blooma.dev"
+							bind:value={$formData.email}
+							required
+						/>
 					</FormField>
 
-					<button
-						class="w-fit text-primary underline"
-						type="button"
-						onclick={() =>
-							AppStore.toggleModals({
-								open: true,
-								name: AppModals.FORGOT_PWD_MODAL
-							})}>Forgot password ?</button
-					>
-				</div>
-			</fieldset>
+					<div class="flex flex-col items-end">
+						<FormField {form} name="password" class="w-full">
+							<InputField
+								label="Password"
+								bind:value={$formData.password}
+								required
+								type="password"
+							/>
+						</FormField>
 
-			<Button
-				type="submit"
-				form="login-form"
-				size="lg"
-				class="w-full"
-				disabled={AuthStore.loaders.isLogingIn}
-				isLoading={AuthStore.loaders.isLogingIn}
-			>
-				Login
-			</Button>
-		</form>
-	</CardContent>
-</Card>
+						<button
+							class="w-fit text-primary underline"
+							type="button"
+							onclick={() =>
+								AppStore.toggleModals({
+									open: true,
+									name: AppModals.FORGOT_PWD_MODAL
+								})}>Forgot password ?</button
+						>
+					</div>
+				</fieldset>
+
+				<Button
+					type="submit"
+					form="login-form"
+					size="lg"
+					class="w-full"
+					disabled={AuthStore.loaders.isLogingIn}
+					isLoading={AuthStore.loaders.isLogingIn}
+				>
+					Login
+				</Button>
+			</form>
+		</CardContent>
+	</Card>
+</div>
