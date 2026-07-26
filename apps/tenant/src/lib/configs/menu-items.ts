@@ -4,6 +4,10 @@ import SettingsIcon from '@lucide/svelte/icons/settings';
 import { EnumRole } from './roles';
 import ROUTES from './routes.svelte';
 import UserRoundPenIcon from '@lucide/svelte/icons/user-round-pen';
+import LogsIcon from '@lucide/svelte/icons/logs';
+import UsersIcon from '@lucide/svelte/icons/users';
+import ShieldUserIcon from '@lucide/svelte/icons/shield-user';
+import HospitalIcon from '@lucide/svelte/icons/hospital';
 
 const ALL_MENU_ITEMS: RoleMenuItem[] = [
 	{
@@ -11,6 +15,30 @@ const ALL_MENU_ITEMS: RoleMenuItem[] = [
 		url: ROUTES.DASHBOARD.path,
 		icon: LayoutDashboardIcon,
 		roles: []
+	},
+	{
+		title: ROUTES.BRANCHES.title,
+		url: ROUTES.BRANCHES.path,
+		icon: HospitalIcon,
+		roles: [EnumRole.TENANT_ADMIN]
+	},
+	{
+		title: ROUTES.STAFF.title,
+		url: ROUTES.STAFF.path,
+		icon: UsersIcon,
+		roles: [EnumRole.TENANT_ADMIN]
+	},
+	{
+		title: ROUTES.PATIENTS.title,
+		url: ROUTES.PATIENTS.path,
+		icon: ShieldUserIcon,
+		roles: [EnumRole.TENANT_ADMIN]
+	},
+	{
+		title: ROUTES.AUDIT_LOGS.title,
+		url: ROUTES.AUDIT_LOGS.path,
+		icon: LogsIcon,
+		roles: ROUTES.AUDIT_LOGS.roles
 	}
 ];
 
