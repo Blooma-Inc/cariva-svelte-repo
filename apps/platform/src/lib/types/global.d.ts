@@ -18,19 +18,21 @@ type TIsAuthenticated = { ttl: number; token?: string; email?: string };
 
 type TResendTokenState = 'idle' | 'resending' | 'sent' | 'failed';
 
-interface IJwtPayloadExt extends jwt.JwtPayload {
-	authorization: boolean;
-	exp: number;
-	userID: number;
+interface AccessTokenUserModel {
+	uid: string;
 	email: string;
-	firstName: string;
-	is_interested: boolean;
-	is_vendor: boolean;
-	lastName: string;
-	pics: string;
-	business_handle: string;
-	user_uuid: string;
-	vendor_id: string;
+	first_name: string;
+	last_name: string;
+	roles: string[];
+	scope: string;
+	is_email_verified: boolean;
+}
+
+interface TokenModel {
+	exp: number;
+	jti: string;
+	refresh: boolean;
+	user: AccessTokenUserModel;
 }
 
 interface OffsetPagination {

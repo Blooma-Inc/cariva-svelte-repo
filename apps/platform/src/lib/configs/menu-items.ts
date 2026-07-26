@@ -43,7 +43,8 @@ const ALL_MENU_ITEMS: RoleMenuItem[] = [
 ];
 
 export function getMenuForRole(role: EnumRole): MenuItem[] {
-	return ALL_MENU_ITEMS.filter((item) => item.roles.includes(role)).map((item) => item);
+	if (role) return ALL_MENU_ITEMS.filter((item) => item.roles.includes(role)).map((item) => item);
+	return [];
 }
 
 export const menuCommon: MenuItem[] = [

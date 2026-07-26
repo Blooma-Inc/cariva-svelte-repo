@@ -1,5 +1,6 @@
 import { resolve } from '$app/paths';
 import { goto } from '$app/navigation';
+import { decodeJwt } from 'jose';
 import ROUTES from '$lib/configs/routes.svelte';
 import {
 	getCurrentUser,
@@ -35,7 +36,7 @@ class AuthStore {
 
 	accessToken = $state<string>('');
 	refreshPromise: Promise<string> | null = $state(null);
-	user = $state<Partial<UserItem>>({});
+	user = $state<Partial<AccessTokenUserModel>>({});
 	loaders = $state({ ...INIT_IS_LOADING });
 	errors = $state(initializer(this.loaders, ''));
 
@@ -51,7 +52,8 @@ class AuthStore {
 		switch (result) {
 			case 'success': {
 				const { data: userData } = await getCurrentUser();
-				this.user = userData.data;
+				const claims = decodeJwt<TokenModel>(this.accessToken);
+				this.user = { ...userData.data, roles: claims.user.roles, scope: claims.user.scope };
 				cb?.();
 				toast.success('Sucessful!');
 				break;
