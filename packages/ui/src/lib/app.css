@@ -304,7 +304,10 @@
 }
 
 @utility auto-grid {
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(var(--auto-grid-min, 220px), var(--auto-grid-max, 1fr))
+  );
   display: grid;
-  gap: calc(var(--spacing) * 3);
+  gap: calc(var(--spacing) * var(--auto-grid-gap, 3));
 }

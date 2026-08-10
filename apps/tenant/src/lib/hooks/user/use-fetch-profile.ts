@@ -1,7 +1,9 @@
 import { createQuery } from '@tanstack/svelte-query';
 import { user } from './fetch-key-factory';
 
-export function useFetchUserProfile(enabled = true) {
+export function useFetchUserProfile(
+	enabled = true
+): QueryHookResponse<UserProfileItem | undefined> {
 	const meta = user.getUserProfile();
 
 	const query = createQuery(() => ({

@@ -28,3 +28,9 @@ export const TFA = {
 	VERIFY_TOTP_2FA: '/tfa/verify/totp',
 	VERIFY_CODE_2FA: '/tfa/verify/code'
 };
+
+export const TENANT = {
+	CURRENT_TENANT: '/tenant',
+	STATS: '/tenant/stats',
+	BRANCHES: '/tenant/branches'
+};

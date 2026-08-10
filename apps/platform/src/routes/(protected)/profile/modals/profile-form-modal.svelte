@@ -28,7 +28,7 @@
 			const { phone, alternative_phone } = data;
 
 			if (alternative_phone) {
-				if (alternative_phone == phone) {
+				if (alternative_phone === phone) {
 					ctx.addIssue({
 						code: 'custom',
 						path: ['alternative_phone'],

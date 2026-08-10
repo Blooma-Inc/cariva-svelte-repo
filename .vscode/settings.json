@@ -1,4 +1,5 @@
 {
+  "biome.enabled": false,
   "editor.quickSuggestions": {
     "other": true,
     "comments": true,
@@ -11,11 +12,15 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
-    "source.fixAll.format": "explicit"
+    "source.fixAll.format": "explicit",
+    "quickfix.biome": "never"
   },
   "editor.rulers": [100],
   "typescript.tsdk": "node_modules/typescript/lib",
   "[typescriptreact]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[svelte]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }
