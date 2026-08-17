@@ -34,3 +34,8 @@ export const TENANT = {
 	STATS: '/tenant/stats',
 	BRANCHES: '/tenant/branches'
 };
+
+export const BRANCH = {
+	NEW: '/branch',
+	SINGLE: '/branch/:uid'
+};

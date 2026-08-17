@@ -21,7 +21,9 @@
 			import('$lib/components/modals/session-timeout-modal.svelte'),
 		[AppModals.LOGOUT_MODAL]: () => import('$lib/components/modals/logout-modal.svelte'),
 		[AppModals.REQUEST_EMAIL_VERIFICATION_MODAL]: () =>
-			import('$lib/components/modals/request-email-verification-modal.svelte')
+			import('$lib/components/modals/request-email-verification-modal.svelte'),
+		[AppModals.BRANCH_FORM_MODAL]: () =>
+			import('$routes/(protected)/branches/modals/branch-form-modal.svelte')
 	};
 
 	let { AppStore } = stores;

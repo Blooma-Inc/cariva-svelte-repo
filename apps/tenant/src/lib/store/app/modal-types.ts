@@ -11,7 +11,8 @@ export enum AppModals {
 	SESSION_TIMEOUT_MODAL = 'SESSION_TIMEOUT_MODAL',
 	LOGOUT_MODAL = 'LOGOUT_MODAL',
 	PROFILE_FORM_MODAL = 'PROFILE_FORM_MODAL',
-	REQUEST_EMAIL_VERIFICATION_MODAL = 'REQUEST_EMAIL_VERIFICATION_MODAL'
+	REQUEST_EMAIL_VERIFICATION_MODAL = 'REQUEST_EMAIL_VERIFICATION_MODAL',
+	BRANCH_FORM_MODAL = 'BRANCH_FORM_MODAL'
 }
 
 export type TAppModalsAction =
@@ -54,6 +55,13 @@ export type TAppModalsAction =
 			| {
 					open: true;
 					codes: string;
+			  }
+			| { open?: false }
+	  ))
+	| ({ name: AppModals.BRANCH_FORM_MODAL } & (
+			| {
+					open: true;
+					branch_uid: string;
 			  }
 			| { open?: false }
 	  ));

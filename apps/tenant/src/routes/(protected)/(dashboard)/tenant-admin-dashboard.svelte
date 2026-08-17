@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import { useFetchTenant } from '$lib/hooks/tenant/use-fetch-Tenant';
 	import { useFetchTenantStats } from '$lib/hooks/tenant/use-fetch-tenant-stats';
 	import { Paragraph, Heading } from '@cariva/ui/components/ui/typography/index.js';
@@ -13,6 +15,7 @@
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 	import TenantBranchCard from './components/tenant-branch-card.svelte';
 	import { ArrowRightIcon } from '@lucide/svelte';
+	import ROUTES from '$lib/configs/routes.svelte';
 
 	const stats: Array<IStatsCardProps> = [
 		{
@@ -79,7 +82,9 @@
 	<div class="flex w-full flex-col gap-2">
 		<div class="flex items-center justify-between">
 			<Heading level="h3">Your branches</Heading>
-			<Button size="xs" variant="outline">View all <ArrowRightIcon /></Button>
+			<Button size="xs" variant="outline" onclick={() => goto(resolve(ROUTES.BRANCHES.path))}
+				>View all <ArrowRightIcon /></Button
+			>
 		</div>
 
 		<div class="auto-grid [--auto-grid-min:300px]">
