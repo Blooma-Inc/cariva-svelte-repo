@@ -1,5 +1,5 @@
 import { TENANT } from '$lib/constants/api';
-import type { TProvisionTenantSchema } from '$routes/(protected)/tenants/modals/tenant-form-modal/validation';
+import type { TProvisionTenantSchema } from '$routes/(protected)/tenants/modals/tenant-form-modal.svelte';
 import server from './index';
 
 export const postTenantRequest = async (payload: TProvisionTenantSchema) =>

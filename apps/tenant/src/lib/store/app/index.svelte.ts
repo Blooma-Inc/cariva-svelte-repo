@@ -39,9 +39,9 @@ class AppStore {
 		plan_uid: ''
 	});
 
-	tenantModal = $state({
-		tenant_uid: '',
-		tenant_name: ''
+	branchModal = $state({
+		branch_uid: '',
+		branch_name: ''
 	});
 
 	tfaModal = $state({
@@ -102,6 +102,11 @@ class AppStore {
 			case AppModals.TFA_BACKUP_CODES:
 				if (modal.open) {
 					this.tfaModal.codes = modal.codes;
+				}
+				break;
+			case AppModals.BRANCH_FORM_MODAL:
+				if (modal.open) {
+					this.branchModal.branch_uid = modal.branch_uid;
 				}
 				break;
 			default:

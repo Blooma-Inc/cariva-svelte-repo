@@ -4,7 +4,7 @@ import ROUTES from '$lib/configs/routes.svelte';
 import { postActivateTenant, postTenantRequest } from '$lib/requests/tenant';
 import { parseError } from '$lib/utils/errorHandler';
 import initializer from '$lib/utils/initializers';
-import type { TProvisionTenantSchema } from '$routes/(protected)/tenants/modals/tenant-form-modal/validation';
+import type { TProvisionTenantSchema } from '$routes/(protected)/tenants/modals/tenant-form-modal.svelte';
 import type { RootStore } from '../index.svelte';
 import { toast } from '@cariva/ui/components/toast/index.js';
 

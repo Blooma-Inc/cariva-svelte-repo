@@ -18,10 +18,13 @@
 
 <header class="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4">
 	<SidebarTrigger class="-ms-1" />
-	<Badge class="text-[10px]">{snakeCaseToSentenceCase(role)}</Badge>
+
 	<div class="flex w-full items-center justify-end">
 		<div class="h-fit">
-			<Button variant="secondary">Switch Role <ChevronRightIcon class="size-3" /></Button>
+			<Button variant="ghost"
+				><Badge class="text-[10px]">{snakeCaseToSentenceCase(role)}</Badge>
+				<ChevronRightIcon class="size-3" /></Button
+			>
 		</div>
 	</div>
 </header>

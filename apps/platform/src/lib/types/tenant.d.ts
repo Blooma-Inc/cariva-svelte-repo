@@ -1,4 +1,4 @@
-interface TenantQuery extends CarivaBaseQuery {
+interface TenantQuery extends CarivaBaseQueryParams {
 	subscription_uid?: string | null;
 	status?: string;
 }
