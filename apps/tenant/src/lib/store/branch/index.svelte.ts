@@ -29,6 +29,7 @@ class BranchStore {
 			cb?.();
 		} catch (error) {
 			this.errors.isBranchLoading = parseError(error);
+			toast.error(this.errors.isBranchLoading);
 		} finally {
 			this.loaders.isBranchLoading = false;
 		}

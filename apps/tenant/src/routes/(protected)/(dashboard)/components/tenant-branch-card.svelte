@@ -45,7 +45,7 @@
 				{:else}
 					<Button>
 						<UserStarIcon class="size-3" />
-						Assign admin
+						Assign branch admin
 					</Button>
 				{/if}
 			</div>

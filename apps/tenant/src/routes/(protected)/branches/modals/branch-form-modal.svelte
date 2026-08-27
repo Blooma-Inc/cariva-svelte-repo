@@ -2,7 +2,7 @@
 	import { z } from 'zod';
 
 	export const CreateBranchSchema = z.object({
-		name: z.string({ error: 'Main branch name is needed.' }).trim().default('Main branch'),
+		name: z.string({ error: 'Main branch name is needed.' }).trim().default(''),
 		address: z.string({ error: 'Office address is needed.' }).trim(),
 		city: z.string({ error: 'city is needed.' }).trim(),
 		state: z.string({ error: 'State is needed.' }).trim(),
@@ -53,7 +53,7 @@
 	const tenantQuery = useFetchTenant();
 
 	const blankTenant = {
-		name: 'Main branch',
+		name: '',
 		address: '',
 		city: '',
 		state: '',
@@ -170,17 +170,25 @@
 				<fieldset disabled={BranchStore.loaders.isBranchLoading} class="grid grid-cols-1 gap-3">
 					<Card class="self-start">
 						<CardHeader>
-							<CardTitle>Hospital Details</CardTitle>
-							<CardDescription>Provide full details of your hospital.</CardDescription>
+							<CardTitle>Branch Details</CardTitle>
+							<CardDescription>Provide full details of your new branch.</CardDescription>
 						</CardHeader>
 
 						<CardContent>
 							<fieldset class="flex flex-col gap-3">
+								<FormField {form} name="name">
+									<InputField
+										label="City"
+										placeholder="Branch name"
+										bind:value={$formData.name}
+										required
+									/>
+								</FormField>
 								<div class="grid grid-cols-1 gap-2 lg:grid-cols-[1fr_1fr_1fr] lg:items-end">
 									<FormField {form} name="city">
 										<InputField
 											label="City"
-											placeholder="Select city"
+											placeholder="Branch city"
 											bind:value={$formData.city}
 											required
 										/>
@@ -188,7 +196,7 @@
 									<FormField {form} name="state">
 										<InputField
 											label="State"
-											placeholder="Select state"
+											placeholder="Branch state"
 											bind:value={$formData.state}
 											required
 										/>
@@ -196,7 +204,7 @@
 									<FormField {form} name="country">
 										<InputField
 											label="Country"
-											placeholder="Select country"
+											placeholder="Branch country"
 											bind:value={$formData.country}
 											required
 										/>
@@ -205,7 +213,7 @@
 
 								<FormField {form} name="address">
 									<TextareaField
-										label="Physical Address (Main branch location)"
+										label="Physical Address (Branch location)"
 										placeholder="123 Medical Avenue, Idi-Araba"
 										bind:value={$formData.address}
 										required
