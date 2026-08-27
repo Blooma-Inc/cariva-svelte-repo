@@ -52,7 +52,7 @@ export const columns: ColumnDef<TenantBranchItem, unknown>[] = [
 			renderComponent(Badge, {
 				class: cn('w-fit'),
 				variant: branchStatusBadge.get(info.row.original.is_main) as 'default',
-				children: textSnippet(info.row.original.is_active ? 'Main' : 'Satellite')
+				children: textSnippet(info.row.original.is_main ? 'Main' : 'Satellite')
 			}),
 		enableSorting: false,
 		enableHiding: false
@@ -96,7 +96,7 @@ export const columns: ColumnDef<TenantBranchItem, unknown>[] = [
 				return renderComponent(Button, {
 					size: 'xs',
 					variant: 'info',
-					children: textSnippet('Assign admin')
+					children: textSnippet('Assign branch admin')
 				});
 			}
 		},
