@@ -10,6 +10,8 @@
 	} from '@cariva/ui/components/ui/card/index.js';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 	import UserStarIcon from '@lucide/svelte/icons/user-star';
+	import UserAvatar from '$lib/components/user-avatar.svelte';
+	import { formatRelativeTime } from '$lib/utils/date';
 	const { name, city, state, country, address, is_active, is_main, admin }: TenantBranchItem =
 		$props();
 </script>
@@ -41,7 +43,18 @@
 
 			<div>
 				{#if admin}
-					<p>{admin.email}</p>
+					<div class="flex flex-col gap-1">
+						<Badge class="text-[10px]">Branch Admin</Badge>
+						<UserAvatar
+							photoUrl={admin.profile_photo_url}
+							firstName={admin.first_name}
+							lastName={admin.last_name}
+							email={admin.email}
+						/>
+						<div>
+							<small>last login: {formatRelativeTime(admin.last_login_at)}</small>
+						</div>
+					</div>
 				{:else}
 					<Button>
 						<UserStarIcon class="size-3" />

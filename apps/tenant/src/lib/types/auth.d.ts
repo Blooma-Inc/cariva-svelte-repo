@@ -3,27 +3,12 @@ type Enable2FA = {
 	qr_code_url: string;
 };
 
-interface BaseItem {
-	uid: string;
-	created_at: string;
-	updated_at: string;
-}
-
 interface SessionItem extends BaseItem {
 	user_uid: string;
 	ip_address: string;
 	user_agent: string;
 	device_finger_print: string;
 	expires_at: string;
-	revoked_at: string;
-}
-
-interface BranchAssignmentItem extends BaseItem {
-	tenant_uid: string;
-	branch_uid: string;
-	user_uid: string;
-	assigned_by: string;
-	assigned_at: string;
 	revoked_at: string;
 }
 

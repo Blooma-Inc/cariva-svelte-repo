@@ -1,15 +1,96 @@
-import { format, parseISO } from 'date-fns';
+import { Temporal } from '@js-temporal/polyfill';
 import type { SvelteDate } from 'svelte/reactivity';
 
-export const formatDate = (iso: string, fmt = 'MMM d, yyyy') => {
+const defaultFormat: Intl.DateTimeFormatOptions = {
+	month: 'short',
+	day: 'numeric',
+	year: 'numeric'
+};
+
+export const formatDate = (
+	iso: string,
+	fmt: Intl.DateTimeFormatOptions = defaultFormat
+): string => {
 	try {
-		return format(parseISO(iso), fmt);
+		const instant = Temporal.Instant.from(iso);
+
+		const timeZone = Temporal.Now.timeZoneId();
+		const zonedDateTime = instant.toZonedDateTimeISO(timeZone);
+
+		return new Intl.DateTimeFormat('en-US', fmt).format(zonedDateTime.epochMilliseconds);
 	} catch {
 		return iso;
 	}
 };
 
-export const formatDateTime = (iso: string) => formatDate(iso, 'MMM d, yyyy · h:mm a');
+export const formatDateTime = (iso: string): string => {
+	try {
+		const instant = Temporal.Instant.from(iso);
+		const zonedDateTime = instant.toZonedDateTimeISO(Temporal.Now.timeZoneId());
+
+		const formatter = new Intl.DateTimeFormat('en-US', {
+			month: 'short',
+			day: 'numeric',
+			year: 'numeric',
+			hour: 'numeric',
+			minute: '2-digit',
+			hour12: true
+		});
+
+		const parts = formatter.formatToParts(zonedDateTime.epochMilliseconds);
+		const dateStr = `${parts.find((p) => p.type === 'month')?.value} ${parts.find((p) => p.type === 'day')?.value}, ${parts.find((p) => p.type === 'year')?.value}`;
+		const timeStr = `${parts.find((p) => p.type === 'hour')?.value}:${parts.find((p) => p.type === 'minute')?.value} ${parts.find((p) => p.type === 'dayPeriod')?.value}`;
+
+		return `${dateStr} · ${timeStr}`;
+	} catch {
+		return iso;
+	}
+};
+
+export function formatRelativeTime(pastIsoString: string): string {
+	try {
+		const timeZone = Temporal.Now.timeZoneId();
+
+		const now = Temporal.Now.zonedDateTimeISO(timeZone);
+		const past = Temporal.Instant.from(pastIsoString).toZonedDateTimeISO(timeZone);
+
+		const diff = now.since(past, {
+			largestUnit: 'days',
+			smallestUnit: 'hours',
+			roundingMode: 'trunc'
+		});
+
+		if (diff.days === 0) {
+			const hours = diff.hours;
+
+			if (hours < 1) {
+				const minDiff = now.since(past, {
+					largestUnit: 'minutes',
+					smallestUnit: 'minutes',
+					roundingMode: 'trunc'
+				});
+				return new Intl.RelativeTimeFormat('en', { numeric: 'auto' }).format(
+					-minDiff.minutes,
+					'minute'
+				);
+			}
+
+			return new Intl.RelativeTimeFormat('en', { numeric: 'auto' }).format(-hours, 'hour');
+		}
+
+		if (diff.days === 1) {
+			return new Intl.RelativeTimeFormat('en', { numeric: 'auto' }).format(-1, 'day');
+		}
+
+		return new Intl.DateTimeFormat('en', {
+			month: 'short',
+			day: 'numeric',
+			year: 'numeric'
+		}).format(past.toInstant().epochMilliseconds);
+	} catch {
+		return pastIsoString ?? 'N/A';
+	}
+}
 
 export const svelteDateToYearMonthDay = (svelteDateInstance: SvelteDate) => {
 	const year = svelteDateInstance.getFullYear();

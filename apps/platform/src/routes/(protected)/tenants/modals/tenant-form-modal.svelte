@@ -21,7 +21,7 @@
 			.date({ error: 'Date Established is needed.' })
 			.transform((args) => new SvelteDate(args)),
 		website_url: z.string({ error: 'Tenant website url is needed.' }).trim(),
-		email: z.string({ error: 'Tenant email is needed.' }).trim()
+		email
 	});
 
 	export const CreateBranchSchema = z.object({
@@ -33,10 +33,10 @@
 	});
 
 	export const CreateTenantAdminSchema = z.object({
-		first_name: z.string({ error: 'Main branch name is needed.' }).trim(),
-		last_name: z.string({ error: 'Office address is needed.' }).trim(),
+		first_name: z.string({ error: 'First name is needed.' }).trim(),
+		last_name: z.string({ error: 'Last name is needed.' }).trim(),
 		middle_name: z.string().trim().optional(),
-		phone: z.string({ error: 'State is needed.' }).trim(),
+		phone: z.string({ error: 'Phone is needed.' }).trim(),
 		email
 	});
 

@@ -1,7 +1,8 @@
-import type { Pathname } from '$app/types';
+import { resolve } from '$app/paths';
+import type { RouteId, RouteParams } from '$app/types';
 
-class Route {
-	path: Pathname;
+class Route<T extends RouteId = RouteId> {
+	path: T;
 	title: string;
 	description: string;
 	roles: Array<string>;
@@ -14,7 +15,7 @@ class Route {
 		roles = [],
 		isProtected
 	}: {
-		path: Pathname;
+		path: T;
 		title: string;
 		description?: string;
 		roles?: Array<string>;
@@ -25,6 +26,11 @@ class Route {
 		this.description = description;
 		this.roles = roles;
 		this.isProtected = isProtected;
+	}
+
+	resolve(...params: RouteParams<T> extends Record<string, never> ? [] : [params: RouteParams<T>]) {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		return (resolve as any)(this.path, ...params);
 	}
 }
 
@@ -37,7 +43,7 @@ class Routes {
 		isProtected: false
 	});
 	RESET_PWD = new Route({
-		path: '/auth/reset-password/',
+		path: '/auth/reset-password/[token]',
 		title: 'Password Reset',
 		description: '',
 		isProtected: false
@@ -56,39 +62,44 @@ class Routes {
 		isProtected: true
 	});
 	BRANCHES = new Route({
-		path: '/branches',
+		path: '/(protected)/branches',
 		title: 'Branches',
 		isProtected: true
 	});
+	SINGLE_BRANCH = new Route({
+		path: '/(protected)/branches/[id]',
+		title: '',
+		isProtected: true
+	});
 	STAFF = new Route({
-		path: '/staff',
+		path: '/(protected)/staff',
 		title: 'Staff',
 		isProtected: true
 	});
 	PATIENTS = new Route({
-		path: '/patients',
+		path: '/(protected)/patients',
 		title: 'Patients',
 		isProtected: true
 	});
 	AUDIT_LOGS = new Route({
-		path: '/audit-logs',
+		path: '/(protected)/audit-logs',
 		title: 'Audit Logs',
 		isProtected: true
 	});
 	NOTIFICATION = new Route({
-		path: '/notifications',
+		path: '/(protected)/notifications',
 		title: 'Notifications',
 		description: 'Users Notification',
 		isProtected: true
 	});
 	PROFILE = new Route({
-		path: '/profile',
+		path: '/(protected)/profile',
 		title: 'Profile',
 		description: 'User Profile',
 		isProtected: true
 	});
 	SETTINGS = new Route({
-		path: '/settings',
+		path: '/(protected)/settings',
 		title: 'Settings',
 		description: 'Users Settings',
 		isProtected: true
@@ -101,6 +112,7 @@ class Routes {
 			this.VERIFY,
 			this.DASHBOARD,
 			this.BRANCHES,
+			this.SINGLE_BRANCH,
 			this.STAFF,
 			this.PATIENTS,
 			this.AUDIT_LOGS,

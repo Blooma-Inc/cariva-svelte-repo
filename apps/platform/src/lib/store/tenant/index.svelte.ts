@@ -1,5 +1,4 @@
 import { goto } from '$app/navigation';
-import { resolve } from '$app/paths';
 import ROUTES from '$lib/configs/routes.svelte';
 import { postActivateTenant, postTenantRequest } from '$lib/requests/tenant';
 import { parseError } from '$lib/utils/errorHandler';
@@ -31,7 +30,7 @@ class TenantStore {
 			} = await postTenantRequest(payload);
 
 			toast.success(message);
-			goto(resolve(ROUTES.TENANT.path), { replaceState: true });
+			goto(ROUTES.TENANT.resolve(), { replaceState: true });
 			cb?.();
 		} catch (error) {
 			toast.error(parseError(error));
@@ -54,7 +53,7 @@ class TenantStore {
 			// } = await postTenantRequest(payload);
 
 			// toast.success(message);
-			goto(resolve(ROUTES.TENANT.path), { replaceState: true });
+			goto(ROUTES.TENANT.resolve(), { replaceState: true });
 			cb?.();
 		} catch (error) {
 			toast.error(parseError(error));

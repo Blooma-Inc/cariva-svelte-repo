@@ -5,6 +5,7 @@
 </script>
 
 <script lang="ts">
+	import EyeIcon from '@lucide/svelte/icons/eye';
 	import PencilIcon from '@lucide/svelte/icons/pencil';
 	import BanIcon from '@lucide/svelte/icons/ban';
 	import ScrollTextIcon from '@lucide/svelte/icons/scroll-text';
@@ -13,6 +14,8 @@
 	import * as DropdownMenu from '@cariva/ui/components/ui/dropdown-menu/index.js';
 	import { stores } from '$lib/store/index.svelte';
 	import { AppModals } from '$lib/store/app/modal-types';
+	import { goto } from '$app/navigation';
+	import ROUTES from '$lib/configs/routes.svelte';
 
 	let { branch }: BranchActionsProps = $props();
 	let { AppStore } = stores;
@@ -33,6 +36,15 @@
 	<DropdownMenu.Content align="end" class="w-fit">
 		<DropdownMenu.Item
 			onclick={() => {
+				goto(ROUTES.SINGLE_BRANCH.resolve({ id: branch.uid }));
+			}}
+		>
+			<EyeIcon class="size-3" />
+			View branch
+		</DropdownMenu.Item>
+
+		<DropdownMenu.Item
+			onclick={() => {
 				AppStore.toggleModals({
 					open: true,
 					name: AppModals.BRANCH_FORM_MODAL,
@@ -43,26 +55,6 @@
 			<PencilIcon class="size-3" />
 			Edit branch
 		</DropdownMenu.Item>
-		<!-- <DropdownMenu.Item
-				onclick={() => {
-					AppStore.toggleModals({
-						open: true,
-						name: AppModals.ACTIVATE_TENANT_MODAL,
-						tenant_uid: tenant.uid,
-						tenant_name: tenant.name
-					});
-				}}
-			>
-				<ShieldCheckIcon class="size-3" />
-				Activate tenant
-			</DropdownMenu.Item> -->
-
-		<!-- <DropdownMenu.Item
-			onclick={() => goto(resolve(ROUTES.TENANT_DETAILS.path.replace(':uid', tenant.uid)))}
-		>
-			<EyeIcon class="size-3" />
-			View tenant
-		</DropdownMenu.Item> -->
 
 		<DropdownMenu.Item>
 			<ScrollTextIcon class="size-3" />

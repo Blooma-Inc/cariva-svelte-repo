@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { resolve } from '$app/paths';
 	import { goto } from '$app/navigation';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 	import { Card, CardContent } from '@cariva/ui/components/ui/card/index.js';
@@ -24,7 +23,7 @@
 		onUpdated: async ({ form }) => {
 			if (!form.valid) return;
 			await AuthStore.login(form.data, () =>
-				goto(resolve(ROUTES.DASHBOARD.path), { replaceState: true })
+				goto(ROUTES.DASHBOARD.resolve(), { replaceState: true })
 			);
 		}
 	});

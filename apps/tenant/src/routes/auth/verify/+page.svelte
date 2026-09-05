@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { resolve } from '$app/paths';
 	import ROUTES from '$lib/configs/routes.svelte';
 	import { stores } from '$lib/store/index.svelte';
 	import { Heading, Paragraph } from '@cariva/ui/components/ui/typography/index.js';
@@ -13,7 +12,7 @@
 	let isSuccess = $state<boolean>();
 
 	async function handleVerification() {
-		const cbFn = () => setTimeout(() => goto(resolve(ROUTES.DASHBOARD.path)), 2000);
+		const cbFn = () => setTimeout(() => goto(ROUTES.DASHBOARD.resolve()), 2000);
 		isSuccess = await AuthStore.verifyEmail(data.token, cbFn);
 	}
 

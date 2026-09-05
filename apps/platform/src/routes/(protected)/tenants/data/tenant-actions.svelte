@@ -6,7 +6,6 @@
 
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { resolve } from '$app/paths';
 	import EyeIcon from '@lucide/svelte/icons/eye';
 	import PencilIcon from '@lucide/svelte/icons/pencil';
 	import BanIcon from '@lucide/svelte/icons/ban';
@@ -72,9 +71,7 @@
 				Reject tenant
 			</DropdownMenu.Item>
 		{:else}
-			<DropdownMenu.Item
-				onclick={() => goto(resolve(ROUTES.TENANT_DETAILS.path.replace(':uid', tenant.uid)))}
-			>
+			<DropdownMenu.Item onclick={() => goto(ROUTES.TENANT_DETAILS.resolve({ id: tenant.uid }))}>
 				<EyeIcon class="size-3" />
 				View tenant
 			</DropdownMenu.Item>

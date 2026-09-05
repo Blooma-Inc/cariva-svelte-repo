@@ -1,8 +1,9 @@
-import type { Pathname } from '$app/types';
+import { resolve } from '$app/paths';
+import type { RouteId, RouteParams } from '$app/types';
 import { EnumRole } from './roles';
 
-class Route {
-	path: Pathname;
+class Route<T extends RouteId = RouteId> {
+	path: T;
 	title: string;
 	description: string;
 	roles: Array<string>;
@@ -15,7 +16,7 @@ class Route {
 		roles = [],
 		isProtected
 	}: {
-		path: Pathname;
+		path: T;
 		title: string;
 		description?: string;
 		roles?: Array<string>;
@@ -26,6 +27,11 @@ class Route {
 		this.description = description;
 		this.roles = roles;
 		this.isProtected = isProtected;
+	}
+
+	resolve(...params: RouteParams<T> extends Record<string, never> ? [] : [params: RouteParams<T>]) {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		return (resolve as any)(this.path, ...params);
 	}
 }
 
@@ -46,50 +52,50 @@ class Routes {
 		roles: [EnumRole.PLATFORM_SUPER_ADMIN]
 	});
 	TENANT = new Route({
-		path: '/tenants',
+		path: '/(protected)/tenants',
 		title: 'Tenants',
 		isProtected: true,
 		roles: [EnumRole.PLATFORM_SUPER_ADMIN]
 	});
 	TENANT_DETAILS = new Route({
-		path: '/tenants/:uid',
+		path: '/(protected)/tenants/[id]',
 		title: 'New Tenants',
 		isProtected: true,
 		roles: [EnumRole.PLATFORM_SUPER_ADMIN]
 	});
 	SYSTEM_SETTINGS = new Route({
-		path: '/system-settings',
+		path: '/(protected)/system-settings',
 		title: 'System settings',
 		isProtected: true,
 		roles: [EnumRole.PLATFORM_SUPER_ADMIN]
 	});
 	AUDIT_LOGS = new Route({
-		path: '/audit-logs',
+		path: '/(protected)/audit-logs',
 		title: 'Audit Logs',
 		isProtected: true,
 		roles: [EnumRole.PLATFORM_SUPER_ADMIN]
 	});
 	PLATFORM_ANALYTICS = new Route({
-		path: '/analytics',
+		path: '/(protected)/analytics',
 		title: 'Platform Analytics',
 		isProtected: true,
 		roles: [EnumRole.PLATFORM_SUPER_ADMIN]
 	});
 
 	NOTIFICATION = new Route({
-		path: '/notifications',
+		path: '/(protected)/notifications',
 		title: 'Notifications',
 		description: 'Users Notification',
 		isProtected: true
 	});
 	PROFILE = new Route({
-		path: '/profile',
+		path: '/(protected)/profile',
 		title: 'Profile',
 		description: 'User Profile',
 		isProtected: true
 	});
 	SETTINGS = new Route({
-		path: '/settings',
+		path: '/(protected)/settings',
 		title: 'Settings',
 		description: 'Users Settings',
 		isProtected: true

@@ -42,3 +42,8 @@ export const getChangedFields = <T extends Record<string, any>>(
 		{} as Record<string, any>
 	) as Partial<T>;
 };
+
+export function sanitizeFormData<T>(formData: Partial<T>) {
+	const payload = structuredClone(formData);
+	return payload as T;
+}

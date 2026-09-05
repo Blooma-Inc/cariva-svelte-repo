@@ -49,6 +49,10 @@ class AppStore {
 		codes: ''
 	});
 
+	userModal = $state({
+		user_uid: ''
+	});
+
 	loadingSubPlanUid: string | null = $state(null);
 
 	constructor(rootStore: RootStore) {
@@ -107,6 +111,11 @@ class AppStore {
 			case AppModals.BRANCH_FORM_MODAL:
 				if (modal.open) {
 					this.branchModal.branch_uid = modal.branch_uid;
+				}
+				break;
+			case AppModals.STAFF_FORM_MODAL:
+				if (modal.open) {
+					this.userModal.user_uid = modal.user_uid;
 				}
 				break;
 			default:

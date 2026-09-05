@@ -32,10 +32,21 @@ export const TFA = {
 export const TENANT = {
 	CURRENT_TENANT: '/tenant',
 	STATS: '/tenant/stats',
-	BRANCHES: '/tenant/branches'
+	BRANCHES: '/tenant/branches',
+	USERS: '/tenant/users'
 };
 
 export const BRANCH = {
 	NEW: '/branch',
 	SINGLE: '/branch/:uid'
+};
+
+export const STAFF = {
+	ALL: '/staff',
+	ADD: '/staff/add',
+	SINGLE: '/staff/:uid'
+};
+
+export const ROLES = {
+	ALL: '/role'
 };

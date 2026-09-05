@@ -60,6 +60,12 @@ interface QueryHookResponse<D> {
 	) => Promise<QueryObserverResult<CarivaServerResp<SubscriptionItem[], null>, Error>>;
 }
 
+interface BaseItem {
+	uid: string;
+	created_at: string;
+	updated_at: string;
+}
+
 interface CarivaBaseQueryParams {
 	q?: string;
 	limit?: number;

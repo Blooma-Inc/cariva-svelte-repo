@@ -1,4 +1,3 @@
-import { resolve } from '$app/paths';
 import { goto } from '$app/navigation';
 import { decodeJwt } from 'jose';
 import ROUTES from '$lib/configs/routes.svelte';
@@ -25,6 +24,8 @@ import type { EnableTFASchemaType } from '$lib/components/modals/enable-tfa-moda
 import type { TFAVerificationSchemaType } from '$lib/components/modals/tfa-verification-modal.svelte';
 import store from 'store2';
 import { Mangle } from '$lib/constants/mangle';
+import type { UserProfileType } from '$routes/(protected)/profile/modals/profile-form-modal.svelte';
+import { patchUpdateUser } from '$lib/requests/user';
 
 const INIT_IS_LOADING = {
 	isLogingIn: false,
@@ -110,8 +111,7 @@ class AuthStore {
 				});
 				break;
 			case 'requires_password_reset':
-				// eslint-disable-next-line svelte/no-navigation-without-resolve
-				goto(ROUTES.RESET_PWD.path.concat(this.accessToken));
+				goto(ROUTES.RESET_PWD.resolve({ token: this.accessToken }));
 				break;
 			default:
 				toast.info('Unknown error.');
@@ -161,7 +161,7 @@ class AuthStore {
 			this.user = data.data;
 			this.decodeToken(access_token);
 		} catch {
-			goto(resolve(ROUTES.LOGIN.path), { replaceState: true });
+			goto(ROUTES.LOGIN.resolve(), { replaceState: true });
 		}
 	}
 
@@ -170,26 +170,41 @@ class AuthStore {
 			await postLogout();
 			this.rootStore.AppStore.toggleModals({});
 			cb?.();
-			goto(resolve(ROUTES.LOGIN.path), { replaceState: true });
+			goto(ROUTES.LOGIN.resolve(), { replaceState: true });
 		} catch (error) {
 			this.errors.isLogingOut = parseError(error);
 		} finally {
 			this.accessToken = '';
 			this.user = {};
-			goto(resolve(ROUTES.LOGIN.path));
+			goto(ROUTES.LOGIN.resolve());
 		}
 	}
 
 	async logoutAll() {
 		try {
 			await postLogoutAll();
-			goto(resolve(ROUTES.LOGIN.path), { replaceState: true });
+			goto(ROUTES.LOGIN.resolve(), { replaceState: true });
 		} catch (error) {
 			this.errors.isLogingOut = parseError(error);
 		} finally {
 			this.accessToken = '';
 			this.user = {};
-			goto(resolve(ROUTES.LOGIN.path));
+			goto(ROUTES.LOGIN.resolve());
+		}
+	}
+
+	async updateUser(payload: Partial<UserProfileType>, cb?: () => void) {
+		this.loaders.isUpdatingProfile = true;
+		this.errors.isUpdatingProfile = '';
+		try {
+			const { data } = (await patchUpdateUser(payload)) as { data: CarivaServerResp<boolean> };
+			toast.success(data.message);
+			cb?.();
+		} catch (error) {
+			this.errors.isUpdatingProfile = parseError(error);
+			toast.error(this.errors.isUpdatingProfile);
+		} finally {
+			this.loaders.isUpdatingProfile = false;
 		}
 	}
 

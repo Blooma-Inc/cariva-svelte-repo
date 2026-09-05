@@ -67,7 +67,7 @@
 		{#if query.status === 'success' && query.data}
 			{#if query.data.data.length}
 				<div class="flex w-full flex-col justify-between gap-2 md:flex-row md:items-center">
-					<DataTableSearch placeholder="search by name, status e.t.c" />
+					<DataTableSearch class="w-full! max-w-sm" placeholder="search by name, status e.t.c" />
 
 					<Button
 						size="sm"

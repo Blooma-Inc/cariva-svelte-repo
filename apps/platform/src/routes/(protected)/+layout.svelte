@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { resolve } from '$app/paths';
 	import { goto } from '$app/navigation';
 	import AppSidebar from '$lib/components/sidebar/app-sidebar.svelte';
 	import Header from '$lib/components/sidebar/header.svelte';
@@ -18,7 +17,7 @@
 			try {
 				await stores.AuthStore.bootstrap();
 			} catch {
-				goto(resolve(ROUTES.LOGIN.path));
+				goto(ROUTES.LOGIN.resolve());
 				return;
 			}
 		}

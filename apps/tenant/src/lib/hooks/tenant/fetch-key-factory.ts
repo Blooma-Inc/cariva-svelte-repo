@@ -11,14 +11,22 @@ export const tenant = {
 	getCurrentTenant() {
 		return {
 			path: TENANT.CURRENT_TENANT,
-			keys: () => [TENANT.CURRENT_TENANT] as const
+			keys: () => [TENANT.STATS, TENANT.CURRENT_TENANT] as const
 		};
 	},
 
 	getTenantBranches(params: CarivaBaseQueryParams) {
 		return {
 			path: TENANT.BRANCHES,
-			keys: () => [TENANT.BRANCHES] as const,
+			keys: () => [TENANT.STATS, TENANT.BRANCHES] as const,
+			params
+		};
+	},
+
+	getTenantUsers(params: StaffQueryParams) {
+		return {
+			path: TENANT.BRANCHES,
+			keys: () => [TENANT.STATS, TENANT.BRANCHES] as const,
 			params
 		};
 	}

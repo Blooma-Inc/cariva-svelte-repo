@@ -9,7 +9,6 @@
 	import { ResetPasswordSchema } from '../../validator';
 	import { stores } from '$lib/store/index.svelte';
 	import { goto } from '$app/navigation';
-	import { resolve } from '$app/paths';
 	import ROUTES from '$lib/configs/routes.svelte';
 
 	const { data } = $props();
@@ -25,7 +24,7 @@
 			onUpdated: async ({ form }) => {
 				if (form.valid) {
 					AuthStore.resetPwd(form.data, () => {
-						goto(resolve(ROUTES.LOGIN.path));
+						goto(ROUTES.LOGIN.resolve());
 					});
 				}
 			}

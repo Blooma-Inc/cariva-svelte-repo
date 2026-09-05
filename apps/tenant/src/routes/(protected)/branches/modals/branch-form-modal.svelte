@@ -2,7 +2,7 @@
 	import { z } from 'zod';
 
 	export const CreateBranchSchema = z.object({
-		name: z.string({ error: 'Main branch name is needed.' }).trim().default(''),
+		name: z.string({ error: 'Main branch name is needed.' }).trim(),
 		address: z.string({ error: 'Office address is needed.' }).trim(),
 		city: z.string({ error: 'city is needed.' }).trim(),
 		state: z.string({ error: 'State is needed.' }).trim(),
@@ -42,7 +42,7 @@
 	import { Heading } from '@cariva/ui/components/ui/typography/index.js';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import { TENANT } from '$lib/constants/api.js';
-	import { getChangedFields } from '$lib/utils';
+	import { getChangedFields, sanitizeFormData } from '$lib/utils';
 	import { useFetchTenant } from '$lib/hooks/tenant/use-fetch-Tenant';
 
 	const { BranchStore, AppStore } = stores;
@@ -66,11 +66,6 @@
 		});
 		AppStore.toggleModals({});
 	};
-
-	function sanitizeFormData(formData: Partial<TCreateBranchSchema>) {
-		const payload = structuredClone(formData);
-		return payload as TCreateBranchSchema;
-	}
 
 	const form = superForm<TCreateBranchSchema>(blankTenant, {
 		SPA: true,
@@ -132,7 +127,7 @@
 	<SheetContent
 		onEscapeKeydown={(e) => e.preventDefault()}
 		onInteractOutside={(e) => e.preventDefault()}
-		class="flex h-svh w-full max-w-xl! flex-col overflow-clip "
+		class="flex h-svh w-full! max-w-xl! flex-col overflow-clip "
 	>
 		<SheetHeader class="border">
 			<Heading level="h3">{isEditMode ? 'Edit' : 'Provision'} Branch</Heading>

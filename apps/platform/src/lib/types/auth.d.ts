@@ -38,5 +38,4 @@ interface UserItem extends BaseItem {
 	designation: string;
 	is_email_verified: boolean;
 	last_login_at: string;
-	// branch_assignments: Array<BranchAssignmentItem>;
 }

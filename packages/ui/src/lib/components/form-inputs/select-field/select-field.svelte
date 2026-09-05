@@ -44,7 +44,7 @@
           <SelectTrigger>
             {triggerContent}
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent class="max-h-60">
             {#each selectables as selectables (selectables.value)}
               <SelectItem value={selectables.value} label={selectables.label}>
                 {selectables.label}

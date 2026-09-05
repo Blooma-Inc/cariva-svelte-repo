@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { resolve } from '$app/paths';
 	import { useFetchTenant } from '$lib/hooks/tenant/use-fetch-Tenant';
 	import { useFetchTenantStats } from '$lib/hooks/tenant/use-fetch-tenant-stats';
 	import { Paragraph, Heading } from '@cariva/ui/components/ui/typography/index.js';
@@ -14,8 +13,10 @@
 	import { useFetchTenantBranches } from '$lib/hooks/tenant/use-fetch-branches';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 	import TenantBranchCard from './components/tenant-branch-card.svelte';
-	import { ArrowRightIcon } from '@lucide/svelte';
+	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
+	import PlusIcon from '@lucide/svelte/icons/plus';
 	import ROUTES from '$lib/configs/routes.svelte';
+	import { AppModals } from '$lib/store/app/modal-types';
 
 	const stats: Array<IStatsCardProps> = [
 		{
@@ -41,7 +42,7 @@
 		}
 	];
 
-	let { AuthStore } = stores;
+	let { AuthStore, AppStore } = stores;
 
 	const params = $state({
 		limit: 10,
@@ -82,7 +83,7 @@
 	<div class="flex w-full flex-col gap-2">
 		<div class="flex items-center justify-between">
 			<Heading level="h3">Your branches</Heading>
-			<Button size="xs" variant="outline" onclick={() => goto(resolve(ROUTES.BRANCHES.path))}
+			<Button size="xs" variant="outline" onclick={() => goto(ROUTES.BRANCHES.resolve())}
 				>View all <ArrowRightIcon /></Button
 			>
 		</div>
@@ -101,6 +102,32 @@
 					<div>This tenant has no branch.</div>
 				{/if}
 			{/if}
+		</div>
+	</div>
+
+	<div class="flex w-full flex-col gap-2">
+		<div class="flex items-center justify-between">
+			<Heading level="h3">Quick Actions</Heading>
+		</div>
+
+		<div class="flex flex-wrap items-center justify-start gap-2">
+			<Button
+				onclick={() => {
+					AppStore.toggleModals({ open: true, name: AppModals.BRANCH_FORM_MODAL, branch_uid: '' });
+				}}
+			>
+				<PlusIcon class="size-3" /> Add New Branch
+			</Button>
+			<Button
+				variant="info"
+				onclick={() => {
+					AppStore.toggleModals({ open: true, name: AppModals.STAFF_FORM_MODAL, user_uid: '' });
+				}}
+			>
+				<PlusIcon class="size-3" /> Add New Staff
+			</Button>
+			<Button variant="outline" onclick={() => {}}>View Patients</Button>
+			<Button variant="outline" onclick={() => {}}>View Audit Logs</Button>
 		</div>
 	</div>
 </section>

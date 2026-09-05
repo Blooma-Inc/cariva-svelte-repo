@@ -23,7 +23,11 @@
 		[AppModals.REQUEST_EMAIL_VERIFICATION_MODAL]: () =>
 			import('$lib/components/modals/request-email-verification-modal.svelte'),
 		[AppModals.BRANCH_FORM_MODAL]: () =>
-			import('$routes/(protected)/branches/modals/branch-form-modal.svelte')
+			import('$routes/(protected)/branches/modals/branch-form-modal.svelte'),
+		[AppModals.STAFF_FORM_MODAL]: () =>
+			import('$routes/(protected)/staff/modals/staff-form-modal.svelte'),
+		[AppModals.PROFILE_FORM_MODAL]: () =>
+			import('$routes/(protected)/profile/modals/profile-form-modal.svelte')
 	};
 
 	let { AppStore } = stores;

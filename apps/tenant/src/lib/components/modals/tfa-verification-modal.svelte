@@ -9,7 +9,6 @@
 </script>
 
 <script lang="ts">
-	import { resolve } from '$app/paths';
 	import { goto } from '$app/navigation';
 	import DialogModal from '$lib/atoms/parent-modals/dialogModal.svelte';
 	import { AppModals } from '$lib/store/app/modal-types';
@@ -39,7 +38,7 @@
 			onUpdate: async ({ form }) => {
 				if (form.valid) {
 					AuthStore.verifyTFATOTP(form.data, () => {
-						goto(resolve(ROUTES.DASHBOARD.path), { replaceState: true });
+						goto(ROUTES.DASHBOARD.resolve(), { replaceState: true });
 					});
 					AppStore.toggleModals({});
 				}

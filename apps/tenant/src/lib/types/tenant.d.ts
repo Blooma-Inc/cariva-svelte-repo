@@ -16,17 +16,6 @@ interface CurrentTenant extends BaseItem {
 	onboarded_at: string | null;
 }
 
-interface BranchItem extends BaseItem {
-	name: string;
-	address: string;
-	city: string;
-	state: string;
-	country: string;
-	is_active: boolean;
-	is_main: boolean;
-	timezone: string;
-}
-
 interface TenantBranchItem extends BranchItem {
 	user_count: number;
 	admin: UserItem | null;

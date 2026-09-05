@@ -1,4 +1,3 @@
-import { resolve } from '$app/paths';
 import { goto } from '$app/navigation';
 import { decodeJwt } from 'jose';
 import ROUTES from '$lib/configs/routes.svelte';
@@ -133,7 +132,7 @@ class AuthStore {
 			const { data } = await getCurrentUser();
 			this.user = data.data;
 		} catch {
-			goto(resolve(ROUTES.LOGIN.path), { replaceState: true });
+			goto(ROUTES.LOGIN.resolve(), { replaceState: true });
 		}
 	}
 
@@ -142,26 +141,26 @@ class AuthStore {
 			await postLogout();
 			this.rootStore.AppStore.toggleModals({});
 			cb?.();
-			goto(resolve(ROUTES.LOGIN.path), { replaceState: true });
+			goto(ROUTES.LOGIN.resolve(), { replaceState: true });
 		} catch (error) {
 			this.errors.isLogingOut = parseError(error);
 		} finally {
 			this.accessToken = '';
 			this.user = {};
-			goto(resolve(ROUTES.LOGIN.path));
+			goto(ROUTES.LOGIN.resolve());
 		}
 	}
 
 	async logoutAll() {
 		try {
 			await postLogoutAll();
-			goto(resolve(ROUTES.LOGIN.path), { replaceState: true });
+			goto(ROUTES.LOGIN.resolve(), { replaceState: true });
 		} catch (error) {
 			this.errors.isLogingOut = parseError(error);
 		} finally {
 			this.accessToken = '';
 			this.user = {};
-			goto(resolve(ROUTES.LOGIN.path));
+			goto(ROUTES.LOGIN.resolve());
 		}
 	}
 

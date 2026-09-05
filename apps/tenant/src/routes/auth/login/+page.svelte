@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { resolve } from '$app/paths';
 	import { goto } from '$app/navigation';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 	import { Card, CardContent } from '@cariva/ui/components/ui/card/index.js';
@@ -16,15 +15,16 @@
 	let { data } = $props();
 	let { AuthStore, AppStore } = stores;
 
-	// svelte-ignore state_referenced_locally
-	const form = superForm(data.form, {
+	let dataForm = () => data.form;
+
+	const form = superForm(dataForm(), {
 		SPA: true,
 		resetForm: false,
 		validators: zod4Client(LoginSchema),
 		onUpdated: async ({ form }) => {
 			if (!form.valid) return;
 			await AuthStore.login(form.data, () =>
-				goto(resolve(ROUTES.DASHBOARD.path), { replaceState: true })
+				goto(ROUTES.DASHBOARD.resolve(), { replaceState: true })
 			);
 		}
 	});

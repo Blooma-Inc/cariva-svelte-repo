@@ -3,13 +3,13 @@ import { branch } from './fetch-key-factory';
 
 export function useFetchBranchByUid(
 	branch_uid: string
-): QueryHookResponse<TenantBranchItem | undefined> {
+): QueryHookResponse<BranchDetailedItem | undefined> {
 	const meta = branch.getBranchByUid(branch_uid);
 
 	const query = createQuery(() => ({
 		queryKey: meta.keys(),
 		meta,
-		select: (resp: CarivaServerResp<TenantBranchItem>) => resp.data
+		select: (resp: CarivaServerResp<BranchDetailedItem>) => resp.data
 	}));
 
 	return {
