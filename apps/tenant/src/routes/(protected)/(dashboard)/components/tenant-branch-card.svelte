@@ -23,7 +23,7 @@
 				<div class="flex items-start justify-start gap-2 pb-3">
 					<Avatar.Root class="size-16 rounded-lg">
 						<Avatar.Image src="" alt="branch logo" />
-						<Avatar.Fallback class="rounded-lg">{getInitials(name)}</Avatar.Fallback>
+						<Avatar.Fallback class="rounded-lg text-2xl">{getInitials(name)}</Avatar.Fallback>
 					</Avatar.Root>
 
 					<div>

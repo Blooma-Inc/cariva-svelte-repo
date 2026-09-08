@@ -1,3 +1,15 @@
+interface BranchOperatingHoursDay {
+	week_day: number;
+	is_enabled: boolean;
+	open_time: string | null;
+	close_time: string | null;
+}
+
+interface BranchOperatingHours {
+	days: BranchOperatingHoursDay[];
+	is_emergency_services: boolean;
+}
+
 interface BranchItem extends BaseItem {
 	name: string;
 	address: string;
@@ -12,5 +24,10 @@ interface BranchItem extends BaseItem {
 interface BranchDetailedItem extends BranchItem {
 	email: string | null;
 	phone: string | null;
-	operating_hours: string | null;
+	operating_hours: BranchOperatingHours;
+}
+
+interface BranchItemWithAdmin {
+	branch: BranchDetailedItem;
+	admin: UserItem | null;
 }

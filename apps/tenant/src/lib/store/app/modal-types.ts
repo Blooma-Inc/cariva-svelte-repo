@@ -13,7 +13,8 @@ export enum AppModals {
 	PROFILE_FORM_MODAL = 'PROFILE_FORM_MODAL',
 	REQUEST_EMAIL_VERIFICATION_MODAL = 'REQUEST_EMAIL_VERIFICATION_MODAL',
 	BRANCH_FORM_MODAL = 'BRANCH_FORM_MODAL',
-	STAFF_FORM_MODAL = 'STAFF_FORM_MODAL'
+	STAFF_FORM_MODAL = 'STAFF_FORM_MODAL',
+	BRANCH_OPERATING_HOURS_FROM = 'BRANCH_OPERATING_HOURS_FROM'
 }
 
 export type TAppModalsAction =
@@ -70,6 +71,14 @@ export type TAppModalsAction =
 			| {
 					open: true;
 					user_uid: string;
+			  }
+			| { open?: false }
+	  ))
+	| ({ name: AppModals.BRANCH_OPERATING_HOURS_FROM } & (
+			| {
+					open: true;
+					branch_uid: string;
+					working_hours: string;
 			  }
 			| { open?: false }
 	  ));

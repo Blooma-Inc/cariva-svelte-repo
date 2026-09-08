@@ -3,7 +3,7 @@
 	import { page } from '$app/state';
 	import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
 	import { Badge } from '@cariva/ui/components/ui/badge/index.js';
-	import { Heading } from '@cariva/ui/components/ui/typography/index.js';
+	import { Heading, Paragraph } from '@cariva/ui/components/ui/typography/index.js';
 	import { Tabs, TabsList, TabsContent, TabsTrigger } from '@cariva/ui/components/ui/tabs/index.js';
 	import Overview from './components/overview.svelte';
 	import Staff from './components/staff.svelte';
@@ -11,6 +11,7 @@
 	import Settings from './components/settings.svelte';
 	import { useFetchBranchByUid } from '$lib/hooks/branch/use-fetch-branch-by-uid.js';
 	import { useScrollActiveTab } from '$lib/hooks/app/use-scroll-into-view.svelte.js';
+	import { useFetchTenant } from '$lib/hooks/tenant/use-fetch-Tenant.js';
 
 	let { data } = $props();
 	const branch_uid = () => data.branch_uid;
@@ -38,6 +39,7 @@
 		goto(url, { replaceState: true, keepFocus: true, noScroll: true });
 	}
 
+	const tenantQuery = useFetchTenant();
 	const branchQuery = useFetchBranchByUid(branch_uid());
 </script>
 
@@ -50,9 +52,12 @@
 		<div class="flex flex-col">
 			<button class="flex w-fit items-center justify-start gap-2" onclick={() => history.back()}>
 				<ArrowLeftIcon />
-				<Heading>{branchQuery.data.name}</Heading>
-				<Badge>{branchQuery.data.is_active ? 'Active' : 'Inactive'}</Badge>
+				<Heading level="h3">{branchQuery.data.branch.name}</Heading>
+				<Badge>{branchQuery.data.branch.is_active ? 'Active' : 'Inactive'}</Badge>
 			</button>
+			{#if tenantQuery.status === 'success' && tenantQuery.data}
+				<Paragraph>{tenantQuery.data.name}</Paragraph>
+			{/if}
 		</div>
 
 		<Tabs value={tabValue} onValueChange={handleTabChange} class="flex w-full flex-col space-y-4">
@@ -65,7 +70,7 @@
 			</TabsList>
 
 			<TabsContent value="overview">
-				<Overview branch={branchQuery.data} />
+				<Overview branch={branchQuery.data.branch} admin={branchQuery.data.admin} />
 			</TabsContent>
 			<TabsContent value="wards_and_beds">
 				<WardsAndBeds />

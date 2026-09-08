@@ -87,8 +87,7 @@
 ───────────────────────────────────────────────────────────── */
 :root {
   /* Brand */
-  /* #006F62 → oklch */
-  --primary: oklch(0.432 0.095 171.6);
+  --primary: oklch(48.6% 0.088 181);
   --primary-foreground: oklch(0.98 0.005 171.6);
 
   /* Neutrals */
@@ -113,22 +112,22 @@
   --ring: oklch(0.432 0.095 171.6 / 40%);
 
   /* #FF3333 → oklch */
-  --destructive: oklch(0.575 0.223 25.2);
+  --destructive: oklch(64.9% 0.237 27);
 
   /* #00C247 → oklch */
-  --success: oklch(0.72 0.192 145.6);
+  --success: oklch(70.9% 0.211 147);
   --success-foreground: oklch(0.98 0.01 145.6);
 
   /* #ED8B00 → oklch */
-  --warning: oklch(0.72 0.165 57.4);
+  --warning: oklch(72.6% 0.165 63.1);
   --warning-foreground: oklch(0.15 0.02 57.4);
 
   /* #307FF6 → oklch */
-  --info: oklch(0.6 0.185 258.3);
+  --info: oklch(61.4% 0.194 258.9);
   --info-foreground: oklch(0.98 0.01 258.3);
 
   /* #00A3E0 → oklch */
-  --info-secondary: oklch(0.665 0.142 223.8);
+  --info-secondary: oklch(67.5% 0.142 234.3);
   --info-secondary-foreground: oklch(0.98 0.01 223.8);
 
   /* Charts — kept from your brand palette */

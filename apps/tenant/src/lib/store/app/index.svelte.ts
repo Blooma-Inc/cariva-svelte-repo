@@ -41,7 +41,8 @@ class AppStore {
 
 	branchModal = $state({
 		branch_uid: '',
-		branch_name: ''
+		branch_name: '',
+		working_hours: ''
 	});
 
 	tfaModal = $state({
@@ -111,6 +112,12 @@ class AppStore {
 			case AppModals.BRANCH_FORM_MODAL:
 				if (modal.open) {
 					this.branchModal.branch_uid = modal.branch_uid;
+				}
+				break;
+			case AppModals.BRANCH_OPERATING_HOURS_FROM:
+				if (modal.open) {
+					this.branchModal.branch_uid = modal.branch_uid;
+					this.branchModal.working_hours = modal.working_hours;
 				}
 				break;
 			case AppModals.STAFF_FORM_MODAL:
