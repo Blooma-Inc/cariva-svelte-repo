@@ -28,8 +28,9 @@
 	} from '@cariva/ui/components/ui/collapsible/index.js';
 	import NavUser from './nav-user.svelte';
 	import { stores } from '$lib/store/index.svelte';
+	import { useFetchTenant } from '$lib/hooks/tenant/use-fetch-Tenant';
 
-	const { AuthStore } = stores;
+	const { AuthStore, AppStore } = stores;
 	const isActive = (url: string) => page.url.pathname === url || page.url.pathname.startsWith(url);
 
 	const isSubmenuActive = (submenu: { url: string }[]) =>
@@ -48,6 +49,14 @@
 	const roleMenu = $derived(
 		getMenuForRole(AuthStore.user.roles?.at(AuthStore.active_role) as EnumRole)
 	);
+
+	const tenantQuery = useFetchTenant();
+
+	$effect(() => {
+		if (tenantQuery.status === 'success' && tenantQuery.data) {
+			AppStore.currentTenant = tenantQuery.data;
+		}
+	});
 </script>
 
 <Sidebar collapsible="icon">

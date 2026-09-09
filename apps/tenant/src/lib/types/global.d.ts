@@ -68,6 +68,6 @@ interface BaseItem {
 
 interface CarivaBaseQueryParams {
 	q?: string;
-	limit?: number;
-	offset?: number;
+	limit: number;
+	offset: number;
 }

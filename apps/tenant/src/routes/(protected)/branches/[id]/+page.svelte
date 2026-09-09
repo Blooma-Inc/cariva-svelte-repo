@@ -70,16 +70,24 @@
 			</TabsList>
 
 			<TabsContent value="overview">
-				<Overview branch={branchQuery.data.branch} admin={branchQuery.data.admin} />
+				{#if tabValue === 'overview'}
+					<Overview branch={branchQuery.data.branch} admin={branchQuery.data.admin} />
+				{/if}
 			</TabsContent>
 			<TabsContent value="wards_and_beds">
-				<WardsAndBeds />
+				{#if tabValue === 'wards_and_beds'}
+					<WardsAndBeds />
+				{/if}
 			</TabsContent>
 			<TabsContent value="staff">
-				<Staff />
+				{#if tabValue === 'staff'}
+					<Staff branchUid={branch_uid()} branchName={branchQuery.data.branch.name} />
+				{/if}
 			</TabsContent>
 			<TabsContent value="settings">
-				<Settings />
+				{#if tabValue === 'settings'}
+					<Settings />
+				{/if}
 			</TabsContent>
 		</Tabs>
 	{/if}

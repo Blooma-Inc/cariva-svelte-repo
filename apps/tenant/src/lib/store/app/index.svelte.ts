@@ -11,6 +11,7 @@ const INIT_IS_LOADING = {
 class AppStore {
 	rootStore: RootStore;
 
+	currentTenant: Partial<CurrentTenant> = $state({});
 	nonce = 0;
 	resendingTokenState: TResendTokenState = $state('idle');
 	isLoading = $state({ ...INIT_IS_LOADING });

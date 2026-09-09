@@ -7,10 +7,7 @@ const defaultFormat: Intl.DateTimeFormatOptions = {
 	year: 'numeric'
 };
 
-export const formatDate = (
-	iso: string,
-	fmt: Intl.DateTimeFormatOptions = defaultFormat
-): string => {
+export const formatDate = (iso: string, fmt: Intl.DateTimeFormatOptions = defaultFormat) => {
 	try {
 		const instant = Temporal.Instant.from(iso);
 
@@ -23,7 +20,7 @@ export const formatDate = (
 	}
 };
 
-export const formatDateTime = (iso: string): string => {
+export const formatDateTime = (iso: string) => {
 	try {
 		const instant = Temporal.Instant.from(iso);
 		const zonedDateTime = instant.toZonedDateTimeISO(Temporal.Now.timeZoneId());
@@ -47,7 +44,7 @@ export const formatDateTime = (iso: string): string => {
 	}
 };
 
-export function formatRelativeTime(pastIsoString: string): string {
+export function formatRelativeTime(pastIsoString: string) {
 	try {
 		const timeZone = Temporal.Now.timeZoneId();
 
@@ -90,6 +87,12 @@ export function formatRelativeTime(pastIsoString: string): string {
 	} catch {
 		return pastIsoString ?? 'N/A';
 	}
+}
+
+export function formatTime(timeStr: string) {
+	const time = Temporal.PlainTime.from(timeStr);
+
+	return time.toLocaleString('en-US', { timeStyle: 'short', hour12: true });
 }
 
 export const svelteDateToYearMonthDay = (svelteDateInstance: SvelteDate) => {

@@ -43,7 +43,7 @@
 
 	export const branchWorkingHoursSchema = z.object({
 		days: z.array(branchOperatingDay),
-		is_emergency_services: z.boolean().default(false)
+		is_emergency_services: z.boolean()
 	});
 
 	export type TBranchWorkingHours = z.infer<typeof branchWorkingHoursSchema>;
@@ -56,17 +56,22 @@
 	import { CheckField } from '@cariva/ui/components/form-inputs/check-field/index.js';
 	import { AppModals } from '$lib/store/app/modal-types';
 	import { stores } from '$lib/store/index.svelte';
-	import { DialogContent, DialogHeader } from '@cariva/ui/components/ui/dialog/index.js';
+	import {
+		DialogContent,
+		DialogFooter,
+		DialogHeader
+	} from '@cariva/ui/components/ui/dialog/index.js';
 	import { Heading } from '@cariva/ui/components/ui/typography/index.js';
-	// import { useQueryClient } from '@tanstack/svelte-query';
-	// import { TENANT } from '$lib/constants/api';
+	import { useQueryClient } from '@tanstack/svelte-query';
+	import { TENANT } from '$lib/constants/api';
 	import { superForm } from 'sveltekit-superforms';
 	import { zod4Client } from 'sveltekit-superforms/adapters';
 	import { getChangedFields, sanitizeFormData } from '$lib/utils';
+	import { Button } from '@cariva/ui/components/ui/button/index.js';
 
 	const { AppStore, BranchStore } = stores;
 	let editableWorkingHours = $state<Partial<TBranchWorkingHours>>({});
-	// const queryClient = useQueryClient();
+	const queryClient = useQueryClient();
 
 	const blankWorkingHours: TBranchWorkingHours = {
 		days: DEFAULT_WEEK_DAYS.map(({ value }) => ({
@@ -78,12 +83,12 @@
 		is_emergency_services: false
 	};
 
-	// const cbFn = () => {
-	// 	queryClient.invalidateQueries({
-	// 		predicate: (query) => query.queryKey[0] === TENANT.BRANCHES
-	// 	});
-	// 	AppStore.toggleModals({});
-	// };
+	const cbFn = () => {
+		queryClient.invalidateQueries({
+			predicate: (query) => query.queryKey[0] === TENANT.STATS
+		});
+		AppStore.toggleModals({});
+	};
 
 	const form = superForm<TBranchWorkingHours>(blankWorkingHours, {
 		SPA: true,
@@ -91,14 +96,13 @@
 		resetForm: false,
 		validators: zod4Client(branchWorkingHoursSchema),
 		onUpdated: async ({ form }) => {
+			console.log(form.data);
 			if (AppStore.branchModal.branch_uid) {
-				// const changedValue = getChangedFields(editableWorkingHours, form.data);
-				// const branchDetails = JSON.parse(AppStore.branchModal.branch_uid) as TenantBranchItem;
-				// const payload = sanitizeFormData(changedValue);
-				// await BranchStore.editBranch(branchDetails.uid, payload);
-			} else {
-				const payload = sanitizeFormData(form.data);
-				// await BranchStore.createBranch(payload, cbFn);
+				await BranchStore.editBranch(
+					AppStore.branchModal.branch_uid,
+					{ operating_hours: form.data },
+					cbFn
+				);
 			}
 		}
 	});
@@ -109,11 +113,11 @@
 		if (!AppStore.branchModal.branch_uid) return $formData;
 		return getChangedFields<TBranchWorkingHours>(editableWorkingHours, $formData);
 	});
-	// const hasChanges = $derived(Object.keys(changedFields).length > 0);
-	// const isLoading = $derived(BranchStore.loaders.isBranchLoading);
+	const hasChanges = $derived(Object.keys(changedFields).length > 0);
+	const isLoading = $derived(BranchStore.loaders.isBranchLoading);
 
 	const handleClose = () => {
-		AppStore.toggleModals({ name: AppModals.BRANCH_FORM_MODAL, open: false });
+		AppStore.toggleModals({ name: AppModals.BRANCH_OPERATING_HOURS_FROM, open: false });
 	};
 
 	$effect(() => {
@@ -139,53 +143,86 @@
 
 <DialogModal isOpen={AppStore.isOpen.BRANCH_OPERATING_HOURS_FROM} closeModal={handleClose}>
 	<DialogContent
-		showCloseButton={false}
 		onEscapeKeydown={(e) => e.preventDefault()}
 		onInteractOutside={(e) => e.preventDefault()}
-		class="max-w-2xl!"
+		class="flex max-h-[85vh] max-w-full! flex-col overflow-clip md:max-w-fit! "
 	>
 		<DialogHeader>
 			<Heading level="h2">Working Hours</Heading>
 		</DialogHeader>
 
 		<section class="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-2">
-			<form id="tenant-form" use:enhance class="flex w-full flex-col gap-4">
+			<form id="branch-operating-hours-form" use:enhance class="flex w-full flex-col gap-4">
 				<fieldset disabled={BranchStore.loaders.isBranchLoading} class="grid grid-cols-1 gap-3">
 					{#each $formData.days as day, index (index)}
-						<div class="grid grid-cols-[1fr_1fr_1fr_auto] items-center gap-3">
+						<div class="flex w-full flex-col justify-between md:flex-row md:items-center md:gap-3">
 							<div class="text-sm font-medium">
 								{DEFAULT_WEEK_DAYS.find((item) => item.value === day.week_day)?.label}
 							</div>
 
-							<FormField {form} name={`days[${index}].open_time`}>
-								<InputField
-									type="time"
-									label=""
-									disabled={!day.is_enabled}
-									class="[&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-								/>
-							</FormField>
+							<div class="grid grid-cols-[1fr_1fr_auto] items-center gap-3">
+								<FormField {form} name={`days[${index}].is_enabled`}>
+									<CheckField
+										label={$formData.days[index].is_enabled ? 'Enabled' : 'Closed'}
+										bind:checked={$formData.days[index].is_enabled}
+									/>
+								</FormField>
 
-							<FormField {form} name={`days[${index}].close_time`}>
-								<InputField
-									type="time"
-									label=""
-									disabled={!day.is_enabled}
-									class="[&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-								/>
-							</FormField>
+								<FormField {form} name={`days[${index}].open_time`}>
+									<InputField
+										type="time"
+										label=""
+										disabled={!$formData.days[index].is_enabled}
+										class="[&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+										bind:value={$formData.days[index].open_time}
+									/>
+								</FormField>
 
-							<FormField {form} name={`days[${index}].is_enabled`}>
-								<CheckField label="" />
-							</FormField>
+								<FormField {form} name={`days[${index}].close_time`}>
+									<InputField
+										type="time"
+										label=""
+										disabled={!$formData.days[index].is_enabled}
+										class="[&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+										bind:value={$formData.days[index].close_time}
+									/>
+								</FormField>
+							</div>
 						</div>
 					{/each}
 
-					<FormField {form} name="is_emergency_services">
-						<CheckField label="Emergency Services" />
-					</FormField>
+					<div class="flex items-center justify-between gap-3">
+						<div class="text-sm font-medium">Emergency</div>
+
+						<FormField {form} name="is_emergency_services">
+							<CheckField label="Available 24/7" bind:checked={$formData.is_emergency_services} />
+						</FormField>
+					</div>
 				</fieldset>
 			</form>
 		</section>
+
+		<DialogFooter class="border-t p-2">
+			<Button
+				size="lg"
+				type="button"
+				class="md:w-fit"
+				variant="secondary"
+				disabled={isLoading}
+				onclick={handleClose}
+			>
+				Cancel
+			</Button>
+			<Button
+				size="lg"
+				type="submit"
+				form="branch-operating-hours-form"
+				class="md:w-fit"
+				disabled={isLoading || !hasChanges}
+				{isLoading}
+			>
+				Save
+			</Button>
+		</DialogFooter>
 	</DialogContent>
 </DialogModal>

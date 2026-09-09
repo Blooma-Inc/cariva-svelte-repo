@@ -35,7 +35,7 @@ class BranchStore {
 		}
 	}
 
-	async editBranch(branch_uid: string, payload: Partial<TCreateBranchSchema>, cb?: () => void) {
+	async editBranch(branch_uid: string, payload: Partial<BranchDetailedItem>, cb?: () => void) {
 		this.loaders.isBranchLoading = false;
 		this.errors.isBranchLoading = '';
 		try {

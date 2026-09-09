@@ -44,7 +44,8 @@ export const BRANCH = {
 export const STAFF = {
 	ALL: '/staff',
 	ADD: '/staff/add',
-	SINGLE: '/staff/:uid'
+	SINGLE: '/staff/:uid',
+	IN_BRANCH: '/staff/branch/:branch_uid'
 };
 
 export const ROLES = {

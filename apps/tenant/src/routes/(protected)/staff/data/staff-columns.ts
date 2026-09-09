@@ -40,12 +40,14 @@ export const columns: ColumnDef<StaffItem, unknown>[] = [
 		accessorKey: 'first_name',
 		header: 'Staff Member',
 		cell: (info) => {
+			const uid = info.row.original.uid;
 			const photoUrl = info.row.original.profile_photo_url;
 			const firstName = info.row.original.first_name;
 			const lastName = info.row.original.last_name;
 			const email = info.row.original.email;
 
 			return renderComponent(UserAvatar, {
+				uid: uid,
 				photoUrl: photoUrl,
 				firstName: firstName,
 				lastName: lastName,

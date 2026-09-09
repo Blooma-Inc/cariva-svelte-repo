@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { useFetchTenant } from '$lib/hooks/tenant/use-fetch-Tenant';
 	import { useFetchTenantStats } from '$lib/hooks/tenant/use-fetch-tenant-stats';
 	import { Paragraph, Heading } from '@cariva/ui/components/ui/typography/index.js';
 	import type { IStatsCardProps } from './components/tenant-stats-card.svelte';
@@ -48,22 +47,18 @@
 		limit: 10,
 		offset: 0
 	});
-
-	const tenantQuery = useFetchTenant();
 	const tenantStatsQuery = useFetchTenantStats();
 	const tenantBranchesQuery = useFetchTenantBranches(params);
 </script>
 
 <section class="flex w-full flex-col gap-4">
-	<div class="grid flex-1 text-start text-sm leading-tight">
+	<div class="grid flex-1 text-start">
 		<Heading level="h3" class="truncate"
 			>Hello, {AuthStore.user?.designation} {AuthStore.user.last_name}</Heading
 		>
-		{#if tenantQuery.status === 'success'}
-			<Paragraph class="truncate text-neutral-600"
-				>Here is what is happening at {tenantQuery.data?.name}.</Paragraph
-			>
-		{/if}
+		<Paragraph muted class="truncate"
+			>Here is what is happening at {AppStore.currentTenant?.name}.</Paragraph
+		>
 	</div>
 
 	<div class="auto-grid">

@@ -5,5 +5,5 @@ import server from './index';
 export const postBranch = async (payload: TCreateBranchSchema) =>
 	await server.post<CarivaServerResp<boolean>>(BRANCH.NEW, payload);
 
-export const patchBranch = async (branch_uid: string, payload: Partial<TCreateBranchSchema>) =>
+export const patchBranch = async (branch_uid: string, payload: Partial<BranchDetailedItem>) =>
 	await server.patch<CarivaServerResp<boolean>>(BRANCH.SINGLE.replace(':uid', branch_uid), payload);

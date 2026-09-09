@@ -16,11 +16,13 @@
 	import * as DropdownMenu from '@cariva/ui/components/ui/dropdown-menu/index.js';
 	import { stores } from '$lib/store/index.svelte';
 	import { AppModals } from '$lib/store/app/modal-types';
+	import { UseIsOwner } from '$lib/hooks/app/use-is-owner.svelte';
 
 	let { staff }: StaffActionsProps = $props();
 	let { AppStore } = stores;
 
 	const isSuspended = $derived(!staff.is_active);
+	const { isOwner } = UseIsOwner(() => staff.uid);
 </script>
 
 <DropdownMenu.Root>
@@ -39,39 +41,41 @@
 			View Profile
 		</DropdownMenu.Item>
 
-		<DropdownMenu.Item
-			onclick={() => {
-				AppStore.toggleModals({
-					open: true,
-					name: AppModals.STAFF_FORM_MODAL,
-					user_uid: JSON.stringify(staff)
-				});
-			}}
-		>
-			<PencilIcon class="size-3" />
-			Edit Details
-		</DropdownMenu.Item>
+		{#if !isOwner}
+			<DropdownMenu.Item
+				onclick={() => {
+					AppStore.toggleModals({
+						open: true,
+						name: AppModals.STAFF_FORM_MODAL,
+						user_uid: JSON.stringify(staff)
+					});
+				}}
+			>
+				<PencilIcon class="size-3" />
+				Edit Details
+			</DropdownMenu.Item>
 
-		<DropdownMenu.Item onclick={() => {}}>
-			<UserCogIcon class="size-3" />
-			Change Role
-		</DropdownMenu.Item>
+			<DropdownMenu.Item onclick={() => {}}>
+				<UserCogIcon class="size-3" />
+				Change Role
+			</DropdownMenu.Item>
 
-		<DropdownMenu.Item onclick={() => {}}>
-			<LockIcon class="size-3" />
-			Reset Password
-		</DropdownMenu.Item>
+			<DropdownMenu.Item onclick={() => {}}>
+				<LockIcon class="size-3" />
+				Reset Password
+			</DropdownMenu.Item>
 
-		<DropdownMenu.Item>
-			<ScrollTextIcon class="size-3" />
-			View Audit Trail
-		</DropdownMenu.Item>
+			<DropdownMenu.Item>
+				<ScrollTextIcon class="size-3" />
+				View Audit Trail
+			</DropdownMenu.Item>
 
-		<DropdownMenu.Separator />
+			<DropdownMenu.Separator />
 
-		<DropdownMenu.Item variant={isSuspended ? 'default' : 'destructive'}>
-			<BanIcon class="size-3" />
-			{isSuspended ? 'Activate Account' : 'Deactivate Account'}
-		</DropdownMenu.Item>
+			<DropdownMenu.Item variant={isSuspended ? 'default' : 'destructive'}>
+				<BanIcon class="size-3" />
+				{isSuspended ? 'Activate Account' : 'Deactivate Account'}
+			</DropdownMenu.Item>
+		{/if}
 	</DropdownMenu.Content>
 </DropdownMenu.Root>

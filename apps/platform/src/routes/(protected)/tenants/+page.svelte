@@ -3,15 +3,12 @@
 	import NoTenants from './components/no-tenants.svelte';
 	import { useFetchTenants } from '$lib/hooks/tenant/use-fetch-tenants.svelte';
 	import { columns } from './data/tenant-columns';
-	import {
-		DataTable,
-		DataTableSearch,
-		type PaginationMeta
-	} from '@cariva/ui/components/data-table/index.js';
+	import { DataTable, DataTableSearch } from '@cariva/ui/components/data-table/index.js';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 	import PlusIcon from '@lucide/svelte/icons/plus';
 	import { stores } from '$lib/store/index.svelte';
 	import { AppModals } from '$lib/store/app/modal-types';
+	import { useOffsetPagination } from '$lib/hooks/app/use-offset-pagination.svelte';
 
 	const { AppStore } = stores;
 
@@ -21,34 +18,10 @@
 	});
 
 	const query = useFetchTenants(params);
-	const paginationMeta = $derived.by<PaginationMeta>(() => {
-		if (query.status === 'success' && query.data) {
-			const meta = query.data.meta;
-			return {
-				type: 'offset',
-				total: meta.total,
-				page: meta.page,
-				perPage: meta.per_page,
-				totalPages: meta.total_pages
-			};
-		}
-		return {
-			type: 'offset',
-			total: 0,
-			page: 1,
-			perPage: params.limit,
-			totalPages: 1
-		};
-	});
-
-	function handlePageChange(page: number) {
-		params.offset = (page - 1) * params.limit;
-	}
-
-	function handlePerPageChange(perPage: number) {
-		params.limit = perPage;
-		params.offset = 0;
-	}
+	const { paginationMeta, handlePageChange, handlePerPageChange } = useOffsetPagination(
+		query,
+		params
+	);
 </script>
 
 {#snippet EmptyTenant()}

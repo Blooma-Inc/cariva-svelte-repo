@@ -11,7 +11,7 @@ import { formatDate } from '$lib/utils/date';
 import { branchStatusBadge } from './branch-status-badge';
 import BranchActions from './branch-actions.svelte';
 import { Button } from '@cariva/ui/components/ui/button/index.js';
-import { Paragraph } from '@cariva/ui/components/ui/typography/index.js';
+import UserAvatar from '$lib/components/user-avatar.svelte';
 
 export const columns: ColumnDef<TenantBranchItem, unknown>[] = [
 	{
@@ -91,7 +91,13 @@ export const columns: ColumnDef<TenantBranchItem, unknown>[] = [
 		accessorFn: (row) => row.user_count,
 		cell: (info) => {
 			if (info.row.original.admin) {
-				return;
+				const admin = info.row.original.admin;
+				return renderComponent(UserAvatar, {
+					photoUrl: admin.profile_photo_url,
+					firstName: admin.first_name,
+					lastName: admin.last_name,
+					email: admin.email
+				});
 			} else {
 				return renderComponent(Button, {
 					size: 'xs',
@@ -108,10 +114,7 @@ export const columns: ColumnDef<TenantBranchItem, unknown>[] = [
 		id: 'user_count',
 		header: 'Staff size',
 		accessorFn: (row) => row.user_count,
-		cell: (info) =>
-			renderComponent(Paragraph, {
-				children: textSnippet(`${info.row.original.user_count} staff`)
-			}),
+		cell: (info) => info.getValue(),
 		enableSorting: false,
 		enableHiding: false
 	},

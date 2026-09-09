@@ -17,6 +17,7 @@
 			gender: z.string({ error: 'Email is required.' }).trim(),
 			phone: z.string({ error: 'Phone number is required.' }).trim(),
 			alternative_phone: z.string({ error: 'Phone number is required.' }).trim(),
+			designation: z.string({ error: 'Designation is required' }).trim(),
 			dob: z
 				.date()
 				.optional()
@@ -62,6 +63,7 @@
 	import { zod4Client } from 'sveltekit-superforms/adapters';
 	import { svelteDateToYearMonthDay } from '$lib/utils/date';
 	import { getInitials } from '$lib/utils/strings';
+	import { designationItem } from '$lib/constants/shared';
 
 	const { AppStore, AuthStore } = stores;
 	const queryClient = useQueryClient();
@@ -77,6 +79,7 @@
 				gender: userProfileQuery.data.gender ?? '',
 				phone: userProfileQuery.data.phone ?? '',
 				alternative_phone: userProfileQuery.data.alternative_phone ?? '',
+				designation: userProfileQuery.data.designation ?? '',
 				dob: userProfileQuery.data?.dob ? new SvelteDate(userProfileQuery.data.dob) : undefined
 			};
 		}
@@ -88,6 +91,7 @@
 			gender: '',
 			phone: '',
 			alternative_phone: '',
+			designation: '',
 			dob: undefined
 		};
 	});
@@ -210,6 +214,16 @@
 							/>
 						</FormField>
 					</div>
+
+					<FormField {form} name="designation">
+						<SelectField
+							label="Designation"
+							type="single"
+							placeholder="Select designation"
+							selectables={designationItem}
+							bind:value={$formData.designation}
+						/>
+					</FormField>
 
 					<div class="grid grid-cols-1 gap-2 lg:grid-cols-[1fr_1fr] lg:items-end">
 						<FormField {form} name="gender">

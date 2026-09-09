@@ -21,7 +21,7 @@
 	import PencilIcon from '@lucide/svelte/icons/pencil';
 	import CalendarPlusIcon from '@lucide/svelte/icons/calendar-plus';
 	import UserAvatar from '$lib/components/user-avatar.svelte';
-	import { formatRelativeTime } from '$lib/utils/date';
+	import { formatRelativeTime, formatTime } from '$lib/utils/date';
 	import { DEFAULT_WEEK_DAYS } from '../modals/branch-operating-hours.svelte';
 	import { AppModals } from '$lib/store/app/modal-types';
 	import { stores } from '$lib/store/index.svelte';
@@ -84,7 +84,7 @@
 		{#if admin}
 			<Item class="border border-neutral-200">
 				<ItemHeader class="border-b pb-2">
-					<ItemTitle>Branch Admin</ItemTitle>
+					<ItemTitle class="text-neutral-600">Branch Admin</ItemTitle>
 				</ItemHeader>
 
 				<ItemContent class="flex flex-col gap-3">
@@ -111,7 +111,7 @@
 
 		<Item class="border border-neutral-200">
 			<ItemHeader class="border-b pb-2">
-				<ItemTitle>Operating Hours</ItemTitle>
+				<ItemTitle class="text-neutral-600">Operating Hours</ItemTitle>
 
 				<Button
 					size="icon-sm"
@@ -131,26 +131,29 @@
 			{#if branch.operating_hours}
 				<ItemContent class="flex flex-col gap-2">
 					{#each branch.operating_hours.days as day, index (index)}
-						<div class="flex items-center justify-start gap-2 rounded-md border border-neutral-100">
-							<Paragraph size="sm">
-								{DEFAULT_WEEK_DAYS.find((item) => item.value === day.week_day)?.label}
+						<div class="flex items-center justify-start gap-2">
+							<Paragraph size="sm" muted class="font-medium!">
+								{DEFAULT_WEEK_DAYS.find((item) => item.value === day.week_day)?.label}:
 							</Paragraph>
 
 							{#if day.is_enabled}
-								<Paragraph size="sm">
-									{day.open_time} – {day.close_time}
+								<Paragraph size="sm" class="font-medium">
+									{day.open_time && formatTime(day.open_time)} – {day.close_time &&
+										formatTime(day.close_time)}
 								</Paragraph>
 							{:else}
-								<Paragraph size="sm" class="text-destructive!">Closed</Paragraph>
+								<Paragraph size="sm" class="font-medium text-destructive!">Closed</Paragraph>
 							{/if}
 						</div>
 					{/each}
 
-					<div class="flex items-center justify-start gap-2 rounded-md border border-neutral-100">
-						<Paragraph size="sm">Emergency Services</Paragraph>
+					<div
+						class="flex items-center justify-start gap-2 border-t border-neutral-200 pt-2 font-semibold!"
+					>
+						<Paragraph size="sm" class="text-destructive/70">Emergency Services:</Paragraph>
 
 						{#if branch.operating_hours.is_emergency_services}
-							<span class="text-sm font-medium">24/7</span>
+							<span class="text-sm text-destructive">24/7</span>
 						{:else}
 							<span class="text-sm text-neutral-400">Not available</span>
 						{/if}
