@@ -121,8 +121,18 @@
 			>
 				<PlusIcon class="size-3" /> Add New Staff
 			</Button>
-			<Button variant="outline" onclick={() => {}}>View Patients</Button>
-			<Button variant="outline" onclick={() => {}}>View Audit Logs</Button>
+			<Button
+				variant="outline"
+				onclick={() => {
+					goto(ROUTES.PATIENTS.resolve());
+				}}>View Patients</Button
+			>
+			<Button
+				variant="outline"
+				onclick={() => {
+					goto(ROUTES.AUDIT_LOGS.resolve());
+				}}>View Audit Logs</Button
+			>
 		</div>
 	</div>
 </section>

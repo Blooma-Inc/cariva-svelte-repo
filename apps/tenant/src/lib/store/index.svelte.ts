@@ -1,6 +1,7 @@
 import AppStore from './app/index.svelte';
 import AuthStore from './auth/index.svelte';
 import BranchStore from './branch/index.svelte';
+import PermissionStore from './permissions/index.svelte';
 import StaffStore from './staff/index.svelte';
 
 export class RootStore {
@@ -8,12 +9,14 @@ export class RootStore {
 	AuthStore: AuthStore;
 	BranchStore: BranchStore;
 	StaffStore: StaffStore;
+	PermissionStore: PermissionStore;
 
 	constructor() {
 		this.AppStore = new AppStore(this);
 		this.AuthStore = new AuthStore(this);
 		this.BranchStore = new BranchStore(this);
 		this.StaffStore = new StaffStore(this);
+		this.PermissionStore = new PermissionStore(this);
 	}
 }
 

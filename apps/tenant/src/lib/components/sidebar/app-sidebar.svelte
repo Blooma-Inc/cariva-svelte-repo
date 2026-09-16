@@ -18,8 +18,7 @@
 		SidebarMenuSubItem,
 		SidebarRail
 	} from '@cariva/ui/components/ui/sidebar/index.js';
-	import { EnumRole } from '$lib/configs/roles';
-	import { menuCommon, getMenuForRole } from '$lib/configs/menu-items';
+	import { menuCommon, getMenuForUser } from '$lib/configs/menu-items';
 	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
 	import {
 		Collapsible,
@@ -30,7 +29,7 @@
 	import { stores } from '$lib/store/index.svelte';
 	import { useFetchTenant } from '$lib/hooks/tenant/use-fetch-Tenant';
 
-	const { AuthStore, AppStore } = stores;
+	const { AppStore, PermissionStore } = stores;
 	const isActive = (url: string) => page.url.pathname === url || page.url.pathname.startsWith(url);
 
 	const isSubmenuActive = (submenu: { url: string }[]) =>
@@ -46,10 +45,6 @@
 			currentPath.startsWith(menuItem.url.endsWith('/') ? menuItem.url : `${menuItem.url}/`)
 		);
 	};
-	const roleMenu = $derived(
-		getMenuForRole(AuthStore.user.roles?.at(AuthStore.active_role) as EnumRole)
-	);
-
 	const tenantQuery = useFetchTenant();
 
 	$effect(() => {
@@ -73,53 +68,58 @@
 	<SidebarContent class="bg-white">
 		<SidebarGroup>
 			<SidebarGroupLabel>Menu</SidebarGroupLabel>
-			<SidebarMenu>
-				{#each roleMenu as roleItem (roleItem.title)}
-					{#if !roleItem.submenu}
-						<a href={resolve(roleItem.url)}>
-							<SidebarMenuItem>
-								<SidebarMenuButton
-									isActive={isCurrentPath(roleItem, page.url.pathname)}
-									tooltipContent={roleItem.title}
-								>
-									<roleItem.icon class="size-4 shrink-0" />
-									<span>{roleItem.title}</span>
-								</SidebarMenuButton>
-							</SidebarMenuItem>
-						</a>
-					{:else}
-						<Collapsible class="group/collapsible" open={isSubmenuActive(roleItem.submenu)}>
-							<SidebarMenuItem>
-								<CollapsibleTrigger>
+			{#if PermissionStore.loaders.isPermissionLoading}
+				loading
+			{:else}
+				<SidebarMenu>
+					{@const roleMenu = getMenuForUser([...PermissionStore.permissions])}
+					{#each roleMenu as roleItem (roleItem.title)}
+						{#if !roleItem.submenu}
+							<a href={resolve(roleItem.url)}>
+								<SidebarMenuItem>
 									<SidebarMenuButton
+										isActive={isCurrentPath(roleItem, page.url.pathname)}
 										tooltipContent={roleItem.title}
-										isActive={isSubmenuActive(roleItem.submenu)}
 									>
 										<roleItem.icon class="size-4 shrink-0" />
 										<span>{roleItem.title}</span>
-										<ChevronRightIcon
-											class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
-										/>
 									</SidebarMenuButton>
-								</CollapsibleTrigger>
-								<CollapsibleContent>
-									<SidebarMenuSub>
-										{#each roleItem.submenu as subItem (subItem.title)}
-											<SidebarMenuSubItem>
-												<SidebarMenuSubButton
-													isActive={isCurrentPath(subItem as MenuItem, page.url.pathname)}
-												>
-													<a href={resolve(subItem.url)}>{subItem.title}</a>
-												</SidebarMenuSubButton>
-											</SidebarMenuSubItem>
-										{/each}
-									</SidebarMenuSub>
-								</CollapsibleContent>
-							</SidebarMenuItem>
-						</Collapsible>
-					{/if}
-				{/each}
-			</SidebarMenu>
+								</SidebarMenuItem>
+							</a>
+						{:else}
+							<Collapsible class="group/collapsible" open={isSubmenuActive(roleItem.submenu)}>
+								<SidebarMenuItem>
+									<CollapsibleTrigger>
+										<SidebarMenuButton
+											tooltipContent={roleItem.title}
+											isActive={isSubmenuActive(roleItem.submenu)}
+										>
+											<roleItem.icon class="size-4 shrink-0" />
+											<span>{roleItem.title}</span>
+											<ChevronRightIcon
+												class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
+											/>
+										</SidebarMenuButton>
+									</CollapsibleTrigger>
+									<CollapsibleContent>
+										<SidebarMenuSub>
+											{#each roleItem.submenu as subItem (subItem.title)}
+												<SidebarMenuSubItem>
+													<SidebarMenuSubButton
+														isActive={isCurrentPath(subItem as MenuItem, page.url.pathname)}
+													>
+														<a href={resolve(subItem.url)}>{subItem.title}</a>
+													</SidebarMenuSubButton>
+												</SidebarMenuSubItem>
+											{/each}
+										</SidebarMenuSub>
+									</CollapsibleContent>
+								</SidebarMenuItem>
+							</Collapsible>
+						{/if}
+					{/each}
+				</SidebarMenu>
+			{/if}
 		</SidebarGroup>
 
 		<SidebarGroup>

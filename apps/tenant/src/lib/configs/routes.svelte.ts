@@ -1,30 +1,31 @@
 import { resolve } from '$app/paths';
 import type { RouteId, RouteParams } from '$app/types';
+import { PERMISSIONS } from '$lib/configs/permissions';
 
-class Route<T extends RouteId = RouteId> {
+export class Route<T extends RouteId = RouteId> {
 	path: T;
 	title: string;
 	description: string;
-	roles: Array<string>;
+	requiredPermission?: string;
 	isProtected: boolean;
 
 	constructor({
 		path,
 		title,
 		description = '',
-		roles = [],
+		requiredPermission,
 		isProtected
 	}: {
 		path: T;
 		title: string;
 		description?: string;
-		roles?: Array<string>;
+		requiredPermission?: string;
 		isProtected: boolean;
 	}) {
 		this.path = path;
 		this.title = title;
 		this.description = description;
-		this.roles = roles;
+		this.requiredPermission = requiredPermission;
 		this.isProtected = isProtected;
 	}
 
@@ -33,6 +34,8 @@ class Route<T extends RouteId = RouteId> {
 		return (resolve as any)(this.path, ...params);
 	}
 }
+
+// export const { Route };
 
 class Routes {
 	// auth
@@ -64,27 +67,38 @@ class Routes {
 	BRANCHES = new Route({
 		path: '/(protected)/branches',
 		title: 'Branches',
-		isProtected: true
+		isProtected: true,
+		requiredPermission: PERMISSIONS.BRANCHES_READ
 	});
 	SINGLE_BRANCH = new Route({
 		path: '/(protected)/branches/[id]',
 		title: '',
-		isProtected: true
+		isProtected: true,
+		requiredPermission: PERMISSIONS.BRANCHES_READ
 	});
 	STAFF = new Route({
 		path: '/(protected)/staff',
 		title: 'Staff',
-		isProtected: true
+		isProtected: true,
+		requiredPermission: PERMISSIONS.STAFF_READ
+	});
+	WARDS = new Route({
+		path: '/(protected)/wards',
+		title: 'Wards',
+		isProtected: true,
+		requiredPermission: PERMISSIONS.WARDS_READ
 	});
 	PATIENTS = new Route({
 		path: '/(protected)/patients',
 		title: 'Patients',
-		isProtected: true
+		isProtected: true,
+		requiredPermission: PERMISSIONS.PATIENTS_READ
 	});
 	AUDIT_LOGS = new Route({
 		path: '/(protected)/audit-logs',
 		title: 'Audit Logs',
-		isProtected: true
+		isProtected: true,
+		requiredPermission: PERMISSIONS.AUDIT_READ
 	});
 	NOTIFICATION = new Route({
 		path: '/(protected)/notifications',
@@ -118,7 +132,8 @@ class Routes {
 			this.AUDIT_LOGS,
 			this.PROFILE,
 			this.NOTIFICATION,
-			this.SETTINGS
+			this.SETTINGS,
+			this.WARDS
 		];
 	}
 
@@ -132,5 +147,13 @@ class Routes {
 }
 
 const ROUTES = new Routes();
+
+export function getRoute(routeId: string | undefined) {
+	if (!routeId) return undefined;
+
+	return ROUTES.allRoutes().find((route) => {
+		return routeId === route.path;
+	});
+}
 
 export default ROUTES;

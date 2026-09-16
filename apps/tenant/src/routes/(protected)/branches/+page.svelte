@@ -9,8 +9,10 @@
 	import { stores } from '$lib/store/index.svelte';
 	import { AppModals } from '$lib/store/app/modal-types';
 	import { useOffsetPagination } from '$lib/hooks/app/use-offset-pagination.svelte';
+	import { parseError } from '$lib/utils/errorHandler';
+	import { PERMISSIONS } from '$lib/configs/permissions';
 
-	const { AppStore } = stores;
+	const { AppStore, PermissionStore } = stores;
 
 	const params = $state({
 		limit: 30,
@@ -43,18 +45,20 @@
 				<div class="flex w-full flex-col justify-between gap-2 md:flex-row md:items-center">
 					<DataTableSearch class="w-full! max-w-sm" placeholder="search by name, status e.t.c" />
 
-					<Button
-						size="sm"
-						onclick={() =>
-							AppStore.toggleModals({
-								open: true,
-								name: AppModals.BRANCH_FORM_MODAL,
-								branch_uid: ''
-							})}
-					>
-						<PlusIcon class="size-3" />
-						New Branch
-					</Button>
+					{#if PermissionStore.can(PERMISSIONS.BRANCHES_CREATE)}
+						<Button
+							size="sm"
+							onclick={() =>
+								AppStore.toggleModals({
+									open: true,
+									name: AppModals.BRANCH_FORM_MODAL,
+									branch_uid: ''
+								})}
+						>
+							<PlusIcon class="size-3" />
+							New Branch
+						</Button>
+					{/if}
 				</div>
 			{/if}
 		{/if}
@@ -72,7 +76,9 @@
 			}}
 			errorDataProps={{
 				title: 'Failed to load branches',
-				errorDescription: 'An error occurred while fetching the branch list.',
+				errorDescription: query.error
+					? parseError(query.error)
+					: 'An error occurred while fetching the branch list.',
 				onRetry: query.refetch
 			}}
 			emptyDataNode={EmptyBranch}

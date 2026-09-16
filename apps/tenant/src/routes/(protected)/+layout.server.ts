@@ -1,3 +1,4 @@
-export const load = async ({ locals }) => ({
-	hasValidSession: !!locals.hasValidSession
+export const load = async ({ locals, route }) => ({
+	hasValidSession: !!locals.hasValidSession,
+	routeId: route.id
 });

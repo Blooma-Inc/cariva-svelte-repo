@@ -31,3 +31,9 @@ interface BranchItemWithAdmin {
 	branch: BranchDetailedItem;
 	admin: UserItem | null;
 }
+
+interface BranchDashboardStats {
+	patients: number;
+	staff: number;
+	beds: number;
+}

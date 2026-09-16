@@ -57,7 +57,7 @@
 
 		return [];
 	});
-	const branchQuery = useFetchTenantBranches({});
+	const branchQuery = useFetchTenantBranches({ q: '', limit: 10, offset: 0 });
 	const branchItem = $derived.by(() => {
 		if (branchQuery.status === 'success' && branchQuery.data) {
 			return branchQuery.data?.data.map((branch) => ({

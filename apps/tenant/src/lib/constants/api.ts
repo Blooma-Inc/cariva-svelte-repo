@@ -51,3 +51,8 @@ export const STAFF = {
 export const ROLES = {
 	ALL: '/role'
 };
+
+export const PERMISSIONS = {
+	CATALOG: '/permissions/catalog',
+	ME: '/permissions/me'
+};

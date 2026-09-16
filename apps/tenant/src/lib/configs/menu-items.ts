@@ -1,51 +1,61 @@
 import BellDotIcon from '@lucide/svelte/icons/bell-dot';
 import LayoutDashboardIcon from '@lucide/svelte/icons/layout-dashboard';
 import SettingsIcon from '@lucide/svelte/icons/settings';
-import { EnumRole } from './roles';
 import ROUTES from './routes.svelte';
 import UserRoundPenIcon from '@lucide/svelte/icons/user-round-pen';
 import LogsIcon from '@lucide/svelte/icons/logs';
 import UsersIcon from '@lucide/svelte/icons/users';
 import ShieldUserIcon from '@lucide/svelte/icons/shield-user';
 import HospitalIcon from '@lucide/svelte/icons/hospital';
+import BedDoubleIcon from '@lucide/svelte/icons/bed-double';
 
-const ALL_MENU_ITEMS: RoleMenuItem[] = [
+const ALL_MENU_ITEMS: MenuItem[] = [
 	{
 		title: ROUTES.DASHBOARD.title,
-		url: ROUTES.DASHBOARD.path,
-		icon: LayoutDashboardIcon,
-		roles: []
+		url: ROUTES.DASHBOARD.resolve(),
+		requiredPermission: ROUTES.DASHBOARD.requiredPermission,
+		icon: LayoutDashboardIcon
 	},
 	{
 		title: ROUTES.BRANCHES.title,
-		url: ROUTES.BRANCHES.path,
-		icon: HospitalIcon,
-		roles: [EnumRole.TENANT_ADMIN]
+		url: ROUTES.BRANCHES.resolve(),
+		requiredPermission: ROUTES.BRANCHES.requiredPermission,
+		icon: HospitalIcon
 	},
 	{
 		title: ROUTES.STAFF.title,
-		url: ROUTES.STAFF.path,
-		icon: UsersIcon,
-		roles: [EnumRole.TENANT_ADMIN]
+		url: ROUTES.STAFF.resolve(),
+		requiredPermission: ROUTES.STAFF.requiredPermission,
+		icon: UsersIcon
 	},
 	{
 		title: ROUTES.PATIENTS.title,
-		url: ROUTES.PATIENTS.path,
-		icon: ShieldUserIcon,
-		roles: [EnumRole.TENANT_ADMIN]
+		url: ROUTES.PATIENTS.resolve(),
+		requiredPermission: ROUTES.PATIENTS.requiredPermission,
+		icon: ShieldUserIcon
+	},
+	{
+		title: ROUTES.WARDS.title,
+		url: ROUTES.WARDS.resolve(),
+		requiredPermission: ROUTES.WARDS.requiredPermission,
+		icon: BedDoubleIcon
 	},
 	{
 		title: ROUTES.AUDIT_LOGS.title,
-		url: ROUTES.AUDIT_LOGS.path,
-		icon: LogsIcon,
-		roles: ROUTES.AUDIT_LOGS.roles
+		url: ROUTES.AUDIT_LOGS.resolve(),
+		requiredPermission: ROUTES.AUDIT_LOGS.requiredPermission,
+		icon: LogsIcon
 	}
 ];
 
-export function getMenuForRole(role: EnumRole): MenuItem[] {
-	return ALL_MENU_ITEMS.filter((item) => item.roles.length === 0 || item.roles.includes(role)).map(
-		(item) => item
-	);
+export function getMenuForUser(permissions: Array<string>): MenuItem[] {
+	return ALL_MENU_ITEMS.filter((item) => {
+		if (item.requiredPermission) {
+			return permissions.includes(item.requiredPermission);
+		}
+
+		return true;
+	}).map((item) => item);
 }
 
 export const menuCommon: MenuItem[] = [

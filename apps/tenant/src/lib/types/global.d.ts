@@ -3,15 +3,12 @@ interface MenuItem {
 	url?: Pathname;
 	icon: LucideIcon;
 	isNestable?: boolean;
+	requiredPermission?: str;
 	submenu?: Array<{
 		title: string;
 		url: Pathname;
 		isNestable?: boolean;
 	}>;
-}
-
-interface RoleMenuItem extends MenuItem {
-	roles: EnumRole[];
 }
 
 type TIsAuthenticated = { ttl: number; token?: string; email?: string };
@@ -55,9 +52,7 @@ interface QueryHookResponse<D> {
 	isLoading: boolean;
 	error: unknown;
 	status: 'error' | 'success' | 'pending';
-	refetch: (
-		options?: RefetchOptions
-	) => Promise<QueryObserverResult<CarivaServerResp<SubscriptionItem[], null>, Error>>;
+	refetch: () => void;
 }
 
 interface BaseItem {

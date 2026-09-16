@@ -13,12 +13,6 @@ export function useFetchRoles(
 		select: (resp: CarivaServerResp<Array<TenantRoleItem>, null>) => resp
 	}));
 
-	// let data = query.data;
-
-	// if (data) {
-	// 	data.data = data.data.filter((role) => role.scope !== 'platform');
-	// }
-
 	return {
 		get data() {
 			return query.data;
