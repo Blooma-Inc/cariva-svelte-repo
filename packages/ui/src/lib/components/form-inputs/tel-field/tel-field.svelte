@@ -14,7 +14,7 @@
       disabled?: boolean;
       readonly?: boolean;
       class?: string;
-      value: string; // stored as E.164
+      value: string;
       valid?: boolean;
       initialFormat?: 'international' | 'national';
       required?: boolean;
@@ -126,6 +126,7 @@
           {placeholder}
           {name}
           type="tel"
+          aria-invalid={rawInput.length > 0 && !valid}
           class={className}
           required={rest.required}
         />

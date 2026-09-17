@@ -1,9 +1,9 @@
 <script lang="ts">
-	import FallbackDashboard from './fallback-dashboard.svelte';
-	import TenantAdminDashboard from './tenant-admin-dashboard.svelte';
+	import FallbackDashboard from './components/fallback-dashboard.svelte';
+	import TenantAdminDashboard from './tenant-admin/index.svelte';
+	import BranchAdminDashboard from './branch-admin/index.svelte';
 	import { stores } from '$lib/store/index.svelte';
 	import { ROLES, type Role } from '$lib/configs/roles';
-	import BranchAdminDashboard from './branch-admin-dashboard.svelte';
 
 	let { AuthStore } = stores;
 

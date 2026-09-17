@@ -13,8 +13,8 @@ class PermissionStore {
 
 	loaders = $state({ ...INIT_IS_LOADING });
 	errors = $state(initializer(this.loaders, ''));
-	permissions = new SvelteSet();
-	role = new SvelteSet();
+	permissions = new SvelteSet<string>();
+	role = new SvelteSet<string>();
 
 	constructor(rootStore: RootStore) {
 		this.rootStore = rootStore;

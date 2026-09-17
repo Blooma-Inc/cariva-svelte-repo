@@ -29,12 +29,8 @@
 		</DialogHeader>
 
 		<DialogFooter>
-			<Button
-				size="lg"
-				variant="secondary"
-				class="w-fit"
-				disabled={AuthStore.loaders.isLogingOut}
-				onclick={handleClose}>Stay Signed In</Button
+			<Button size="lg" class="w-fit" disabled={AuthStore.loaders.isLogingOut} onclick={handleClose}
+				>Stay Signed In</Button
 			>
 
 			<Button

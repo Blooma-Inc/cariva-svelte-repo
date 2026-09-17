@@ -3,8 +3,16 @@
   import * as Calendar from './index.js';
   import { cn, type WithoutChildrenOrChild } from '$lib/utils.js';
   import type { ButtonVariant } from '../button/button.svelte';
-  import { isEqualMonth, type DateValue } from '@internationalized/date';
+  import {
+    isEqualMonth,
+    isSameDay,
+    today,
+    getLocalTimeZone,
+    type DateValue
+  } from '@internationalized/date';
   import type { Snippet } from 'svelte';
+
+  type CalendarView = 'week' | 'month';
 
   let {
     ref = $bindable(null),
@@ -21,6 +29,7 @@
     yearFormat = 'numeric',
     day,
     disableDaysOutsideMonth = false,
+    view = 'month',
     ...restProps
   }: WithoutChildrenOrChild<CalendarPrimitive.RootProps> & {
     buttonVariant?: ButtonVariant;
@@ -30,6 +39,7 @@
     monthFormat?: CalendarPrimitive.MonthSelectProps['monthFormat'];
     yearFormat?: CalendarPrimitive.YearSelectProps['yearFormat'];
     day?: Snippet<[{ day: DateValue; outsideMonth: boolean }]>;
+    view?: CalendarView;
   } = $props();
 
   const monthFormat = $derived.by(() => {
@@ -37,12 +47,16 @@
     if (captionLayout.startsWith('dropdown')) return 'short';
     return 'long';
   });
+
+  const isWeekView = $derived(view === 'week');
+
+  // Reference date used to pick out "this week" — prefers the selected value,
+  // then the placeholder, then falls back to today.
+  const referenceDate = $derived(
+    (value as DateValue | undefined) ?? placeholder ?? today(getLocalTimeZone())
+  );
 </script>
 
-<!--
-Discriminated Unions + Destructing (required for bindable) do not
-get along, so we shut typescript up by casting `value` to `never`.
--->
 <CalendarPrimitive.Root
   bind:value={value as never}
   bind:ref
@@ -60,10 +74,6 @@ get along, so we shut typescript up by casting `value` to `never`.
 >
   {#snippet children({ months, weekdays })}
     <Calendar.Months>
-      <Calendar.Nav>
-        <Calendar.PrevButton variant={buttonVariant} />
-        <Calendar.NextButton variant={buttonVariant} />
-      </Calendar.Nav>
       {#each months as month, monthIndex (month)}
         <Calendar.Month>
           <Calendar.Header>
@@ -78,6 +88,10 @@ get along, so we shut typescript up by casting `value` to `never`.
               {locale}
               {monthIndex}
             />
+            <Calendar.Nav>
+              <Calendar.PrevButton variant={buttonVariant} />
+              <Calendar.NextButton variant={buttonVariant} />
+            </Calendar.Nav>
           </Calendar.Header>
           <Calendar.Grid>
             <Calendar.GridHead>
@@ -91,20 +105,22 @@ get along, so we shut typescript up by casting `value` to `never`.
             </Calendar.GridHead>
             <Calendar.GridBody>
               {#each month.weeks as weekDates (weekDates)}
-                <Calendar.GridRow class="mt-2 w-full">
-                  {#each weekDates as date (date)}
-                    <Calendar.Cell {date} month={month.value}>
-                      {#if day}
-                        {@render day({
-                          day: date,
-                          outsideMonth: !isEqualMonth(date, month.value)
-                        })}
-                      {:else}
-                        <Calendar.Day />
-                      {/if}
-                    </Calendar.Cell>
-                  {/each}
-                </Calendar.GridRow>
+                {#if !isWeekView || weekDates.some((d) => isSameDay(d, referenceDate))}
+                  <Calendar.GridRow class="mt-2 w-full">
+                    {#each weekDates as date (date)}
+                      <Calendar.Cell {date} month={month.value}>
+                        {#if day}
+                          {@render day({
+                            day: date,
+                            outsideMonth: !isEqualMonth(date, month.value)
+                          })}
+                        {:else}
+                          <Calendar.Day />
+                        {/if}
+                      </Calendar.Cell>
+                    {/each}
+                  </Calendar.GridRow>
+                {/if}
               {/each}
             </Calendar.GridBody>
           </Calendar.Grid>

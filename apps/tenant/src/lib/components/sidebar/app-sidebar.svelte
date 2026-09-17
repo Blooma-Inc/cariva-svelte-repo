@@ -28,9 +28,12 @@
 	import NavUser from './nav-user.svelte';
 	import { stores } from '$lib/store/index.svelte';
 	import { useFetchTenant } from '$lib/hooks/tenant/use-fetch-Tenant';
+	import { useFetchMyPermissions } from '$lib/hooks/permissions/use-fetch-my-permissions';
+	import { Paragraph } from '@cariva/ui/components/ui/typography/index.js';
 
-	const { AppStore, PermissionStore } = stores;
+	const { AppStore } = stores;
 	const isActive = (url: string) => page.url.pathname === url || page.url.pathname.startsWith(url);
+	const permissionsQuery = useFetchMyPermissions();
 
 	const isSubmenuActive = (submenu: { url: string }[]) =>
 		submenu.some((item) => isActive(item.url));
@@ -68,11 +71,15 @@
 	<SidebarContent class="bg-white">
 		<SidebarGroup>
 			<SidebarGroupLabel>Menu</SidebarGroupLabel>
-			{#if PermissionStore.loaders.isPermissionLoading}
+			{#if permissionsQuery.status === 'pending'}
 				loading
-			{:else}
+			{:else if permissionsQuery.status === 'error'}
+				<div class="flex h-screen flex-col items-center justify-center">
+					<Paragraph size="sm" muted>Couldn't load your permissions. Try refreshing.</Paragraph>
+				</div>
+			{:else if permissionsQuery.status === 'success' && permissionsQuery.data}
 				<SidebarMenu>
-					{@const roleMenu = getMenuForUser([...PermissionStore.permissions])}
+					{@const roleMenu = getMenuForUser([...permissionsQuery.data])}
 					{#each roleMenu as roleItem (roleItem.title)}
 						{#if !roleItem.submenu}
 							<a href={resolve(roleItem.url)}>

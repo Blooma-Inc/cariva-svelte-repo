@@ -11,14 +11,16 @@
 	import CarivaLogo from '$lib/assets/favicon.svg';
 	import { useFetchMyPermissions } from '$lib/hooks/permissions/use-fetch-my-permissions.js';
 	import AccessDenied from '$lib/components/access-denied.svelte';
+	import { SvelteSet } from 'svelte/reactivity';
 
 	let { children, data } = $props();
+	const { PermissionStore, AuthStore } = stores;
 	let bootstrapping = $state(true);
 
 	onMount(async () => {
-		if (!stores.AuthStore.accessToken && data.hasValidSession) {
+		if (!AuthStore.accessToken && data.hasValidSession) {
 			try {
-				await stores.AuthStore.bootstrap();
+				await AuthStore.bootstrap();
 			} catch {
 				goto(ROUTES.LOGIN.resolve());
 				return;
@@ -31,7 +33,7 @@
 
 	$effect(() => {
 		if (permissionsQuery.status === 'success' && permissionsQuery.data !== undefined) {
-			stores.PermissionStore.permissions = new Set(permissionsQuery.data);
+			PermissionStore.permissions = new SvelteSet(permissionsQuery.data);
 		}
 	});
 
@@ -39,7 +41,7 @@
 		if (!routeId) return true;
 		const currentRoute = getRoute(routeId);
 		if (!currentRoute?.requiredPermission) return true;
-		return stores.PermissionStore.can(currentRoute.requiredPermission);
+		return PermissionStore.can(currentRoute.requiredPermission);
 	}
 
 	let hasAccess = $derived(
@@ -61,7 +63,7 @@
 	<div class="flex h-screen flex-col items-center justify-center">
 		<Paragraph size="sm" muted>Couldn't load your permissions. Try refreshing.</Paragraph>
 	</div>
-{:else if permissionsQuery.status === 'success'}
+{:else if permissionsQuery.status === 'success' && permissionsQuery.data}
 	<SidebarProvider>
 		<AppSidebar />
 		<SidebarInset>
