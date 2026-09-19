@@ -14,7 +14,8 @@ export enum AppModals {
 	REQUEST_EMAIL_VERIFICATION_MODAL = 'REQUEST_EMAIL_VERIFICATION_MODAL',
 	BRANCH_FORM_MODAL = 'BRANCH_FORM_MODAL',
 	STAFF_FORM_MODAL = 'STAFF_FORM_MODAL',
-	BRANCH_OPERATING_HOURS_FROM = 'BRANCH_OPERATING_HOURS_FROM'
+	BRANCH_OPERATING_HOURS_FROM = 'BRANCH_OPERATING_HOURS_FROM',
+	STAFF_PERMISSION_OVERRIDE_MODAL = 'STAFF_PERMISSION_OVERRIDE_MODAL'
 }
 
 export type TAppModalsAction =
@@ -67,7 +68,7 @@ export type TAppModalsAction =
 			  }
 			| { open?: false }
 	  ))
-	| ({ name: AppModals.STAFF_FORM_MODAL } & (
+	| ({ name: AppModals.STAFF_FORM_MODAL | AppModals.STAFF_PERMISSION_OVERRIDE_MODAL } & (
 			| {
 					open: true;
 					user_uid: string;

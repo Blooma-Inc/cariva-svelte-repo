@@ -44,9 +44,13 @@
 		return PermissionStore.can(currentRoute.requiredPermission);
 	}
 
-	let hasAccess = $derived(
-		permissionsQuery.status === 'success' ? checkAccess(page.route.id) : true
-	);
+	let hasAccess = $derived.by(() => {
+		if (permissionsQuery.status === 'success' && permissionsQuery.data) {
+			PermissionStore.permissions = new SvelteSet(permissionsQuery.data);
+			return checkAccess(page.route.id);
+		}
+		return true;
+	});
 </script>
 
 {#if bootstrapping}

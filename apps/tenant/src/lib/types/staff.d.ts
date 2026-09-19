@@ -10,6 +10,7 @@ interface TenantRoleItem extends BaseItem {
 	description: string;
 	scope: string;
 	is_system: boolean;
+	is_enabled: boolean;
 }
 
 interface TenantStaffRoleItem extends BaseItem {

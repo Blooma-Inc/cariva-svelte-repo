@@ -57,6 +57,7 @@
 							<InputField
 								label="Password"
 								bind:value={$formData.password}
+								showClear={true}
 								required
 								type="password"
 							/>

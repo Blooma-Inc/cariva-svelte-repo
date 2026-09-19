@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { Card, CardContent, CardHeader } from '@cariva/ui/components/ui/card/index.js';
-	import { Heading, Paragraph } from '@cariva/ui/components/ui/typography/index.js';
+	import { Heading } from '@cariva/ui/components/ui/typography/index.js';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
+	import EmptyData from '$lib/components/empty-data.svelte';
 </script>
 
 <Card>
@@ -13,12 +14,6 @@
 	</CardHeader>
 
 	<CardContent>
-		<div class="flex h-20 flex-col items-center justify-center gap-3 text-center">
-			<div
-				class="mx-auto flex w-full max-w-lg flex-col items-center justify-center gap-1 text-center"
-			>
-				<Paragraph size="sm" muted>No recent activity</Paragraph>
-			</div>
-		</div>
+		<EmptyData title="No recent activity" description="All recent activities will appear here." />
 	</CardContent>
 </Card>

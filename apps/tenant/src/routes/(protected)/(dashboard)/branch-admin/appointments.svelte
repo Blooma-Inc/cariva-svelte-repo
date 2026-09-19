@@ -2,7 +2,8 @@
 	import { Card, CardTitle, CardContent, CardHeader } from '@cariva/ui/components/ui/card/index.js';
 	import { Calendar } from '@cariva/ui/components/ui/calendar/index.js';
 	import { today, getLocalTimeZone } from '@internationalized/date';
-	import { Heading, Paragraph } from '@cariva/ui/components/ui/typography/index.js';
+	import { Heading } from '@cariva/ui/components/ui/typography/index.js';
+	import EmptyData from '$lib/components/empty-data.svelte';
 </script>
 
 <Card>
@@ -18,14 +19,7 @@
 
 			<div>
 				<CardTitle>Today</CardTitle>
-
-				<div class="flex h-40 flex-col items-center justify-center gap-3 text-center">
-					<div
-						class="mx-auto flex w-full max-w-lg flex-col items-center justify-center gap-1 text-center"
-					>
-						<Paragraph size="sm" muted>No Appointments today</Paragraph>
-					</div>
-				</div>
+				<EmptyData title="" description="No Appointments today" />
 			</div>
 		</div>
 	</CardContent>

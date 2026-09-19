@@ -29,7 +29,9 @@
 		[AppModals.PROFILE_FORM_MODAL]: () =>
 			import('$routes/(protected)/profile/modals/profile-form-modal.svelte'),
 		[AppModals.BRANCH_OPERATING_HOURS_FROM]: () =>
-			import('$routes/(protected)/branches/[id]/modals/branch-operating-hours.svelte')
+			import('$routes/(protected)/branches/[id]/modals/branch-operating-hours.svelte'),
+		[AppModals.STAFF_PERMISSION_OVERRIDE_MODAL]: () =>
+			import('$routes/(protected)/staff/modals/staff-permission-override-modal.svelte')
 	};
 
 	let { AppStore } = stores;

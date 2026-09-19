@@ -6,7 +6,6 @@
 
 <script lang="ts">
 	import EyeIcon from '@lucide/svelte/icons/eye';
-	import UserCogIcon from '@lucide/svelte/icons/user-cog';
 	import LockIcon from '@lucide/svelte/icons/lock-keyhole';
 	import PencilIcon from '@lucide/svelte/icons/pencil';
 	import BanIcon from '@lucide/svelte/icons/ban';
@@ -17,6 +16,8 @@
 	import { stores } from '$lib/store/index.svelte';
 	import { AppModals } from '$lib/store/app/modal-types';
 	import { UseIsOwner } from '$lib/hooks/app/use-is-owner.svelte';
+	import { goto } from '$app/navigation';
+	import ROUTES from '$lib/configs/routes.svelte';
 
 	let { staff }: StaffActionsProps = $props();
 	let { AppStore } = stores;
@@ -36,7 +37,7 @@
 	</DropdownMenu.Trigger>
 
 	<DropdownMenu.Content align="end" class="w-fit">
-		<DropdownMenu.Item onclick={() => {}}>
+		<DropdownMenu.Item onclick={() => goto(ROUTES.SINGLE_STAFF.resolve({ id: staff.uid }))}>
 			<EyeIcon class="size-3" />
 			View Profile
 		</DropdownMenu.Item>
@@ -53,11 +54,6 @@
 			>
 				<PencilIcon class="size-3" />
 				Edit Details
-			</DropdownMenu.Item>
-
-			<DropdownMenu.Item onclick={() => {}}>
-				<UserCogIcon class="size-3" />
-				Change Role
 			</DropdownMenu.Item>
 
 			<DropdownMenu.Item onclick={() => {}}>

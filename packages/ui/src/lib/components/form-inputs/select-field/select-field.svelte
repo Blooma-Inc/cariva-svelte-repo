@@ -2,7 +2,7 @@
   import { Select as SelectPrimitive } from 'bits-ui';
   import type { Snippet } from 'svelte';
 
-  export type Selectables = Array<{ label: string; value: string }>;
+  export type Selectables = Array<{ label: string; value: string; enable: boolean }>;
   export type SelectFieldProps = SelectPrimitive.RootProps & {
     label: string;
     placeholder: string;
@@ -46,7 +46,11 @@
           </SelectTrigger>
           <SelectContent class="max-h-60">
             {#each selectables as selectables (selectables.value)}
-              <SelectItem value={selectables.value} label={selectables.label}>
+              <SelectItem
+                disabled={!selectables.enable}
+                value={selectables.value}
+                label={selectables.label}
+              >
                 {selectables.label}
               </SelectItem>
             {/each}

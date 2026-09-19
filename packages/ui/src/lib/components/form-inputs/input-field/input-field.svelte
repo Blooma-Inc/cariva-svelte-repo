@@ -2,7 +2,9 @@
   import type { FieldInputs } from '$lib/types';
   import type { InputProps, InputType } from '$lib/components/ui/input';
 
-  export type InputFieldProps = FieldInputs<InputProps>;
+  export type InputFieldProps = FieldInputs<InputProps> & {
+    showClear?: boolean;
+  };
 </script>
 
 <script lang="ts">
@@ -13,11 +15,15 @@
     InputGroupButton,
     InputGroupInput
   } from '$lib/components/ui/input-group';
-  import { EyeClosedIcon, EyeIcon, LoaderCircleIcon } from '@lucide/svelte';
+  import XIcon from '@lucide/svelte/icons/x';
+  import EyeIcon from '@lucide/svelte/icons/eye';
+  import EyeClosedIcon from '@lucide/svelte/icons/eye-closed';
+  import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
 
   let {
     ref = $bindable(null),
     value = $bindable(),
+    showClear = false,
     label,
     description,
     type,
@@ -44,6 +50,20 @@
         {/if}
         <InputGroup>
           <InputGroupInput bind:ref bind:value {...controlProps} {...props} type={derivedType} />
+          {#if showClear && value}
+            <InputGroupAddon align="inline-end">
+              <InputGroupButton
+                size="icon-xs"
+                variant="ghost"
+                onclick={() => {
+                  value = '';
+                }}
+              >
+                <XIcon class="size-3" />
+              </InputGroupButton>
+            </InputGroupAddon>
+          {/if}
+
           {#if type === 'password'}
             <InputGroupAddon align="inline-end">
               <InputGroupButton

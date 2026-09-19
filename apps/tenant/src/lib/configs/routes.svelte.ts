@@ -82,6 +82,12 @@ class Routes {
 		isProtected: true,
 		requiredPermission: PERMISSIONS.STAFF_READ
 	});
+	SINGLE_STAFF = new Route({
+		path: '/(protected)/staff/[id]',
+		title: 'Staff',
+		isProtected: true,
+		requiredPermission: PERMISSIONS.STAFF_READ
+	});
 	WARDS = new Route({
 		path: '/(protected)/wards',
 		title: 'Wards',
@@ -128,6 +134,7 @@ class Routes {
 			this.BRANCHES,
 			this.SINGLE_BRANCH,
 			this.STAFF,
+			this.SINGLE_STAFF,
 			this.PATIENTS,
 			this.AUDIT_LOGS,
 			this.PROFILE,

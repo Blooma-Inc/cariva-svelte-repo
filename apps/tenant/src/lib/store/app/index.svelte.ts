@@ -122,6 +122,7 @@ class AppStore {
 				}
 				break;
 			case AppModals.STAFF_FORM_MODAL:
+			case AppModals.STAFF_PERMISSION_OVERRIDE_MODAL:
 				if (modal.open) {
 					this.userModal.user_uid = modal.user_uid;
 				}

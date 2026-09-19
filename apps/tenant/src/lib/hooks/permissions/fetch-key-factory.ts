@@ -13,5 +13,12 @@ export const permissions = {
 			path: PERMISSIONS.ME,
 			keys: () => [PERMISSIONS.ME] as const
 		};
+	},
+
+	getUserOverrides(user_uid: string) {
+		return {
+			path: PERMISSIONS.CATALOG,
+			keys: () => [PERMISSIONS.CATALOG, user_uid] as const
+		};
 	}
 };

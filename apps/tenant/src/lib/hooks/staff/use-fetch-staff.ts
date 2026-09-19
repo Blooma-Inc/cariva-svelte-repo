@@ -2,16 +2,16 @@ import { createQuery } from '@tanstack/svelte-query';
 import { staff } from './fetch-key-factory';
 
 export function useFetchStaff(
-	staff_uid: string,
+	staff_uid: () => string,
 	enabled: boolean = true
-): QueryHookResponse<CarivaServerResp<StaffItem, null> | undefined> {
-	const meta = staff.getStaff(staff_uid);
+): QueryHookResponse<UserProfileItem | undefined> {
+	const meta = staff.getStaff(staff_uid());
 
 	const query = createQuery(() => ({
 		queryKey: meta.keys(),
 		meta,
 		enabled,
-		select: (resp: CarivaServerResp<StaffItem, null>) => resp
+		select: (resp: CarivaServerResp<UserProfileItem, null>) => resp.data
 	}));
 
 	return {

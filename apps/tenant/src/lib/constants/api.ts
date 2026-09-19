@@ -54,5 +54,6 @@ export const ROLES = {
 
 export const PERMISSIONS = {
 	CATALOG: '/permissions/catalog',
-	ME: '/permissions/me'
+	ME: '/permissions/me',
+	OVERRIDE: '/permissions/override'
 };

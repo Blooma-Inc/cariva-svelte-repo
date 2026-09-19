@@ -51,7 +51,8 @@
 		if (rolesQuery.status === 'success' && rolesQuery.data) {
 			return rolesQuery.data?.data.map((role) => ({
 				label: role.name,
-				value: role.uid
+				value: role.uid,
+				enable: role.is_enabled
 			}));
 		}
 
@@ -62,7 +63,8 @@
 		if (branchQuery.status === 'success' && branchQuery.data) {
 			return branchQuery.data?.data.map((branch) => ({
 				label: branch.name,
-				value: branch.uid
+				value: branch.uid,
+				enable: true
 			}));
 		}
 
