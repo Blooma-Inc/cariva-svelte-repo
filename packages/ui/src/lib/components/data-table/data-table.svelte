@@ -14,7 +14,9 @@
     status: 'pending' | 'error' | 'success';
     data: TData[];
     columns: ColumnDef<TData, TValue>[];
+    getRowId?: (row: TData, index: number) => string;
     children?: Snippet;
+    showPagination?: boolean;
     paginationProps: DataTablePaginationProps;
     emptyDataNode?: Snippet;
     emptyDataProps?: DataTableEmptyProps;
@@ -46,7 +48,6 @@
   import DataTableEmpty, { type DataTableEmptyProps } from './data-table-empty.svelte';
   import DataTableError, { type DataTableErrorProps } from './data-table-error.svelte';
   import { createSvelteTable } from '../ui/data-table/data-table.svelte';
-  import { Card, CardFooter } from '$lib/components/ui/card';
 
   let {
     limit,
@@ -57,7 +58,9 @@
     emptyDataNode,
     paginationProps,
     emptyDataProps,
-    errorDataProps
+    errorDataProps,
+    getRowId,
+    showPagination = false
   }: DataTableProps<TData, TValue> = $props();
 
   let rowSelection = $state<RowSelectionState>({});
@@ -72,6 +75,7 @@
     get columns() {
       return columns;
     },
+    ...(getRowId ? { getRowId } : {}),
     state: {
       get sorting() {
         return sorting;
@@ -115,12 +119,10 @@
   {@render children?.()}
 
   {#if status === 'pending'}
-    <Card class="w-full overflow-hidden">
-      <Table>
-        <DataTableHeader headers={table.getHeaderGroups()} />
-        <DataTableLoading columnLength={table.getAllLeafColumns().length} rowLength={limit} />
-      </Table>
-    </Card>
+    <Table>
+      <DataTableHeader headers={table.getHeaderGroups()} />
+      <DataTableLoading columnLength={table.getAllLeafColumns().length} rowLength={limit} />
+    </Table>
   {:else if status === 'success'}
     {#if data && data.length === 0}
       {#if emptyDataNode}
@@ -134,26 +136,24 @@
         />
       {/if}
     {:else}
-      <Card class="w-full overflow-hidden">
-        <Table>
-          <DataTableHeader headers={table.getHeaderGroups()} />
-          <DataTableBody rows={table.getRowModel().rows} />
-        </Table>
+      <Table class="relative">
+        <DataTableHeader headers={table.getHeaderGroups()} />
+        <DataTableBody rows={table.getRowModel().rows} />
+      </Table>
 
-        <CardFooter>
-          <div class="flex w-full justify-end">
-            <DataTablePagination
-              meta={paginationProps.meta}
-              isLoading={paginationProps.isLoading}
-              perPageOptions={paginationProps.perPageOptions}
-              onPageChange={paginationProps.onPageChange}
-              onPerPageChange={paginationProps.onPerPageChange}
-              onCursorChange={paginationProps.onCursorChange}
-            />
-            <div></div>
-          </div></CardFooter
-        >
-      </Card>
+      {#if showPagination}
+        <div class="flex w-full justify-end">
+          <DataTablePagination
+            meta={paginationProps.meta}
+            isLoading={paginationProps.isLoading}
+            perPageOptions={paginationProps.perPageOptions}
+            onPageChange={paginationProps.onPageChange}
+            onPerPageChange={paginationProps.onPerPageChange}
+            onCursorChange={paginationProps.onCursorChange}
+          />
+          <div></div>
+        </div>
+      {/if}
     {/if}
   {:else if status === 'error'}
     <DataTableError

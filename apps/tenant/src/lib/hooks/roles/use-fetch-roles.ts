@@ -3,14 +3,14 @@ import { role } from './fetch-key-factory';
 
 export function useFetchRoles(
 	enabled = true
-): QueryHookResponse<CarivaServerResp<Array<TenantRoleItem>, null> | undefined> {
+): QueryHookResponse<CarivaServerResp<Array<RoleItem>, null> | undefined> {
 	const meta = role.getRoles();
 
 	const query = createQuery(() => ({
 		queryKey: meta.keys(),
 		meta,
 		enabled,
-		select: (resp: CarivaServerResp<Array<TenantRoleItem>, null>) => resp
+		select: (resp: CarivaServerResp<Array<RoleItem>, null>) => resp
 	}));
 
 	return {

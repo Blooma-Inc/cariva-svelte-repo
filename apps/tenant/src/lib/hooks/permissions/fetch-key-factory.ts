@@ -1,4 +1,4 @@
-import { PERMISSIONS } from '$lib/constants/api';
+import { PERMISSIONS, ROLES } from '$lib/constants/api';
 
 export const permissions = {
 	getPermissionsCatalog() {
@@ -11,14 +11,14 @@ export const permissions = {
 	getMyPermissions() {
 		return {
 			path: PERMISSIONS.ME,
-			keys: () => [PERMISSIONS.ME] as const
+			keys: () => [ROLES.ALL, PERMISSIONS.ME] as const
 		};
 	},
 
-	getUserOverrides(user_uid: string) {
+	getUserPermissionsOverride(user_uid: string) {
 		return {
-			path: PERMISSIONS.CATALOG,
-			keys: () => [PERMISSIONS.CATALOG, user_uid] as const
+			path: PERMISSIONS.OVERRIDE.concat(`/${user_uid}`),
+			keys: () => [ROLES.ALL, user_uid] as const
 		};
 	}
 };

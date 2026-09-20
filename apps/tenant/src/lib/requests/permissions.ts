@@ -4,5 +4,10 @@ import server from './index';
 export const getMyPermissions = async () =>
 	server.get<CarivaServerResp<Array<string>, null>>(PERMISSIONS.ME);
 
-export const postOverridePermissions = async (payload: Record<string, string>) =>
+export const postOverrideUserPermissions = async (payload: UserPermissionsOverridePayload) =>
 	await server.post<CarivaServerResp<boolean, null>>(PERMISSIONS.OVERRIDE, payload);
+
+export const delRemoveOverrideUserPermission = async (uid: string) =>
+	await server.delete<CarivaServerResp<boolean, null>>(
+		PERMISSIONS.REMOVE_OVERRIDE.replace(':uid', uid)
+	);

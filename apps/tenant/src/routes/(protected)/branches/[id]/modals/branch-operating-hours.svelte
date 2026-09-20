@@ -66,7 +66,7 @@
 	import { TENANT } from '$lib/constants/api';
 	import { superForm } from 'sveltekit-superforms';
 	import { zod4Client } from 'sveltekit-superforms/adapters';
-	import { getChangedFields, sanitizeFormData } from '$lib/utils';
+	import { getChangedFields } from '$lib/utils';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 
 	const { AppStore, BranchStore } = stores;
@@ -96,7 +96,6 @@
 		resetForm: false,
 		validators: zod4Client(branchWorkingHoursSchema),
 		onUpdated: async ({ form }) => {
-			console.log(form.data);
 			if (AppStore.branchModal.branch_uid) {
 				await BranchStore.editBranch(
 					AppStore.branchModal.branch_uid,

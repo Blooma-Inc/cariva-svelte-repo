@@ -1,11 +1,12 @@
-import { getMyPermissions } from '$lib/requests/permissions';
+import { getMyPermissions, postOverrideUserPermissions } from '$lib/requests/permissions';
 import { parseError } from '$lib/utils/errorHandler';
 import initializer from '$lib/utils/initializers';
 import { SvelteSet } from 'svelte/reactivity';
 import type { RootStore } from '../index.svelte';
 
 const INIT_IS_LOADING = {
-	isPermissionLoading: false
+	isPermissionLoading: false,
+	isOverridingUserPermissions: false
 };
 
 class PermissionStore {
@@ -50,6 +51,19 @@ class PermissionStore {
 	}
 	canAll(perms: string[]) {
 		return perms.every((p) => this.permissions.has(p));
+	}
+
+	async overrideUserPermissions(payload: UserPermissionsOverridePayload, cb?: () => void) {
+		this.loaders.isOverridingUserPermissions = false;
+		this.errors.isOverridingUserPermissions = '';
+		try {
+			await postOverrideUserPermissions(payload);
+			cb?.();
+		} catch (error) {
+			this.errors.isOverridingUserPermissions = parseError(error);
+		} finally {
+			this.loaders.isOverridingUserPermissions = false;
+		}
 	}
 }
 

@@ -5,11 +5,11 @@
 	import { type Selectables } from '@cariva/ui/components/form-inputs/select-field/index.js';
 
 	export const hospitalTypeItem: Selectables = [
-		{ label: 'Hospital', value: 'hospital' },
-		{ label: 'Clinic', value: 'clinic' },
-		{ label: 'Rehabilitation center', value: 'rehabilitation center' },
-		{ label: 'Specialist center', value: 'specialist center' },
-		{ label: 'Mental health', value: 'mental health' }
+		{ label: 'Hospital', value: 'hospital', enable: true },
+		{ label: 'Clinic', value: 'clinic', enable: true },
+		{ label: 'Rehabilitation center', value: 'rehabilitation center', enable: true },
+		{ label: 'Specialist center', value: 'specialist center', enable: true },
+		{ label: 'Mental health', value: 'mental health', enable: true }
 	];
 
 	export const CreateTenantSchema = z.object({

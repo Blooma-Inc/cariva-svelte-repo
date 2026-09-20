@@ -4,8 +4,8 @@
 	import { type Selectables } from '@cariva/ui/components/form-inputs/select-field/index.js';
 
 	export const profileGender: Selectables = [
-		{ label: 'Male', value: 'male' },
-		{ label: 'Female', value: 'female' }
+		{ label: 'Male', value: 'male', enable: true },
+		{ label: 'Female', value: 'female', enable: true }
 	];
 
 	export const userProfileSchema = z

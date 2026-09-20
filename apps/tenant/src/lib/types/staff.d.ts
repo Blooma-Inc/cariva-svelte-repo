@@ -4,21 +4,6 @@ interface StaffQueryParams extends CarivaBaseQueryParams {
 	is_active?: bool;
 }
 
-interface TenantRoleItem extends BaseItem {
-	code: string;
-	name: string;
-	description: string;
-	scope: string;
-	is_system: boolean;
-	is_enabled: boolean;
-}
-
-interface TenantStaffRoleItem extends BaseItem {
-	user_uid: string;
-	role_uid: string;
-	role: TenantRoleItem;
-}
-
 interface StaffItem extends BaseItem {
 	tenant_uid: string;
 	email: string;
@@ -31,6 +16,6 @@ interface StaffItem extends BaseItem {
 	is_active: boolean;
 	last_login_at: string;
 	designation?: string;
-	user_roles: Array<TenantStaffRoleItem>;
+	user_roles: Array<UserRoleItem>;
 	branch_assignments: Array<BranchAssignmentItem>;
 }

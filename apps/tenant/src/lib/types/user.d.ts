@@ -9,7 +9,7 @@ interface UserProfileItem extends BaseItem {
 	designation: string;
 	is_email_verified: boolean;
 	last_login_at: string;
-	user_roles: Array<TenantStaffRoleItem>;
+	user_roles: Array<UserRoleItem>;
 	branch_assignments: Array<BranchAssignmentItem>;
 	alternative_phone: string | null;
 	prefered_name: string | null;

@@ -12,7 +12,7 @@
   let { headers }: DataTableHeaderProps<TData> = $props();
 </script>
 
-<TableHeader>
+<TableHeader class="static">
   {#each headers as headerGroup (headerGroup.id)}
     <TableRow class="group/row">
       {#each headerGroup.headers as header (header.id)}
