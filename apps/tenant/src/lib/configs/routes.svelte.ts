@@ -33,6 +33,15 @@ export class Route<T extends RouteId = RouteId> {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		return (resolve as any)(this.path, ...params);
 	}
+
+	matches(pathname: string) {
+		if (this.path === '/') {
+			return pathname === '/';
+		}
+
+		const basePath = this.path.replace(/\/\[[^/]+\]$/, '');
+		return pathname === basePath || pathname.startsWith(`${basePath}/`);
+	}
 }
 
 // export const { Route };
@@ -142,14 +151,6 @@ class Routes {
 			this.SETTINGS,
 			this.WARDS
 		];
-	}
-
-	openRoutes() {
-		return this.allRoutes().filter((route) => !route.isProtected);
-	}
-
-	protectedRoutes() {
-		return this.allRoutes().filter((route) => route.isProtected);
 	}
 }
 

@@ -22,7 +22,7 @@ class PermissionStore {
 	}
 
 	async load() {
-		this.loaders.isPermissionLoading = false;
+		this.loaders.isPermissionLoading = true;
 		this.errors.isPermissionLoading = '';
 		try {
 			const res = await getMyPermissions();
@@ -54,7 +54,7 @@ class PermissionStore {
 	}
 
 	async overrideUserPermissions(payload: UserPermissionsOverridePayload, cb?: () => void) {
-		this.loaders.isOverridingUserPermissions = false;
+		this.loaders.isOverridingUserPermissions = true;
 		this.errors.isOverridingUserPermissions = '';
 		try {
 			await postOverrideUserPermissions(payload);

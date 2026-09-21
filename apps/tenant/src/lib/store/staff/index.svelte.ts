@@ -1,4 +1,4 @@
-import { patchStaff, postStaff } from '$lib/requests/staff';
+import { patchStaff, postStaff, postResetStaffPwd } from '$lib/requests/staff';
 import { parseError } from '$lib/utils/errorHandler';
 import initializer from '$lib/utils/initializers';
 import type { TCreateStaffSchema } from '$routes/(protected)/staff/modals/staff-form-modal.svelte';
@@ -47,6 +47,22 @@ class StaffStore {
 		try {
 			await patchStaff(staff_uid, payload);
 			toast.success('Staff updated successfully!');
+			cb?.();
+		} catch (error) {
+			this.errors.isStaffLoading = parseError(error);
+			toast.error(this.errors.isStaffLoading);
+		} finally {
+			this.loaders.isStaffLoading = false;
+		}
+	}
+
+	async resetStaffPassword(user_uid: string, cb?: () => void) {
+		this.loaders.isStaffLoading = false;
+		this.errors.isStaffLoading = '';
+
+		try {
+			await postResetStaffPwd(user_uid);
+			toast.success('Password reset initiated!');
 			cb?.();
 		} catch (error) {
 			this.errors.isStaffLoading = parseError(error);

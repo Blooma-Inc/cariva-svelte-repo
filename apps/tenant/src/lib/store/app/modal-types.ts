@@ -2,6 +2,7 @@ export enum AppModals {
 	DONE = 'DONE',
 	DYNAMIC = 'DYNAMIC',
 	ACCOUNT_LOCKED_MODAL = 'ACCOUNT_LOCKED_MODAL',
+	RESET_USER_PASSWORD_MODAL = 'RESET_USER_PASSWORD_MODAL',
 	DEACTIVATED_ACCOUNT_MODAL = 'DEACTIVATED_ACCOUNT_MODAL',
 	SETUP_TFA_MODAL = 'SETUP_TFA_MODAL',
 	ENABLE_TFA_MODAL = 'ENABLE_TFA_MODAL',
@@ -68,7 +69,12 @@ export type TAppModalsAction =
 			  }
 			| { open?: false }
 	  ))
-	| ({ name: AppModals.STAFF_FORM_MODAL | AppModals.STAFF_PERMISSION_OVERRIDE_MODAL } & (
+	| ({
+			name:
+				| AppModals.STAFF_FORM_MODAL
+				| AppModals.STAFF_PERMISSION_OVERRIDE_MODAL
+				| AppModals.RESET_USER_PASSWORD_MODAL;
+	  } & (
 			| {
 					open: true;
 					user_uid: string;

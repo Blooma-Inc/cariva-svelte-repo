@@ -56,7 +56,15 @@
 				Edit Details
 			</DropdownMenu.Item>
 
-			<DropdownMenu.Item onclick={() => {}}>
+			<DropdownMenu.Item
+				onclick={() => {
+					AppStore.toggleModals({
+						open: true,
+						name: AppModals.RESET_USER_PASSWORD_MODAL,
+						user_uid: JSON.stringify(staff)
+					});
+				}}
+			>
 				<LockIcon class="size-3" />
 				Reset Password
 			</DropdownMenu.Item>

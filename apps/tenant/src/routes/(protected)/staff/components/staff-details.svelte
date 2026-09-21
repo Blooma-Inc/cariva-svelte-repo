@@ -64,7 +64,7 @@
 					</Button>
 				</DropdownMenuTrigger>
 
-				<DropdownMenuContent align="end">
+				<DropdownMenuContent align="end" class="w-fit!">
 					<DropdownMenuItem
 						onclick={() =>
 							AppStore.toggleModals({
@@ -73,7 +73,7 @@
 								user_uid: data.uid
 							})}
 					>
-						Permissions override
+						Edit Permissions
 					</DropdownMenuItem>
 					<DropdownMenuItem>Reset Password</DropdownMenuItem>
 					<DropdownMenuItem>Change Branch</DropdownMenuItem>

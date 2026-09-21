@@ -30,12 +30,16 @@
 	size="xs"
 	variant={override.is_granted ? 'default' : 'destructive'}
 	disabled={mutateQuery.isPending}
-	onclick={() => mutateQuery.mutate(override.uid)}
 >
 	{override.permission.code}
 	{#if mutateQuery.isPending}
 		<LoaderCircleIcon class="animate-spin" />
 	{:else}
-		<CircleXIcon />
+		<button
+			class="cursor-pointer transition-all duration-150 hover:scale-125"
+			onclick={() => mutateQuery.mutate(override.uid)}
+		>
+			<CircleXIcon />
+		</button>
 	{/if}
 </Button>

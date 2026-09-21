@@ -8,6 +8,8 @@
 		[AppModals.DYNAMIC]: () => import('$lib/components/modals/dynamic-modal.svelte'),
 		[AppModals.ACCOUNT_LOCKED_MODAL]: () =>
 			import('$lib/components/modals/account-locked-modal.svelte'),
+		[AppModals.RESET_USER_PASSWORD_MODAL]: () =>
+			import('$lib/components/modals/reset-user-password-modal.svelte'),
 		[AppModals.DEACTIVATED_ACCOUNT_MODAL]: () =>
 			import('$lib/components/modals/deactivated-account-modal.svelte'),
 		[AppModals.SETUP_TFA_MODAL]: () => import('$lib/components/modals/setup-tfa-modal.svelte'),

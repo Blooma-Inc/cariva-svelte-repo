@@ -19,16 +19,15 @@ function redirectToLogin(event: Parameters<Handle>[0]['event']) {
 export const handle: Handle = async ({ event, resolve }) => {
 	const pathname = event.url.pathname;
 
-	if (ROUTES.openRoutes().some((r) => pathname.startsWith(r.path))) {
-		return resolve(event);
-	}
-	if (!ROUTES.protectedRoutes().some((r) => pathname.startsWith(r.path))) {
+	const route = ROUTES.allRoutes().find((route) => route.matches(pathname));
+
+	if (!route || !route.isProtected) {
 		return resolve(event);
 	}
 
 	const token = event.cookies.get(Mangle.SESSION_ASSERTION_KEY);
+
 	if (!token) {
-		logger.debug('Terminating Page Req', 'NO_SESSION', { pathname });
 		throw redirectToLogin(event);
 	}
 

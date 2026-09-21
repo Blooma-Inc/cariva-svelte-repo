@@ -106,7 +106,6 @@
 			resetForm: false,
 			validators: zod4Client(OverridesSchema),
 			onUpdated: async ({ form }) => {
-				console.log(form.data);
 				if (form.valid && hasChanges && changedFields) {
 					const payload: UserPermissionsOverridePayload = {
 						user_uid: userUid,
@@ -125,8 +124,6 @@
 	const isLoading = $derived(PermissionStore.loaders.isOverridingUserPermissions);
 	const columns = $derived(createColumns(form));
 
-	$inspect(changedFields);
-
 	$effect(() => {
 		if (rpMatrixQuery.status !== 'success' || !rpMatrixQuery.data) return;
 
@@ -138,6 +135,8 @@
 	$effect(() => {
 		console.log('overrides ref changed');
 	});
+
+	$inspect(isLoading);
 </script>
 
 {#snippet EmptyRPMatrix()}
@@ -151,7 +150,11 @@
 
 	{#if rpMatrixQuery.status === 'success' && rpMatrixQuery.data}
 		<section class="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-2">
-			<form id="permission-override-form" use:enhance class="flex h-96 w-full flex-col gap-4 py-2">
+			<form
+				id="permission-override-form"
+				use:enhance
+				class="flex max-h-120 w-full flex-col gap-4 py-2"
+			>
 				<DataTable
 					limit={100}
 					status={rpMatrixQuery.status}
@@ -178,27 +181,33 @@
 			</form>
 		</section>
 
-		<div class="border-t p-2">
-			<Button
-				size="lg"
-				type="button"
-				class="md:w-fit"
-				variant="secondary"
-				onclick={() => reset({ data: { overrides: initialState } })}
-				disabled={isLoading}
-			>
-				Discard changes
-			</Button>
-			<Button
-				size="lg"
-				type="submit"
-				form="permission-override-form"
-				class="md:w-fit"
-				disabled={isLoading || !hasChanges}
-				{isLoading}
-			>
-				Save override
-			</Button>
+		<div class="flex w-full flex-col justify-between gap-2 border-t p-2">
+			{#if hasChanges}
+				<Paragraph size="sm">You have unsaved changes to this scope’s permissions.</Paragraph>
+			{/if}
+
+			<div>
+				<Button
+					size="lg"
+					type="button"
+					class="md:w-fit"
+					variant="secondary"
+					onclick={() => reset({ data: { overrides: initialState } })}
+					disabled={isLoading || !hasChanges}
+				>
+					Discard changes
+				</Button>
+				<Button
+					size="lg"
+					type="submit"
+					form="permission-override-form"
+					class="md:w-fit"
+					disabled={isLoading || !hasChanges}
+					{isLoading}
+				>
+					Save override
+				</Button>
+			</div>
 		</div>
 	{/if}
 </div>

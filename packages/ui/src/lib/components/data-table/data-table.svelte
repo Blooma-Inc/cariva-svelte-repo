@@ -118,48 +118,58 @@
 <div class="w-full">
   {@render children?.()}
 
-  {#if status === 'pending'}
+  <div class="max-h-150 overflow-y-auto">
     <Table>
       <DataTableHeader headers={table.getHeaderGroups()} />
-      <DataTableLoading columnLength={table.getAllLeafColumns().length} rowLength={limit} />
-    </Table>
-  {:else if status === 'success'}
-    {#if data && data.length === 0}
-      {#if emptyDataNode}
-        {@render emptyDataNode?.()}
-      {:else if emptyDataProps}
-        <DataTableEmpty
-          description={emptyDataProps.description}
-          showAction={emptyDataProps.showAction}
-          actionFn={emptyDataProps.actionFn}
-          actionText={emptyDataProps.actionText}
-        />
+      {#if status === 'pending'}
+        <DataTableLoading columnLength={table.getAllLeafColumns().length} rowLength={limit} />
+      {:else if status === 'success'}
+        {#if data && data.length}
+          <DataTableBody rows={table.getRowModel().rows} />
+        {/if}
       {/if}
-    {:else}
-      <Table class="relative">
-        <DataTableHeader headers={table.getHeaderGroups()} />
-        <DataTableBody rows={table.getRowModel().rows} />
-      </Table>
+    </Table>
+  </div>
 
-      {#if showPagination}
-        <div class="flex w-full justify-end">
-          <DataTablePagination
-            meta={paginationProps.meta}
-            isLoading={paginationProps.isLoading}
-            perPageOptions={paginationProps.perPageOptions}
-            onPageChange={paginationProps.onPageChange}
-            onPerPageChange={paginationProps.onPerPageChange}
-            onCursorChange={paginationProps.onCursorChange}
-          />
-          <div></div>
-        </div>
+  <div class="w-full">
+    {#if status === 'success'}
+      {#if data && data.length === 0}
+        {#if emptyDataNode}
+          <div class="w-full">
+            {@render emptyDataNode?.()}
+          </div>
+        {:else if emptyDataProps}
+          <div class="w-full">
+            <DataTableEmpty
+              description={emptyDataProps.description}
+              showAction={emptyDataProps.showAction}
+              actionFn={emptyDataProps.actionFn}
+              actionText={emptyDataProps.actionText}
+            />
+          </div>
+        {/if}
       {/if}
     {/if}
-  {:else if status === 'error'}
+  </div>
+
+  {#if status === 'error'}
     <DataTableError
       title={errorDataProps.title}
       errorDescription={errorDataProps.errorDescription}
       onRetry={errorDataProps.onRetry}
     />
+  {/if}
+
+  {#if showPagination}
+    <div class="flex w-full justify-end">
+      <DataTablePagination
+        meta={paginationProps.meta}
+        isLoading={paginationProps.isLoading}
+        perPageOptions={paginationProps.perPageOptions}
+        onPageChange={paginationProps.onPageChange}
+        onPerPageChange={paginationProps.onPerPageChange}
+        onCursorChange={paginationProps.onCursorChange}
+      />
+    </div>
   {/if}
 </div>

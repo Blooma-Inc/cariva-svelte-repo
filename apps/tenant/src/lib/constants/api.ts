@@ -45,7 +45,8 @@ export const STAFF = {
 	ALL: '/staff',
 	ADD: '/staff/add',
 	SINGLE: '/staff/:uid',
-	IN_BRANCH: '/staff/branch/:branch_uid'
+	IN_BRANCH: '/staff/branch/:branch_uid',
+	RESET_PWD: '/staff/reset-pwd'
 } as const;
 
 export const ROLES = {

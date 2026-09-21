@@ -7,3 +7,6 @@ export const postStaff = async (payload: object) =>
 
 export const patchStaff = async (staff_uid: string, payload: Partial<TCreateStaffSchema>) =>
 	await server.patch<CarivaServerResp<boolean>>(STAFF.ADD, { ...payload, staff_uid });
+
+export const postResetStaffPwd = async (user_uid: string) =>
+	await server.post<CarivaServerResp<boolean>>(STAFF.RESET_PWD, { user_uid });
