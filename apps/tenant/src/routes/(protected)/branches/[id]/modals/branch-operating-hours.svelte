@@ -1,5 +1,4 @@
 <script lang="ts" module>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { z } from 'zod';
 
 	export const DEFAULT_WEEK_DAYS = [

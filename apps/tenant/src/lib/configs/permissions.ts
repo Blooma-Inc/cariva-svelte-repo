@@ -37,6 +37,8 @@ export const PERMISSIONS = {
 	PATIENTS_UPDATE: 'patients.update',
 	PATIENTS_DELETE: 'patients.delete',
 	PATIENTS_MANAGE: 'patients.manage',
+	PATIENTS_REGISTRY_SEARCH: 'patient.registry_search',
+	PATIENT_REGISTER: 'patient.register',
 
 	APPOINTMENTS_CREATE: 'appointments.create',
 	APPOINTMENTS_READ: 'appointments.read',

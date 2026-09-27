@@ -131,12 +131,6 @@
 		initialState = mapped;
 		reset({ data: { overrides: mapped } });
 	});
-
-	$effect(() => {
-		console.log('overrides ref changed');
-	});
-
-	$inspect(isLoading);
 </script>
 
 {#snippet EmptyRPMatrix()}

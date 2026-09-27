@@ -1,14 +1,16 @@
 import { createQuery } from '@tanstack/svelte-query';
 import { auth } from './fetch-key-factory';
 
-export function useFetchCurrentUser(enabled = true): QueryHookResponse<UserItem | undefined> {
+export function useFetchCurrentUser(
+	enabled = true
+): QueryHookResponse<CurrentUserItem | undefined> {
 	const meta = auth.getCurrentUser();
 
 	const query = createQuery(() => ({
 		queryKey: meta.keys(),
 		meta,
 		enabled,
-		select: (resp: CarivaServerResp<UserItem>) => resp.data
+		select: (resp: CarivaServerResp<CurrentUserItem>) => resp.data
 	}));
 
 	return {

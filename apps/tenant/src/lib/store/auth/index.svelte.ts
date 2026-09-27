@@ -1,5 +1,4 @@
 import { goto } from '$app/navigation';
-import { decodeJwt } from 'jose';
 import ROUTES from '$lib/configs/routes.svelte';
 import {
 	getCurrentUser,
@@ -52,21 +51,12 @@ class AuthStore {
 	active_role: number = $state(get<number>(Mangle.ACTIVE_USER_ROLE, 0));
 	refreshPromise: Promise<string> | null = $state(null);
 	userEmail: string = $state('');
-	user = $state<Partial<AuthProfile>>({});
+	user = $state<Partial<CurrentUserItem>>({});
 	loaders = $state({ ...INIT_IS_LOADING });
 	errors = $state(initializer(this.loaders, ''));
 
 	constructor(rootStore: RootStore) {
 		this.rootStore = rootStore;
-	}
-
-	async decodeToken(access_token: string) {
-		const claims = decodeJwt<TokenModel>(access_token);
-		this.user = {
-			...this.user,
-			roles: claims.user.roles,
-			scope: claims.user.scope
-		};
 	}
 
 	async grantAccess(data: CarivaServerResp<TAuthSchema>, cb?: (url?: string) => void) {
@@ -79,7 +69,6 @@ class AuthStore {
 				const { data: userData } = await getCurrentUser();
 				this.active_role = persist<number>(Mangle.ACTIVE_USER_ROLE, 0);
 				this.user = userData.data;
-				await this.decodeToken(this.accessToken);
 				cb?.();
 				toast.success('Sucessful!');
 				break;
@@ -156,10 +145,7 @@ class AuthStore {
 
 	async bootstrap() {
 		try {
-			const access_token = await this.fetchNewToken();
-			const { data } = await getCurrentUser();
-			this.user = data.data;
-			this.decodeToken(access_token);
+			await this.fetchNewToken();
 		} catch {
 			goto(ROUTES.LOGIN.resolve(), { replaceState: true });
 		}

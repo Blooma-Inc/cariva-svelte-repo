@@ -61,3 +61,12 @@ export const PERMISSIONS = {
 	OVERRIDE: '/permissions/override',
 	REMOVE_OVERRIDE: '/permissions/remove-override/:uid'
 } as const;
+
+export const PATIENTS = {
+	ALL: '/patients',
+	SINGLE: '/patients/:uid',
+	REGISTRY_SEARCH: '/patients/registry-search',
+	CHECK_EXISTING: '/patients/check-existing',
+	REGISTER: '/patients/register',
+	LINK_TO_TENANT: '/patients/:patient_uid/link-to-tenant'
+} as const;

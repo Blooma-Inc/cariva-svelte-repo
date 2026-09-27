@@ -9,8 +9,8 @@
 
 	let { AuthStore } = stores;
 	const role = $derived.by(() => {
-		if (AuthStore.user.roles && AuthStore.active_role !== null) {
-			return AuthStore.user.roles.at(AuthStore.active_role) as Role;
+		if (AuthStore.user.user_roles && AuthStore.active_role !== null) {
+			return AuthStore.user.user_roles.at(AuthStore.active_role)?.role.name as Role;
 		}
 		return '';
 	});

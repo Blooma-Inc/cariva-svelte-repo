@@ -12,6 +12,7 @@
 	import { useFetchMyPermissions } from '$lib/hooks/permissions/use-fetch-my-permissions.js';
 	import AccessDenied from '$lib/components/access-denied.svelte';
 	import { SvelteSet } from 'svelte/reactivity';
+	import { useFetchCurrentUser } from '$lib/hooks/auth/use-fetch-current-user.js';
 
 	let { children, data } = $props();
 	const { PermissionStore, AuthStore } = stores;
@@ -30,12 +31,7 @@
 	});
 
 	const permissionsQuery = useFetchMyPermissions();
-
-	$effect(() => {
-		if (permissionsQuery.status === 'success' && permissionsQuery.data !== undefined) {
-			PermissionStore.permissions = new SvelteSet(permissionsQuery.data);
-		}
-	});
+	const currentUserQuery = useFetchCurrentUser();
 
 	function checkAccess(routeId: string | null) {
 		if (!routeId) return true;
@@ -50,6 +46,20 @@
 			return checkAccess(page.route.id);
 		}
 		return true;
+	});
+
+	$effect(() => {
+		if (permissionsQuery.status === 'success' && permissionsQuery.data !== undefined) {
+			PermissionStore.permissions = new SvelteSet(permissionsQuery.data);
+		}
+	});
+
+	$effect(() => {
+		if (currentUserQuery.status === 'success' && currentUserQuery.data !== undefined) {
+			AuthStore.user = {
+				...currentUserQuery.data
+			};
+		}
 	});
 </script>
 

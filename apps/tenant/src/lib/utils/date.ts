@@ -102,3 +102,27 @@ export const svelteDateToYearMonthDay = (svelteDateInstance: SvelteDate) => {
 
 	return `${year}-${month}-${day}`;
 };
+
+export const ageFromDate = (birthDate: SvelteDate) => {
+	try {
+		const timeZone = Temporal.Now.timeZoneId();
+
+		const today = Temporal.Now.zonedDateTimeISO(timeZone).toPlainDate();
+
+		const dob = Temporal.PlainDate.from({
+			year: birthDate.getFullYear(),
+			month: birthDate.getMonth() + 1,
+			day: birthDate.getDate()
+		});
+
+		const age = dob.until(today, {
+			largestUnit: 'years',
+			smallestUnit: 'days',
+			roundingMode: 'trunc'
+		});
+
+		return `${age.years} years ${age.months} months ${age.days} days`;
+	} catch {
+		return 'N/A';
+	}
+};

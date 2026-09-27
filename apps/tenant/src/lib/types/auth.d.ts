@@ -20,7 +20,14 @@ interface UserItem extends BaseItem {
 	phone: string;
 	gender: string;
 	profile_photo_url: string;
-	designation: string;
+	designation: string | null;
 	is_email_verified: boolean;
 	last_login_at: string;
+}
+
+interface CurrentUserItem extends UserItem {
+	tenant_uid: string;
+	last_login_at: string;
+	user_roles: Array<UserRoleItem>;
+	branch_assignments: Array<BranchAssignmentItem>;
 }

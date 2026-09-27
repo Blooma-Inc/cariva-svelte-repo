@@ -2,6 +2,7 @@
 	import FallbackDashboard from './components/fallback-dashboard.svelte';
 	import TenantAdminDashboard from './tenant-admin/index.svelte';
 	import BranchAdminDashboard from './branch-admin/index.svelte';
+	import ReceptionistDashboard from './receptionist/index.svelte';
 	import { stores } from '$lib/store/index.svelte';
 	import { ROLES, type Role } from '$lib/configs/roles';
 
@@ -9,7 +10,8 @@
 
 	const dashboardMap = {
 		[ROLES.TENANT_ADMIN]: TenantAdminDashboard,
-		[ROLES.BRANCH_ADMIN]: BranchAdminDashboard
+		[ROLES.BRANCH_ADMIN]: BranchAdminDashboard,
+		[ROLES.RECEPTIONIST]: ReceptionistDashboard
 	};
 
 	let ActiveDashboard = $derived.by(() => {

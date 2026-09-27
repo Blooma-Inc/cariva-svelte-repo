@@ -15,11 +15,6 @@ type TIsAuthenticated = { ttl: number; token?: string; email?: string };
 
 type TResendTokenState = 'idle' | 'resending' | 'sent' | 'failed';
 
-interface AuthProfile extends UserItem {
-	roles: string[];
-	scope: string;
-}
-
 interface TokenModel {
 	exp: number;
 	jti: string;

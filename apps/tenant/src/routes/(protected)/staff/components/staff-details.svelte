@@ -129,15 +129,17 @@
 				</ItemContent>
 			</div>
 
-			<div class="flex w-full flex-col gap-2">
-				<ItemHeader class="border-b pb-2">
-					<ItemTitle>Branch Assignment</ItemTitle>
-				</ItemHeader>
+			{#if data.branch_assignments.length}
+				<div class="flex w-full flex-col gap-2">
+					<ItemHeader class="border-b pb-2">
+						<ItemTitle>Branch Assignment</ItemTitle>
+					</ItemHeader>
 
-				<ItemContent class="flex flex-col gap-2">
-					<Paragraph size="sm" muted>Branch: {data.branch_assignments[0].branch.name}</Paragraph>
-				</ItemContent>
-			</div>
+					<ItemContent class="flex flex-col gap-2">
+						<Paragraph size="sm" muted>Branch: {data.branch_assignments[0].branch.name}</Paragraph>
+					</ItemContent>
+				</div>
+			{/if}
 		</Item>
 	</CardContent>
 </Card>
