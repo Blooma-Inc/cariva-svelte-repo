@@ -45,6 +45,7 @@
 				<fieldset class="flex flex-col gap-2">
 					<FormField {form} name="email">
 						<InputField
+							floatingLabel={true}
 							label="Email Address"
 							placeholder="drchucks@luth.org.ng"
 							bind:value={$formData.email}
@@ -55,6 +56,7 @@
 					<div class="flex flex-col items-end gap-1">
 						<FormField {form} name="password" class="w-full">
 							<InputField
+								floatingLabel={true}
 								label="Password"
 								bind:value={$formData.password}
 								showClear={true}

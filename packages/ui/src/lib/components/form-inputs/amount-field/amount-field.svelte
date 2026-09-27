@@ -7,12 +7,14 @@
     locale?: string;
     maxDecimals?: number;
     allowNegative?: boolean;
+    floatingLabel?: boolean;
   };
 </script>
 
 <script lang="ts">
   import * as Form from '$lib/components/ui/form';
   import { InputGroup, InputGroupAddon, InputGroupInput } from '$lib/components/ui/input-group';
+  import { cn } from '$lib/utils';
 
   let {
     ref = $bindable(null),
@@ -23,11 +25,13 @@
     locale = 'en-NG',
     maxDecimals = 2,
     allowNegative = false,
+    floatingLabel = false,
     ...props
   }: AmountFieldProps = $props();
 
   let focused = $state(false);
   let displayValue = $state('');
+  let isFloating = $derived(focused || (value !== undefined && value !== null && value !== ''));
 
   const formatter = $derived(
     new Intl.NumberFormat(locale, {
@@ -93,7 +97,7 @@
   <Form.Control>
     {#snippet children({ props: controlProps })}
       <div class="relative flex w-full flex-col gap-1">
-        {#if label}
+        {#if label && !floatingLabel}
           <Form.Label>
             {label}
             {#if props.required}
@@ -101,23 +105,48 @@
             {/if}
           </Form.Label>
         {/if}
-        <InputGroup>
-          <InputGroupAddon align="inline-start">
-            <span class="text-muted-foreground text-sm">{currencySymbol}</span>
-          </InputGroupAddon>
-          <InputGroupInput
-            bind:ref
-            {...controlProps}
-            {...props}
-            type="text"
-            inputmode="decimal"
-            autocomplete="off"
-            value={displayValue}
-            oninput={handleInput}
-            onfocus={handleFocus}
-            onblur={handleBlur}
-          />
-        </InputGroup>
+
+        <div
+          class="relative"
+          onfocusin={() => (focused = true)}
+          onfocusout={() => (focused = false)}
+        >
+          <InputGroup>
+            <InputGroupAddon align="inline-start">
+              <span class="text-muted-foreground text-sm">{currencySymbol}</span>
+            </InputGroupAddon>
+            <InputGroupInput
+              bind:ref
+              {...controlProps}
+              {...props}
+              placeholder={floatingLabel ? '' : props.placeholder}
+              class={cn(floatingLabel && 'placeholder:text-transparent', props.class)}
+              type="text"
+              inputmode="decimal"
+              autocomplete="off"
+              value={displayValue}
+              oninput={handleInput}
+              onfocus={handleFocus}
+              onblur={handleBlur}
+            />
+          </InputGroup>
+
+          {#if floatingLabel && label}
+            <Form.Label
+              class={cn(
+                'text-muted-foreground pointer-events-none absolute left-3 transition-all duration-150 ease-out select-none',
+                isFloating
+                  ? 'bg-background text-foreground top-0 -translate-y-1/2 px-1 text-xs'
+                  : 'top-1/2 -translate-y-1/2 text-sm'
+              )}
+            >
+              {label}
+              {#if props.required}
+                <small class="text-destructive">*</small>
+              {/if}
+            </Form.Label>
+          {/if}
+        </div>
       </div>
     {/snippet}
   </Form.Control>

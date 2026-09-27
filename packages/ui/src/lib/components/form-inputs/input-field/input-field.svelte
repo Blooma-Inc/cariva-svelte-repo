@@ -4,6 +4,7 @@
 
   export type InputFieldProps = FieldInputs<InputProps> & {
     showClear?: boolean;
+    floatingLabel?: boolean;
   };
 </script>
 
@@ -15,6 +16,7 @@
     InputGroupButton,
     InputGroupInput
   } from '$lib/components/ui/input-group';
+  import { cn } from '$lib/utils';
   import XIcon from '@lucide/svelte/icons/x';
   import EyeIcon from '@lucide/svelte/icons/eye';
   import EyeClosedIcon from '@lucide/svelte/icons/eye-closed';
@@ -24,23 +26,29 @@
     ref = $bindable(null),
     value = $bindable(),
     showClear = false,
+    floatingLabel = false,
     label,
     description,
     type,
     isLoading,
     ...props
   }: InputFieldProps = $props();
+
   let showPassword = $state(false);
+  let focused = $state(false);
+
   let derivedType = $derived(
     (type === 'password' ? (showPassword ? 'text' : 'password') : type) as InputType
   );
+
+  let isFloating = $derived(focused || (value !== undefined && value !== null && value !== ''));
 </script>
 
 <div class="relative flex w-full flex-col gap-1">
   <Form.Control>
     {#snippet children({ props: controlProps })}
       <div class="relative flex w-full flex-col gap-1">
-        {#if label}
+        {#if label && !floatingLabel}
           <Form.Label>
             {label}
             {#if props.required}
@@ -48,46 +56,77 @@
             {/if}
           </Form.Label>
         {/if}
-        <InputGroup>
-          <InputGroupInput bind:ref bind:value {...controlProps} {...props} type={derivedType} />
-          {#if showClear && value}
-            <InputGroupAddon align="inline-end">
-              <InputGroupButton
-                size="icon-xs"
-                variant="ghost"
-                onclick={() => {
-                  value = '';
-                }}
-              >
-                <XIcon class="size-3" />
-              </InputGroupButton>
-            </InputGroupAddon>
-          {/if}
 
-          {#if type === 'password'}
-            <InputGroupAddon align="inline-end">
-              <InputGroupButton
-                size="icon-xs"
-                variant="ghost"
-                onclick={() => (showPassword = !showPassword)}
-              >
-                {#if showPassword}
-                  <EyeIcon class="size-3" />
-                {:else}
-                  <EyeClosedIcon class="size-3" />
-                {/if}
-              </InputGroupButton>
-            </InputGroupAddon>
-          {/if}
+        <div
+          class="relative"
+          onfocusin={() => (focused = true)}
+          onfocusout={() => (focused = false)}
+        >
+          <InputGroup>
+            <InputGroupInput
+              bind:ref
+              bind:value
+              {...controlProps}
+              {...props}
+              type={derivedType}
+              placeholder={floatingLabel ? '' : props.placeholder}
+              class={cn(floatingLabel && 'placeholder:text-transparent', props.class)}
+            />
+            {#if showClear && value}
+              <InputGroupAddon align="inline-end">
+                <InputGroupButton
+                  size="icon-xs"
+                  variant="ghost"
+                  onclick={() => {
+                    value = '';
+                  }}
+                >
+                  <XIcon class="size-3" />
+                </InputGroupButton>
+              </InputGroupAddon>
+            {/if}
 
-          {#if isLoading}
-            <InputGroupAddon align="inline-end">
-              <InputGroupButton size="icon-xs" variant="ghost">
-                <LoaderCircleIcon class="text-primary size-3 animate-spin" />
-              </InputGroupButton>
-            </InputGroupAddon>
+            {#if type === 'password'}
+              <InputGroupAddon align="inline-end">
+                <InputGroupButton
+                  size="icon-xs"
+                  variant="ghost"
+                  onclick={() => (showPassword = !showPassword)}
+                >
+                  {#if showPassword}
+                    <EyeIcon class="size-3" />
+                  {:else}
+                    <EyeClosedIcon class="size-3" />
+                  {/if}
+                </InputGroupButton>
+              </InputGroupAddon>
+            {/if}
+
+            {#if isLoading}
+              <InputGroupAddon align="inline-end">
+                <InputGroupButton size="icon-xs" variant="ghost">
+                  <LoaderCircleIcon class="text-primary size-3 animate-spin" />
+                </InputGroupButton>
+              </InputGroupAddon>
+            {/if}
+          </InputGroup>
+
+          {#if floatingLabel && label}
+            <Form.Label
+              class={cn(
+                'text-muted-foreground pointer-events-none absolute left-3 transition-all duration-150 ease-out select-none',
+                isFloating
+                  ? 'bg-background text-foreground top-0 -translate-y-1/2 px-1 text-xs'
+                  : 'top-1/2 -translate-y-1/2 text-sm'
+              )}
+            >
+              {label}
+              {#if props.required}
+                <small class="text-destructive">*</small>
+              {/if}
+            </Form.Label>
           {/if}
-        </InputGroup>
+        </div>
       </div>
     {/snippet}
   </Form.Control>

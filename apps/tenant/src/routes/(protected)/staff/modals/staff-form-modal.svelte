@@ -179,6 +179,7 @@
 								<div class="grid grid-cols-1 gap-2 lg:grid-cols-[1fr_1fr_1fr] lg:items-end">
 									<FormField {form} name="first_name">
 										<InputField
+											floatingLabel
 											label="First Name"
 											placeholder="Ayomide"
 											bind:value={$formData.first_name}
@@ -187,6 +188,7 @@
 									</FormField>
 									<FormField {form} name="last_name">
 										<InputField
+											floatingLabel
 											label="Last Name"
 											placeholder="Musa"
 											bind:value={$formData.last_name}
@@ -195,6 +197,7 @@
 									</FormField>
 									<FormField {form} name="middle_name">
 										<InputField
+											floatingLabel
 											label="Middle Name"
 											placeholder="Obinna"
 											bind:value={$formData.middle_name}
@@ -225,6 +228,7 @@
 									</FormField>
 									<FormField {form} name="dob">
 										<DateField
+											floatingLabel
 											label="Date of Birth"
 											placeholder="January 01 2001"
 											bind:value={$formData.dob}
@@ -250,15 +254,17 @@
 											label="Email"
 											placeholder="ayomusaobi@gmail.com"
 											bind:value={$formData.email}
+											floatingLabel
 											required
 										/>
 									</FormField>
 									<FormField {form} name="phone">
 										<TelField
-											label="Phone number"
+											label="Phone"
 											defaultCountry="NG"
 											placeholder="08123456789"
 											bind:value={$formData.phone}
+											floatingLabel
 											required
 										/>
 									</FormField>

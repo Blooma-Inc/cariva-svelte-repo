@@ -1,7 +1,7 @@
 <script lang="ts" module>
   import type { FieldInputs } from '$lib/types';
   import type { HTMLInputAttributes } from 'svelte/elements';
-  import { type WithElementRef } from '$lib/utils.js';
+  import { cn, type WithElementRef } from '$lib/utils.js';
   import type { CountryCode, Country } from 'svelte-tel-input/types';
 
   export type TelFieldProps = FieldInputs<
@@ -18,6 +18,8 @@
       valid?: boolean;
       initialFormat?: 'international' | 'national';
       required?: boolean;
+      floatingLabel?: boolean;
+      countryLabel?: string;
       order?: ((a: Country, b: Country) => number) | undefined;
     }
   >;
@@ -25,7 +27,7 @@
 
 <script lang="ts">
   import CountrySelector from './country-selector.svelte';
-  import { InputGroup, InputGroupAddon, InputGroupInput } from '$lib/components/ui/input-group';
+  import { InputGroup, InputGroupInput } from '$lib/components/ui/input-group';
   import * as Form from '$lib/components/ui/form';
   import { countries } from 'svelte-tel-input/assets';
   import { AsYouType, parsePhoneNumberFromString, isValidPhoneNumber } from 'libphonenumber-js';
@@ -40,6 +42,8 @@
     disabled = $bindable(false),
     value = $bindable(''),
     valid = $bindable(false),
+    floatingLabel = false,
+    countryLabel = 'Country',
     order = undefined,
     initialFormat = 'international',
     name = undefined,
@@ -48,9 +52,14 @@
     ...rest
   }: TelFieldProps = $props();
 
-  let rawInput = $state(''); // what the user actually sees/types
+  let rawInput = $state('');
+  let focused = $state(false);
+  let countryOpen = $state(false);
 
-  // Seed the visible field from an incoming E.164 value (edit mode / re-seeded forms)
+  let isFloating = $derived(
+    focused || countryOpen || !!country || (value !== undefined && value !== null && value !== '')
+  );
+
   $effect(() => {
     if (value && !rawInput) {
       const parsed = parsePhoneNumberFromString(value);
@@ -70,9 +79,8 @@
 
     const parsed = formatter.getNumber();
     if (parsed) {
-      value = parsed.number; // E.164
+      value = parsed.number;
       valid = parsed.isValid();
-      // AsYouType infers country from the number itself (e.g. a typed +234...)
       if (parsed.country && parsed.country !== country) {
         country = parsed.country;
       }
@@ -83,7 +91,6 @@
   }
 
   function handleCountryChange() {
-    // Re-validate against the newly selected country without discarding what's typed
     if (rawInput) {
       const formatter = new AsYouType(country ?? undefined);
       rawInput = formatter.input(rawInput);
@@ -97,7 +104,7 @@
 <div class="relative flex w-full flex-col gap-1">
   <Form.Control>
     {#snippet children({ props: controlProps })}
-      {#if label}
+      {#if label && !floatingLabel}
         <Form.Label>
           {label}
           {#if rest.required}
@@ -106,31 +113,60 @@
         </Form.Label>
       {/if}
 
-      <InputGroup>
-        <InputGroupAddon align="inline-start">
-          <CountrySelector
-            {order}
-            {countries}
-            bind:selected={country}
-            on:select={handleCountryChange}
-          />
-        </InputGroupAddon>
-        <InputGroupInput
-          {...controlProps}
-          {...rest}
-          bind:ref
-          bind:value={rawInput}
-          oninput={handleInput}
-          {readonly}
+      <div
+        class="flex w-full items-start gap-2"
+        onfocusin={() => (focused = true)}
+        onfocusout={() => (focused = false)}
+      >
+        <CountrySelector
+          {order}
+          {countries}
           {disabled}
-          {placeholder}
-          {name}
-          type="tel"
-          aria-invalid={rawInput.length > 0 && !valid}
-          class={className}
-          required={rest.required}
+          bind:selected={country}
+          bind:open={countryOpen}
+          on:select={handleCountryChange}
+          {floatingLabel}
+          {isFloating}
+          label={countryLabel}
+          class="w-28 shrink-0"
         />
-      </InputGroup>
+
+        <div class="relative flex-1">
+          <InputGroup>
+            <InputGroupInput
+              {...controlProps}
+              {...rest}
+              bind:ref
+              bind:value={rawInput}
+              oninput={handleInput}
+              {readonly}
+              {disabled}
+              {name}
+              type="tel"
+              aria-invalid={rawInput.length > 0 && !valid}
+              required={rest.required}
+              placeholder={floatingLabel ? '' : placeholder}
+              class={cn(floatingLabel && 'placeholder:text-transparent', className)}
+            />
+          </InputGroup>
+
+          {#if floatingLabel && label}
+            <Form.Label
+              class={cn(
+                'text-muted-foreground pointer-events-none absolute left-3 transition-all duration-150 ease-out select-none',
+                isFloating
+                  ? 'bg-background text-foreground top-0 -translate-y-1/2 px-1 text-xs'
+                  : 'top-1/2 -translate-y-1/2 text-sm'
+              )}
+            >
+              {label}
+              {#if rest.required}
+                <small class="text-destructive">*</small>
+              {/if}
+            </Form.Label>
+          {/if}
+        </div>
+      </div>
     {/snippet}
   </Form.Control>
 

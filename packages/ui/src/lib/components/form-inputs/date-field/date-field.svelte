@@ -4,6 +4,7 @@
   export interface DateFieldBaseProps {
     ref?: HTMLButtonElement | null;
     value?: SvelteDate;
+    floatingLabel?: boolean;
     placeholder?: string;
     showCalendar?: boolean;
     showTime?: boolean;
@@ -32,6 +33,7 @@
     value = $bindable<SvelteDate | undefined>(undefined),
     label,
     description,
+    floatingLabel = false,
     showCalendar = true,
     showTime = false,
     min,
@@ -41,7 +43,10 @@
   }: DateFieldProps = $props();
 
   let open = $state(false);
+  let focused = $state(false);
 
+  // Floats whenever the trigger is focused, the popover is open, or a value is set.
+  let isFloating = $derived(focused || open || value !== undefined);
   function toCalendarDate(date: SvelteDate | undefined): CalendarDate | undefined {
     if (!date) return undefined;
     return new CalendarDate(date.getFullYear(), date.getMonth() + 1, date.getDate());
@@ -162,7 +167,7 @@
   <Form.Control>
     {#snippet children({ props: controlProps })}
       <div class="relative flex w-full flex-col gap-1">
-        {#if label}
+        {#if label && !floatingLabel}
           <Form.Label>
             {label}
             {#if props.required}
@@ -180,15 +185,33 @@
                 {...triggerProps}
                 {...props}
                 type="button"
+                onfocus={() => (focused = true)}
+                onblur={() => (focused = false)}
                 class={cn(
-                  'font-grotesk border-border flex h-11 w-full items-center justify-start gap-2 rounded-xl border bg-white px-3 text-left text-sm font-normal shadow-none focus-within:border-neutral-950 hover:bg-white',
+                  'font-grotesk border-border relative flex h-11 w-full items-center justify-start gap-2 rounded-xl border bg-white px-3 text-left text-sm font-normal shadow-none focus-within:border-neutral-950 hover:bg-white',
                   !value && 'text-neutral-400',
                   props.class
                 )}
               >
+                {#if floatingLabel && label}
+                  <span
+                    class={cn(
+                      'pointer-events-none absolute left-3 text-neutral-400 transition-all duration-150 ease-out select-none',
+                      isFloating
+                        ? 'top-0 -translate-y-1/2 bg-white px-1 text-xs text-neutral-500'
+                        : 'top-1/2 -translate-y-1/2 text-sm'
+                    )}
+                  >
+                    {label}
+                    {#if props.required}
+                      <small class="text-destructive">*</small>
+                    {/if}
+                  </span>
+                {/if}
+
                 {#if value}
-                  <span>{formatValue(value)}</span>
-                {:else}
+                  <span class={floatingLabel ? 'text-neutral-950' : ''}>{formatValue(value)}</span>
+                {:else if !floatingLabel}
                   <span class="w-11/12 text-sm">{props.placeholder}</span>
                 {/if}
               </button>
