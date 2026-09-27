@@ -1,4 +1,6 @@
 <script lang="ts" module>
+	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	export interface PatientActionsProps {
 		linkedTenantPatient: LinkedTenantPatientItem;
 	}
@@ -9,6 +11,10 @@
 	import EllipsisVerticalIcon from '@lucide/svelte/icons/ellipsis-vertical';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 	import * as DropdownMenu from '@cariva/ui/components/ui/dropdown-menu/index.js';
+	import { stores } from '$lib/store/index.svelte';
+
+	let { linkedTenantPatient }: PatientActionsProps = $props();
+	let { AppStore } = stores;
 </script>
 
 <DropdownMenu.Root>
