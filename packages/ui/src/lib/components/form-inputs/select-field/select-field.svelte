@@ -8,6 +8,7 @@
     placeholder: string;
     selectables: Selectables;
     description?: Snippet | string;
+    floatingLabel?: boolean;
   };
 </script>
 
@@ -18,6 +19,7 @@
   let {
     open = $bindable(false),
     value = $bindable(),
+    floatingLabel = true,
     label,
     placeholder,
     description,
@@ -32,7 +34,7 @@
   <Form.Control>
     {#snippet children({ props: controlProps })}
       <div class="flex min-w-full flex-col gap-1">
-        {#if label}
+        {#if label && !floatingLabel}
           <Form.Label>
             {label}
             {#if props.required}
@@ -41,7 +43,7 @@
           </Form.Label>
         {/if}
         <Select {...controlProps} {...props} bind:value={value as never} bind:open>
-          <SelectTrigger>
+          <SelectTrigger {floatingLabel} {label} required={props.required}>
             {triggerContent}
           </SelectTrigger>
           <SelectContent class="max-h-60">

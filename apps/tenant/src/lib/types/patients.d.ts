@@ -34,3 +34,11 @@ interface LinkedTenantPatientItem extends PatientTenantLinkItem {
 interface PatientSearchResultItem extends PatientItem {
 	patient_tenant_links: Array<PatientTenantLinkItem>;
 }
+
+type PatienceMatchConfidence = 'confirmed' | 'possible' | 'ambiguous';
+
+interface PatientExistenceCheckResult {
+	exists: boolean;
+	confidence: PatienceMatchConfidence | null;
+	candidates: Array<PatientSearchResultItem>;
+}

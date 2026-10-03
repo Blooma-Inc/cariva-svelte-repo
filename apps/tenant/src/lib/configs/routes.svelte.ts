@@ -109,6 +109,12 @@ class Routes {
 		isProtected: true,
 		requiredPermission: PERMISSIONS.PATIENTS_READ
 	});
+	PATIENTS_REGISTRATION = new Route({
+		path: '/(protected)/patients/register',
+		title: 'Patients',
+		isProtected: true,
+		requiredPermission: PERMISSIONS.PATIENT_REGISTER
+	});
 	AUDIT_LOGS = new Route({
 		path: '/(protected)/audit-logs',
 		title: 'Audit Logs',
@@ -145,6 +151,7 @@ class Routes {
 			this.STAFF,
 			this.SINGLE_STAFF,
 			this.PATIENTS,
+			this.PATIENTS_REGISTRATION,
 			this.AUDIT_LOGS,
 			this.PROFILE,
 			this.NOTIFICATION,

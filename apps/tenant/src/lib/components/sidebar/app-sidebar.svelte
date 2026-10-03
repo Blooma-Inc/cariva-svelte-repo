@@ -30,8 +30,9 @@
 	import { useFetchTenant } from '$lib/hooks/tenant/use-fetch-Tenant';
 	import { useFetchMyPermissions } from '$lib/hooks/permissions/use-fetch-my-permissions';
 	import { Paragraph } from '@cariva/ui/components/ui/typography/index.js';
+	import { useFetchCurrentUser } from '$lib/hooks/auth/use-fetch-current-user';
 
-	const { AppStore } = stores;
+	const { AppStore, AuthStore } = stores;
 	const isActive = (url: string) => page.url.pathname === url || page.url.pathname.startsWith(url);
 	const permissionsQuery = useFetchMyPermissions();
 
@@ -49,10 +50,19 @@
 		);
 	};
 	const tenantQuery = useFetchTenant();
+	const currentUserQuery = useFetchCurrentUser();
 
 	$effect(() => {
 		if (tenantQuery.status === 'success' && tenantQuery.data) {
 			AppStore.currentTenant = tenantQuery.data;
+		}
+	});
+
+	$effect(() => {
+		if (currentUserQuery.status === 'success' && currentUserQuery.data) {
+			AuthStore.user = {
+				...currentUserQuery.data
+			};
 		}
 	});
 </script>

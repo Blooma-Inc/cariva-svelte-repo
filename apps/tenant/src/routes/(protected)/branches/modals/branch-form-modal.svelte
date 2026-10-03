@@ -173,7 +173,7 @@
 							<fieldset class="flex flex-col gap-3">
 								<FormField {form} name="name">
 									<InputField
-										label="City"
+										label="Branch name"
 										placeholder="Branch name"
 										bind:value={$formData.name}
 										required
@@ -208,7 +208,7 @@
 
 								<FormField {form} name="address">
 									<TextareaField
-										label="Physical Address (Branch location)"
+										label="Physical Address"
 										placeholder="123 Medical Avenue, Idi-Araba"
 										bind:value={$formData.address}
 										required

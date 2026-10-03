@@ -33,7 +33,7 @@
     value = $bindable<SvelteDate | undefined>(undefined),
     label,
     description,
-    floatingLabel = false,
+    floatingLabel = true,
     showCalendar = true,
     showTime = false,
     min,
@@ -166,7 +166,7 @@
 <div class="relative flex w-full flex-col gap-1">
   <Form.Control>
     {#snippet children({ props: controlProps })}
-      <div class="relative flex w-full flex-col gap-1">
+      <div class="relative flex w-full flex-col">
         {#if label && !floatingLabel}
           <Form.Label>
             {label}
@@ -196,9 +196,9 @@
                 {#if floatingLabel && label}
                   <span
                     class={cn(
-                      'pointer-events-none absolute left-3 text-neutral-400 transition-all duration-150 ease-out select-none',
+                      'text-muted-foreground pointer-events-none absolute left-3 transition-all duration-150 ease-out select-none',
                       isFloating
-                        ? 'top-0 -translate-y-1/2 bg-white px-1 text-xs text-neutral-500'
+                        ? 'text-foreground top-0 -translate-y-1/2 bg-white px-1 text-xs'
                         : 'top-1/2 -translate-y-1/2 text-sm'
                     )}
                   >

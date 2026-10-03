@@ -32,7 +32,7 @@
       return a.name.localeCompare(b.name);
     },
     label = 'Country',
-    floatingLabel = false,
+    floatingLabel = true,
     isFloating = false,
     open = $bindable(false),
     class: className = undefined

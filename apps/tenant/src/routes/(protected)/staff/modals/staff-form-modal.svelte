@@ -152,8 +152,6 @@
 			});
 		}
 	});
-
-	$effect(() => {});
 </script>
 
 <SheetModal isOpen={AppStore.isOpen.STAFF_FORM_MODAL} closeModal={handleClose}>
@@ -168,7 +166,7 @@
 
 		<section class="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-2">
 			<form id="tenant-form" use:enhance class="flex w-full flex-col gap-4">
-				<fieldset disabled={isLoading} class="grid grid-cols-1 gap-3">
+				<fieldset disabled={isLoading} class="grid grid-cols-1">
 					<Card class="self-start">
 						<CardHeader>
 							<CardTitle>Personal Information</CardTitle>
@@ -264,6 +262,7 @@
 											defaultCountry="NG"
 											placeholder="08123456789"
 											bind:value={$formData.phone}
+											initialFormat="national"
 											floatingLabel
 											required
 										/>

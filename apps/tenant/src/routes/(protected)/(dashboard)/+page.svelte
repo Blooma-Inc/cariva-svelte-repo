@@ -14,17 +14,20 @@
 		[ROLES.RECEPTIONIST]: ReceptionistDashboard
 	};
 
+	const role = $derived.by(() => {
+		if (AuthStore.user.user_roles && AuthStore.active_role !== null) {
+			return AuthStore.user.user_roles.at(AuthStore.active_role)?.role.name as Role;
+		}
+		return '';
+	});
+
 	let ActiveDashboard = $derived.by(() => {
 		const roleDashboard = Object.entries(dashboardMap).find(([name, component]) => {
-			if (AuthStore.user.roles && AuthStore.active_role !== null) {
-				const role = AuthStore.user.roles.at(AuthStore.active_role) as Role;
-				if (role == name) {
-					return component;
-				}
-			}
+			if (role === name) return component;
+			return FallbackDashboard;
 		});
 
-		return roleDashboard?.[1] || FallbackDashboard;
+		return roleDashboard?.[1];
 	});
 </script>
 

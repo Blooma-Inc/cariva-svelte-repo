@@ -42,7 +42,7 @@
     disabled = $bindable(false),
     value = $bindable(''),
     valid = $bindable(false),
-    floatingLabel = false,
+    floatingLabel = true,
     countryLabel = 'Country',
     order = undefined,
     initialFormat = 'international',

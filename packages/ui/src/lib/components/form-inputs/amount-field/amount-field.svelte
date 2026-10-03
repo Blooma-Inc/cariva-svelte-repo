@@ -25,7 +25,7 @@
     locale = 'en-NG',
     maxDecimals = 2,
     allowNegative = false,
-    floatingLabel = false,
+    floatingLabel = true,
     ...props
   }: AmountFieldProps = $props();
 
@@ -96,7 +96,7 @@
 <div class="relative flex w-full flex-col gap-1">
   <Form.Control>
     {#snippet children({ props: controlProps })}
-      <div class="relative flex w-full flex-col gap-1">
+      <div class="relative flex w-full flex-col">
         {#if label && !floatingLabel}
           <Form.Label>
             {label}

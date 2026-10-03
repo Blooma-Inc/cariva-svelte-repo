@@ -26,7 +26,7 @@
     ref = $bindable(null),
     value = $bindable(),
     showClear = false,
-    floatingLabel = false,
+    floatingLabel = true,
     label,
     description,
     type,
@@ -72,25 +72,23 @@
               placeholder={floatingLabel ? '' : props.placeholder}
               class={cn(floatingLabel && 'placeholder:text-transparent', props.class)}
             />
-            {#if showClear && value}
-              <InputGroupAddon align="inline-end">
+            <InputGroupAddon align="inline-end" class="gap-0.5">
+              {#if showClear && value}
                 <InputGroupButton
                   size="icon-xs"
-                  variant="ghost"
+                  variant="secondary"
                   onclick={() => {
                     value = '';
                   }}
                 >
                   <XIcon class="size-3" />
                 </InputGroupButton>
-              </InputGroupAddon>
-            {/if}
+              {/if}
 
-            {#if type === 'password'}
-              <InputGroupAddon align="inline-end">
+              {#if type === 'password'}
                 <InputGroupButton
                   size="icon-xs"
-                  variant="ghost"
+                  variant="secondary"
                   onclick={() => (showPassword = !showPassword)}
                 >
                   {#if showPassword}
@@ -99,16 +97,14 @@
                     <EyeClosedIcon class="size-3" />
                   {/if}
                 </InputGroupButton>
-              </InputGroupAddon>
-            {/if}
+              {/if}
 
-            {#if isLoading}
-              <InputGroupAddon align="inline-end">
-                <InputGroupButton size="icon-xs" variant="ghost">
+              {#if isLoading}
+                <InputGroupButton size="icon-xs" variant="secondary">
                   <LoaderCircleIcon class="text-primary size-3 animate-spin" />
                 </InputGroupButton>
-              </InputGroupAddon>
-            {/if}
+              {/if}
+            </InputGroupAddon>
           </InputGroup>
 
           {#if floatingLabel && label}
