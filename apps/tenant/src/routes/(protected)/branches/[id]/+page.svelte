@@ -76,7 +76,7 @@
 			</TabsContent>
 			<TabsContent value="wards_and_beds">
 				{#if tabValue === 'wards_and_beds'}
-					<WardsAndBeds />
+					<WardsAndBeds branchUid={branch_uid()} branchName={branchQuery.data.branch.name} />
 				{/if}
 			</TabsContent>
 			<TabsContent value="staff">
