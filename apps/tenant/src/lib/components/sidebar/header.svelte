@@ -3,14 +3,13 @@
 	import { SidebarTrigger } from '@cariva/ui/components/ui/sidebar/index.js';
 	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
 	import { stores } from '$lib/store/index.svelte';
-	import type { Role } from '$lib/configs/roles';
 	import { snakeCaseToSentenceCase } from '$lib/utils/strings';
 	import { Badge } from '@cariva/ui/components/ui/badge/index.js';
 
 	let { AuthStore } = stores;
 	const role = $derived.by(() => {
 		if (AuthStore.user.user_roles && AuthStore.active_role !== null) {
-			return AuthStore.user.user_roles.at(AuthStore.active_role)?.role.name as Role;
+			return AuthStore.user.user_roles.at(AuthStore.active_role)?.role.name ?? '';
 		}
 		return '';
 	});
