@@ -7,7 +7,7 @@
 	import { Tabs, TabsList, TabsContent, TabsTrigger } from '@cariva/ui/components/ui/tabs/index.js';
 	import Overview from './components/overview.svelte';
 	import Staff from './components/staff.svelte';
-	import WardsAndBeds from './components/wards-and-beds.svelte';
+	import WardsAndBeds from '$lib/components/facility/wards-and-beds.svelte';
 	import Settings from './components/settings.svelte';
 	import { useFetchBranchByUid } from '$lib/hooks/branch/use-fetch-branch-by-uid.js';
 	import { useScrollActiveTab } from '$lib/hooks/app/use-scroll-into-view.svelte.js';
