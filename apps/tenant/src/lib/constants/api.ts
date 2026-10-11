@@ -70,3 +70,9 @@ export const PATIENTS = {
 	REGISTER: '/patients/register',
 	LINK_TO_TENANT: '/patients/:patient_uid/link-to-tenant'
 } as const;
+
+export const FACILITY = {
+	OVERVIEW: '/facility/branch/:branch_uid/overview',
+	WARDS: '/facility/branch/:branch_uid/wards',
+	BEDS: '/facility/branch/:branch_uid/beds'
+} as const;
