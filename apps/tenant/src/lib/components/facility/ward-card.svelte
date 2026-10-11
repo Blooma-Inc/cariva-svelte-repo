@@ -3,6 +3,7 @@
 		ward: WardOverview;
 		selected: boolean;
 		onSelect: () => void;
+		onEdit?: () => void;
 	}
 </script>
 
@@ -14,7 +15,7 @@
 	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
 	import BedCounts from './bed-counts.svelte';
 
-	let { ward, selected, onSelect }: WardCardProps = $props();
+	let { ward, selected, onSelect, onEdit }: WardCardProps = $props();
 </script>
 
 <Card class={selected ? 'border-primary ring-1 ring-primary' : ''}>
@@ -42,8 +43,13 @@
 			</div>
 		</div>
 		<BedCounts beds={ward.beds} />
-		<Button variant="outline" class="w-fit" aria-pressed={selected} onclick={onSelect}>
-			View beds <ArrowRightIcon class="size-4" />
-		</Button>
+		<div class="flex flex-wrap gap-2">
+			<Button variant="outline" class="w-fit" aria-pressed={selected} onclick={onSelect}>
+				View beds <ArrowRightIcon class="size-4" />
+			</Button>
+			{#if onEdit}<Button variant="ghost" aria-label={`Edit ${ward.name}`} onclick={onEdit}
+					>Edit ward</Button
+				>{/if}
+		</div>
 	</CardContent>
 </Card>

@@ -10,6 +10,9 @@
 	import { Skeleton } from '@cariva/ui/components/ui/skeleton/index.js';
 	import { Heading, Paragraph } from '@cariva/ui/components/ui/typography/index.js';
 	import BedIcon from '@lucide/svelte/icons/bed';
+	import PlusIcon from '@lucide/svelte/icons/plus';
+	import { Button } from '@cariva/ui/components/ui/button/index.js';
+	import { AppModals } from '$lib/store/app/modal-types';
 	import { useFetchFacilityOverview } from '$lib/hooks/facility/use-fetch-facility-overview';
 	import { stores } from '$lib/store/index.svelte';
 	import { PERMISSIONS } from '$lib/configs/permissions';
@@ -22,7 +25,7 @@
 	import WardBeds from '$lib/components/facility/ward-beds.svelte';
 
 	let { branchUid, branchName }: WardsAndBedsProps = $props();
-	const { PermissionStore } = stores;
+	const { PermissionStore, AppStore } = stores;
 	const canRead = $derived(PermissionStore.canAll([PERMISSIONS.WARDS_READ, PERMISSIONS.BEDS_READ]));
 	const query = useFetchFacilityOverview(
 		() => branchUid,
@@ -32,21 +35,37 @@
 	const selectedWard = $derived(
 		query.data?.wards.find((ward) => ward.uid === selectedWardUid) ?? query.data?.wards[0]
 	);
+	function openWardForm(ward: WardItem | undefined = undefined) {
+		AppStore.toggleModals({
+			name: AppModals.WARD_FORM_MODAL,
+			open: true,
+			branch_uid: branchUid,
+			branch_name: branchName,
+			ward
+		});
+	}
 </script>
 
 <section class="flex min-w-0 flex-col gap-4">
 	<Card class="overflow-hidden bg-primary text-white!">
 		<CardHeader>
-			<div class="flex items-center gap-3">
-				<div class="rounded-lg bg-white/25 p-3"><BedIcon class="size-6" /></div>
-				<div>
-					<Heading level="h1">Wards & Beds</Heading>
-					<Paragraph>
-						{branchName}{query.data && canRead
-							? ` has ${query.data.total_wards} wards with ${query.data.beds.total_beds} beds total`
-							: ''}
-					</Paragraph>
+			<div class="flex flex-wrap items-center justify-between gap-3">
+				<div class="flex items-center gap-3">
+					<div class="rounded-lg bg-white/25 p-3"><BedIcon class="size-6" /></div>
+					<div>
+						<Heading level="h1">Wards & Beds</Heading>
+						<Paragraph>
+							{branchName}{query.data && canRead
+								? ` has ${query.data.total_wards} wards with ${query.data.beds.total_beds} beds total`
+								: ''}
+						</Paragraph>
+					</div>
 				</div>
+				{#if canRead && PermissionStore.can(PERMISSIONS.WARDS_CREATE)}
+					<Button variant="secondary" onclick={() => openWardForm()}
+						><PlusIcon class="size-4" />Add Ward</Button
+					>
+				{/if}
 			</div>
 		</CardHeader>
 	</Card>
@@ -75,6 +94,9 @@
 							{ward}
 							selected={selectedWard?.uid === ward.uid}
 							onSelect={() => (selectedWardUid = ward.uid)}
+							onEdit={PermissionStore.can(PERMISSIONS.WARDS_UPDATE)
+								? () => openWardForm(ward)
+								: undefined}
 						/>
 					{/each}
 				</div>
