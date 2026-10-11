@@ -61,3 +61,14 @@ interface BedItem extends BaseItem {
 interface BedQueryParams extends CarivaBaseQueryParams {
 	ward_uid?: string;
 }
+
+interface CreateWardPayload {
+	name: string;
+	ward_type: WardType;
+	gender_policy: WardGenderPolicy;
+	location_note: string | null;
+	is_active: boolean;
+	capacity: number;
+}
+
+type UpdateWardPayload = Partial<CreateWardPayload>;
