@@ -1,8 +1,7 @@
 <script lang="ts" module>
 	interface WardCardProps {
 		ward: WardOverview;
-		selected: boolean;
-		onSelect: () => void;
+		branchUid: string;
 		onEdit?: () => void;
 	}
 </script>
@@ -12,13 +11,13 @@
 	import { Badge } from '@cariva/ui/components/ui/badge/index.js';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 	import { Heading, Paragraph } from '@cariva/ui/components/ui/typography/index.js';
-	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
+	import WardBeds from './ward-beds.svelte';
 	import BedCounts from './bed-counts.svelte';
 
-	let { ward, selected, onSelect, onEdit }: WardCardProps = $props();
+	let { ward, branchUid, onEdit }: WardCardProps = $props();
 </script>
 
-<Card class={selected ? 'border-primary ring-1 ring-primary' : ''}>
+<Card class="min-w-0">
 	<CardContent class="flex flex-col gap-4">
 		<div class="flex items-start justify-between gap-2">
 			<div>
@@ -42,11 +41,9 @@
 				></div>
 			</div>
 		</div>
+		<WardBeds {branchUid} {ward} />
 		<BedCounts beds={ward.beds} />
 		<div class="flex flex-wrap gap-2">
-			<Button variant="outline" class="w-fit" aria-pressed={selected} onclick={onSelect}>
-				View beds <ArrowRightIcon class="size-4" />
-			</Button>
 			{#if onEdit}<Button variant="ghost" aria-label={`Edit ${ward.name}`} onclick={onEdit}
 					>Edit ward</Button
 				>{/if}

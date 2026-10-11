@@ -22,7 +22,6 @@
 	import ErrorState from '$lib/components/error-state.svelte';
 	import BedCounts from '$lib/components/facility/bed-counts.svelte';
 	import WardCard from '$lib/components/facility/ward-card.svelte';
-	import WardBeds from '$lib/components/facility/ward-beds.svelte';
 
 	let { branchUid, branchName }: WardsAndBedsProps = $props();
 	const { PermissionStore, AppStore } = stores;
@@ -30,10 +29,6 @@
 	const query = useFetchFacilityOverview(
 		() => branchUid,
 		() => canRead
-	);
-	let selectedWardUid = $state<string | null>(null);
-	const selectedWard = $derived(
-		query.data?.wards.find((ward) => ward.uid === selectedWardUid) ?? query.data?.wards[0]
 	);
 	function openWardForm(ward: WardItem | undefined = undefined) {
 		AppStore.toggleModals({
@@ -87,24 +82,16 @@
 				<Paragraph>Overall occupancy: {query.data.beds.occupancy_percentage}%</Paragraph>
 				<BedCounts beds={query.data.beds} />
 			</div>
-			<div class="grid items-start gap-4 xl:grid-cols-[minmax(0,2fr)_minmax(20rem,1fr)]">
-				<div class="grid gap-4 md:grid-cols-2">
-					{#each query.data.wards as ward (ward.uid)}
-						<WardCard
-							{ward}
-							selected={selectedWard?.uid === ward.uid}
-							onSelect={() => (selectedWardUid = ward.uid)}
-							onEdit={PermissionStore.can(PERMISSIONS.WARDS_UPDATE)
-								? () => openWardForm(ward)
-								: undefined}
-						/>
-					{/each}
-				</div>
-				{#if selectedWard}
-					{#key `${branchUid}/${selectedWard.uid}`}
-						<WardBeds {branchUid} ward={selectedWard} />
-					{/key}
-				{/if}
+			<div class="grid items-start gap-4 md:grid-cols-2 xl:grid-cols-3">
+				{#each query.data.wards as ward (ward.uid)}
+					<WardCard
+						{ward}
+						{branchUid}
+						onEdit={PermissionStore.can(PERMISSIONS.WARDS_UPDATE)
+							? () => openWardForm(ward)
+							: undefined}
+					/>
+				{/each}
 			</div>
 		{:else}
 			<Card class="p-6">
