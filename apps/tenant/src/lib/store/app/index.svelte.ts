@@ -46,6 +46,12 @@ class AppStore {
 		working_hours: ''
 	});
 
+	wardModal = $state<{ branch_uid: string; branch_name: string; ward: WardItem | null }>({
+		branch_uid: '',
+		branch_name: '',
+		ward: null
+	});
+
 	tfaModal = $state({
 		qr_code_url: '',
 		codes: ''
@@ -108,6 +114,15 @@ class AppStore {
 			case AppModals.TFA_BACKUP_CODES:
 				if (modal.open) {
 					this.tfaModal.codes = modal.codes;
+				}
+				break;
+			case AppModals.WARD_FORM_MODAL:
+				if (modal.open) {
+					this.wardModal = {
+						branch_uid: modal.branch_uid,
+						branch_name: modal.branch_name,
+						ward: modal.ward ?? null
+					};
 				}
 				break;
 			case AppModals.BRANCH_FORM_MODAL:

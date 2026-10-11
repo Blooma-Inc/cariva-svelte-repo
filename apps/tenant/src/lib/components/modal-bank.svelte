@@ -24,6 +24,8 @@
 		[AppModals.LOGOUT_MODAL]: () => import('$lib/components/modals/logout-modal.svelte'),
 		[AppModals.REQUEST_EMAIL_VERIFICATION_MODAL]: () =>
 			import('$lib/components/modals/request-email-verification-modal.svelte'),
+		[AppModals.WARD_FORM_MODAL]: () =>
+			import('$routes/(protected)/wards/modals/ward-form-modal.svelte'),
 		[AppModals.BRANCH_FORM_MODAL]: () =>
 			import('$routes/(protected)/branches/modals/branch-form-modal.svelte'),
 		[AppModals.STAFF_FORM_MODAL]: () =>
