@@ -46,6 +46,10 @@ class AppStore {
 		working_hours: ''
 	});
 
+	encounterModal = $state({ patient_uid: '', branch_uid: '', branch_name: '' });
+
+	patientModal = $state({ patient_uid: '' });
+
 	wardModal = $state<{ branch_uid: string; branch_name: string; ward: WardItem | null }>({
 		branch_uid: '',
 		branch_name: '',
@@ -115,6 +119,18 @@ class AppStore {
 				if (modal.open) {
 					this.tfaModal.codes = modal.codes;
 				}
+				break;
+			case AppModals.ENCOUNTER_FORM_MODAL:
+				if (modal.open) {
+					this.encounterModal = {
+						patient_uid: modal.patient_uid,
+						branch_uid: modal.branch_uid ?? '',
+						branch_name: modal.branch_name ?? ''
+					};
+				}
+				break;
+			case AppModals.PATIENT_PROFILE_MODAL:
+				if (modal.open) this.patientModal.patient_uid = modal.patient_uid;
 				break;
 			case AppModals.WARD_FORM_MODAL:
 				if (modal.open) {

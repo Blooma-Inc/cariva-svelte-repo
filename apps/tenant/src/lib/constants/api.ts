@@ -76,3 +76,8 @@ export const FACILITY = {
 	WARDS: '/facility/branch/:branch_uid/wards',
 	BEDS: '/facility/branch/:branch_uid/beds'
 } as const;
+
+export const ENCOUNTERS = {
+	ALL: '/encounters/branch/:branch_uid',
+	TYPES: '/encounter-types'
+} as const;

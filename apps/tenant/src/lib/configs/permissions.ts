@@ -46,6 +46,9 @@ export const PERMISSIONS = {
 	APPOINTMENTS_DELETE: 'appointments.delete',
 	APPOINTMENTS_MANAGE: 'appointments.manage',
 
+	ENCOUNTERS_READ: 'encounters.read',
+	ENCOUNTERS_CREATE: 'encounters.create',
+
 	ADMISSIONS_CREATE: 'admissions.create',
 	ADMISSIONS_READ: 'admissions.read',
 	ADMISSIONS_UPDATE: 'admissions.update',

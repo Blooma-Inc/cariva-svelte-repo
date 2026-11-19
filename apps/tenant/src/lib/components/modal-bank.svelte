@@ -4,6 +4,10 @@
 	import { stores } from '$lib/store/index.svelte';
 
 	const ModalsMap = {
+		[AppModals.ENCOUNTER_FORM_MODAL]: () =>
+			import('$routes/(protected)/patients/modals/encounter-form-modal.svelte'),
+		[AppModals.PATIENT_PROFILE_MODAL]: () =>
+			import('$routes/(protected)/patients/components/patient-profile-panel.svelte'),
 		[AppModals.DONE]: () => import('$lib/components/modals/done-modal.svelte'),
 		[AppModals.DYNAMIC]: () => import('$lib/components/modals/dynamic-modal.svelte'),
 		[AppModals.ACCOUNT_LOCKED_MODAL]: () =>

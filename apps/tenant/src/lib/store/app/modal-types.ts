@@ -1,4 +1,6 @@
 export enum AppModals {
+	ENCOUNTER_FORM_MODAL = 'ENCOUNTER_FORM_MODAL',
+	PATIENT_PROFILE_MODAL = 'PATIENT_PROFILE_MODAL',
 	DONE = 'DONE',
 	DYNAMIC = 'DYNAMIC',
 	ACCOUNT_LOCKED_MODAL = 'ACCOUNT_LOCKED_MODAL',
@@ -21,6 +23,10 @@ export enum AppModals {
 }
 
 export type TAppModalsAction =
+	| ({ name: AppModals.ENCOUNTER_FORM_MODAL } & (
+			| { open: true; patient_uid: string; branch_uid?: string; branch_name?: string }
+			| { open?: false }
+	  ))
 	| { name?: undefined }
 	| { name: ''; open?: boolean }
 	| ({ name: AppModals.DONE } & (
@@ -61,6 +67,10 @@ export type TAppModalsAction =
 					open: true;
 					codes: string;
 			  }
+			| { open?: false }
+	  ))
+	| ({ name: AppModals.PATIENT_PROFILE_MODAL } & (
+			| { open: true; patient_uid: string }
 			| { open?: false }
 	  ))
 	| ({ name: AppModals.WARD_FORM_MODAL } & (

@@ -1,6 +1,4 @@
 <script lang="ts" module>
-	/* eslint-disable no-unused-vars */
-	/* eslint-disable @typescript-eslint/no-unused-vars */
 	export interface PatientActionsProps {
 		linkedTenantPatient: LinkedTenantPatientItem;
 	}
@@ -12,9 +10,9 @@
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 	import * as DropdownMenu from '@cariva/ui/components/ui/dropdown-menu/index.js';
 	import { stores } from '$lib/store/index.svelte';
+	import { AppModals } from '$lib/store/app/modal-types';
 
 	let { linkedTenantPatient }: PatientActionsProps = $props();
-	let { AppStore } = stores;
 </script>
 
 <DropdownMenu.Root>
@@ -28,7 +26,14 @@
 	</DropdownMenu.Trigger>
 
 	<DropdownMenu.Content align="end" class="w-fit">
-		<DropdownMenu.Item>
+		<DropdownMenu.Item
+			onSelect={() =>
+				stores.AppStore.toggleModals({
+					name: AppModals.PATIENT_PROFILE_MODAL,
+					open: true,
+					patient_uid: linkedTenantPatient.patient_uid
+				})}
+		>
 			<EyeIcon class="size-3" />
 			View Details
 		</DropdownMenu.Item>

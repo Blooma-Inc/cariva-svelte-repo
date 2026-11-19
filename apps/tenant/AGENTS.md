@@ -29,3 +29,10 @@ You MUST use this tool whenever writing Svelte code before sending it to the use
 
 Generates a Svelte Playground link with the provided code.
 After completing the code, ask the user if they want a playground link. Only call this tool after user confirmation and NEVER if code was written to files in their project.
+
+## Frontend conventions
+
+- Before adding frontend UI, inspect `packages/ui` and comparable tenant app screens. Reuse existing shared components, including `InputField`, `SelectField`, `CheckField`, `TextareaField`, and Tabs with their design-system styling; avoid raw replacements and unnecessary style overrides.
+- Follow existing form patterns: Superforms with Zod, `FormField`, shared field components, and `use:enhance`. Keep API mutations, loading flags, and errors in the appropriate store. Do not replace `use:enhance` with `fromAction(enhance)` or attachment syntax solely because an analyzer suggests it.
+- Create modals through the central modal system: add the enum and typed payload in `lib/store/app/modal-types.ts`, keep context and open state in `AppStore`, register a lazy import in `lib/components/modal-bank.svelte`, and wrap the modal in `DialogModal` or `SheetModal`. Launch and close through `AppStore.toggleModals`; keep triggers separate from modal content so the modal mounts only while open.
+- Each API hook domain uses `fetch-key-factory.ts` for request paths, parameters, and query keys. Use the factory in hooks and corresponding cache invalidation instead of duplicating inline keys. Preserve tenant, branch, patient, and filter scope where applicable.

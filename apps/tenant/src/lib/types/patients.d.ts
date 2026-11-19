@@ -42,3 +42,49 @@ interface PatientExistenceCheckResult {
 	confidence: PatienceMatchConfidence | null;
 	candidates: Array<PatientSearchResultItem>;
 }
+
+interface PatientProfileItem extends PatientItem {
+	personal_detail: {
+		nationality: string | null;
+		state_of_origin: string | null;
+		lga_of_origin: string | null;
+		religion: string | null;
+		occupation: string | null;
+		education_level: string | null;
+	} | null;
+	contacts: Array<{
+		email: string | null;
+		primary_phone: string | null;
+		secondary_phone: string | null;
+		is_primary: boolean | null;
+	}>;
+	addresses: Array<{
+		address: string;
+		lga: string | null;
+		state: string | null;
+		country: string | null;
+		zip_code: string | null;
+		is_current: boolean;
+	}>;
+	contact_persons: Array<{
+		role: string;
+		priority: number;
+		full_name: string;
+		relationship_to_patient: string;
+		primary_phone: string;
+		secondary_phone: string | null;
+		email: string | null;
+		street_address: string | null;
+	}>;
+	insurances: Array<{
+		insurance_type: string;
+		provider_name: string | null;
+		enrollee_id: string | null;
+		plan_name: string | null;
+		is_primary: boolean;
+	}>;
+}
+
+interface LinkedTenantPatientDetails extends LinkedTenantPatientItem {
+	patient: PatientProfileItem;
+}

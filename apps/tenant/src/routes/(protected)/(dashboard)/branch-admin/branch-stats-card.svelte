@@ -27,7 +27,6 @@
 	} from '@cariva/ui/components/ui/card/index.js';
 	import { cn } from '@cariva/ui/utils';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
-	import { goto } from '$app/navigation';
 	import { getRoute } from '$lib/configs/routes.svelte';
 
 	const {
@@ -80,11 +79,8 @@
 				<CardDescription>{meta.stat} {meta.statDescription}</CardDescription>
 			</div>
 
-			<Button
-				size="xs"
-				variant="link"
-				class="underline"
-				onclick={() => goto(getRoute(meta.routeId)?.resolve())}>{meta.routeText}</Button
+			<Button size="xs" variant="link" class="underline" href={getRoute(meta.routeId)?.resolve()}
+				>{meta.routeText}</Button
 			>
 		</div>
 	</CardFooter>
