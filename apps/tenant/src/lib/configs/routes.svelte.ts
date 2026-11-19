@@ -30,8 +30,11 @@ export class Route<T extends RouteId = RouteId> {
 	}
 
 	resolve(...params: RouteParams<T> extends Record<string, never> ? [] : [params: RouteParams<T>]) {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		return (resolve as any)(this.path, ...params);
+		const resolveRoute = resolve as unknown as (
+			path: T,
+			...args: typeof params
+		) => ReturnType<typeof resolve>;
+		return resolveRoute(this.path, ...params);
 	}
 
 	matches(pathname: string) {
@@ -109,6 +112,18 @@ class Routes {
 		isProtected: true,
 		requiredPermission: PERMISSIONS.PATIENTS_READ
 	});
+	SINGLE_PATIENT = new Route({
+		path: '/(protected)/patients/[id]',
+		title: 'Patient details',
+		isProtected: true,
+		requiredPermission: PERMISSIONS.PATIENTS_READ
+	});
+	PATIENT_ENCOUNTERS = new Route({
+		path: '/(protected)/patients/[id]/encounters',
+		title: 'Patient encounters',
+		isProtected: true,
+		requiredPermission: PERMISSIONS.PATIENTS_READ
+	});
 	PATIENTS_REGISTRATION = new Route({
 		path: '/(protected)/patients/register',
 		title: 'Patients',
@@ -152,6 +167,8 @@ class Routes {
 			this.SINGLE_STAFF,
 			this.PATIENTS,
 			this.PATIENTS_REGISTRATION,
+			this.SINGLE_PATIENT,
+			this.PATIENT_ENCOUNTERS,
 			this.AUDIT_LOGS,
 			this.PROFILE,
 			this.NOTIFICATION,

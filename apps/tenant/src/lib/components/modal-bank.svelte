@@ -4,6 +4,10 @@
 	import { stores } from '$lib/store/index.svelte';
 
 	const ModalsMap = {
+		[AppModals.ENCOUNTER_FORM_MODAL]: () =>
+			import('$routes/(protected)/patients/modals/encounter-form-modal.svelte'),
+		[AppModals.PATIENT_PROFILE_MODAL]: () =>
+			import('$routes/(protected)/patients/components/patient-profile-panel.svelte'),
 		[AppModals.DONE]: () => import('$lib/components/modals/done-modal.svelte'),
 		[AppModals.DYNAMIC]: () => import('$lib/components/modals/dynamic-modal.svelte'),
 		[AppModals.ACCOUNT_LOCKED_MODAL]: () =>
@@ -24,6 +28,8 @@
 		[AppModals.LOGOUT_MODAL]: () => import('$lib/components/modals/logout-modal.svelte'),
 		[AppModals.REQUEST_EMAIL_VERIFICATION_MODAL]: () =>
 			import('$lib/components/modals/request-email-verification-modal.svelte'),
+		[AppModals.WARD_FORM_MODAL]: () =>
+			import('$routes/(protected)/wards/modals/ward-form-modal.svelte'),
 		[AppModals.BRANCH_FORM_MODAL]: () =>
 			import('$routes/(protected)/branches/modals/branch-form-modal.svelte'),
 		[AppModals.STAFF_FORM_MODAL]: () =>
