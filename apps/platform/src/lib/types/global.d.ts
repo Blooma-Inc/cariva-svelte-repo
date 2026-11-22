@@ -2,6 +2,7 @@ interface MenuItem {
 	title: string;
 	url?: Pathname;
 	icon: LucideIcon;
+	requiredPermission?: string;
 	isNestable?: boolean;
 	submenu?: Array<{
 		title: string;

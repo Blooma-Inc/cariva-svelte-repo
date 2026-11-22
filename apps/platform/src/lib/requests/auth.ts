@@ -22,6 +22,12 @@ export const postResetPwd = async (payload: TResetPasswordSchema) =>
 export const postVerifyAcct = async (payload: { email: string }) =>
 	await server.post<CarivaServerResp<boolean>>(AUTH.VERIFY_ACCT, payload);
 
+export const postVerifyEmail = async (token: string) =>
+	await server.post<CarivaServerResp<boolean>>(AUTH.VERIFY_EMAIL, { token });
+
+export const postResendEmailVerification = async (email: string) =>
+	await server.post<CarivaServerResp<boolean>>(AUTH.RESEND_EMAIL, { email });
+
 export const postChangePwd = async (payload: TChangePasswordSchema) =>
 	await server.post<CarivaServerResp<boolean>>(AUTH.CHANGE_PWD, payload);
 

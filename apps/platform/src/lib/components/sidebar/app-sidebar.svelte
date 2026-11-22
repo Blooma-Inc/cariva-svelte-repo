@@ -18,8 +18,7 @@
 		SidebarMenuSubItem,
 		SidebarRail
 	} from '@cariva/ui/components/ui/sidebar/index.js';
-	import { EnumRole } from '$lib/configs/roles';
-	import { menuCommon, getMenuForRole } from '$lib/configs/menu-items';
+	import { menuCommon, getMenuForUser } from '$lib/configs/menu-items';
 	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
 	import {
 		Collapsible,
@@ -29,24 +28,24 @@
 	import NavUser from './nav-user.svelte';
 	import { stores } from '$lib/store/index.svelte';
 
-	const { AuthStore } = stores;
-	const isActive = (url: string) => page.url.pathname === url || page.url.pathname.startsWith(url);
+	const { PermissionStore } = stores;
+	const isActive = (url: NonNullable<MenuItem['url']>) =>
+		page.url.pathname === resolve(url) || page.url.pathname.startsWith(`${resolve(url)}/`);
 
-	const isSubmenuActive = (submenu: { url: string }[]) =>
+	const isSubmenuActive = (submenu: { url: NonNullable<MenuItem['url']> }[]) =>
 		submenu.some((item) => isActive(item.url));
 
 	const isCurrentPath = (menuItem: MenuItem, currentPath: string): boolean => {
 		if (!menuItem.url) return false;
 
-		if (!menuItem.isNestable) return menuItem.url === currentPath;
+		const url = resolve(menuItem.url);
 
-		return (
-			currentPath === menuItem.url ||
-			currentPath.startsWith(menuItem.url.endsWith('/') ? menuItem.url : `${menuItem.url}/`)
-		);
+		if (!menuItem.isNestable) return url === currentPath;
+
+		return currentPath === url || currentPath.startsWith(url.endsWith('/') ? url : `${url}/`);
 	};
 
-	const roleMenu = $derived(getMenuForRole(AuthStore.user.roles?.at(0) as EnumRole));
+	const roleMenu = $derived(getMenuForUser([...PermissionStore.permissions]));
 </script>
 
 <Sidebar collapsible="icon">

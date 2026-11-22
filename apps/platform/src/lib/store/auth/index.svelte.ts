@@ -9,12 +9,20 @@ import {
 	postLogin,
 	postVerify2FATOTP,
 	getSetup2FA,
-	postEnable2FA
+	postEnable2FA,
+	postVerifyEmail,
+	postResendEmailVerification,
+	postResetPwd,
+	postForgotPwd
 } from '$lib/requests/auth';
 import { parseError } from '$lib/utils/errorHandler';
 import initializer from '$lib/utils/initializers';
 import { toast } from '@cariva/ui/components/toast/index.js';
-import type { TAuthSchema, TLoginSchema } from '../../../routes/auth/validator';
+import type {
+	TAuthSchema,
+	TLoginSchema,
+	TResetPasswordSchema
+} from '../../../routes/auth/validator';
 import { AppModals } from '../app/modal-types';
 import type { RootStore } from '../index.svelte';
 import type { UserProfileType } from '$routes/(protected)/profile/modals/profile-form-modal.svelte';
@@ -27,15 +35,19 @@ const INIT_IS_LOADING = {
 	isLogingOut: false,
 	isRefreshing: false,
 	isUpdatingProfile: false,
-	isEnablingTFA: false
+	isEnablingTFA: false,
+	isVerifyingEmail: false,
+	isResettingPassword: false,
+	isRequestingPasswordReset: false
 };
 
 class AuthStore {
 	rootStore: RootStore;
 
 	accessToken = $state<string>('');
+	userEmail = $state('');
 	refreshPromise: Promise<string> | null = $state(null);
-	user = $state<Partial<AccessTokenUserModel>>({});
+	user = $state<Partial<UserItem & AccessTokenUserModel>>({});
 	loaders = $state({ ...INIT_IS_LOADING });
 	errors = $state(initializer(this.loaders, ''));
 
@@ -64,10 +76,9 @@ class AuthStore {
 				});
 				break;
 			case 'email_not_verified':
-				// show email not verified modal
 				this.rootStore.AppStore.toggleModals({
 					open: true,
-					name: AppModals.TFA_VERIFICATION_MODAL
+					name: AppModals.REQUEST_EMAIL_VERIFICATION_MODAL
 				});
 				break;
 			case 'account_locked':
@@ -84,7 +95,7 @@ class AuthStore {
 				});
 				break;
 			case 'requires_password_reset':
-				// show password reset modal
+				await goto(ROUTES.RESET_PWD.resolve({ token: this.accessToken }));
 				break;
 			default:
 				toast.info('Unknown error.');
@@ -96,6 +107,7 @@ class AuthStore {
 		this.errors.isLogingIn = '';
 		try {
 			const { data } = (await postLogin(payload)) as { data: CarivaServerResp<TAuthSchema> };
+			this.userEmail = payload.email;
 			await this.grantAccess(data, cb);
 		} catch (error) {
 			this.errors.isLogingIn = parseError(error);
@@ -130,9 +142,13 @@ class AuthStore {
 		try {
 			await this.fetchNewToken();
 			const { data } = await getCurrentUser();
-			this.user = data.data;
-		} catch {
-			goto(ROUTES.LOGIN.resolve(), { replaceState: true });
+			const claims = decodeJwt<TokenModel>(this.accessToken);
+			this.user = { ...data.data, roles: claims.user.roles, scope: claims.user.scope };
+		} catch (error) {
+			this.rootStore.PermissionStore.clear();
+			this.accessToken = '';
+			this.user = {};
+			throw error;
 		}
 	}
 
@@ -145,6 +161,7 @@ class AuthStore {
 		} catch (error) {
 			this.errors.isLogingOut = parseError(error);
 		} finally {
+			this.rootStore.PermissionStore.clear();
 			this.accessToken = '';
 			this.user = {};
 			goto(ROUTES.LOGIN.resolve());
@@ -158,6 +175,7 @@ class AuthStore {
 		} catch (error) {
 			this.errors.isLogingOut = parseError(error);
 		} finally {
+			this.rootStore.PermissionStore.clear();
 			this.accessToken = '';
 			this.user = {};
 			goto(ROUTES.LOGIN.resolve());
@@ -232,6 +250,73 @@ class AuthStore {
 			toast.error(this.errors.isLogingIn);
 		} finally {
 			this.loaders.isLogingIn = false;
+		}
+	}
+
+	async verifyEmail(token: string, cb?: () => void) {
+		this.loaders.isVerifyingEmail = true;
+		this.errors.isVerifyingEmail = '';
+		try {
+			const { data } = (await postVerifyEmail(token)) as { data: CarivaServerResp<boolean> };
+			toast.success(data.message);
+			cb?.();
+			return true;
+		} catch (error) {
+			this.errors.isVerifyingEmail = parseError(error);
+			toast.error(this.errors.isVerifyingEmail);
+
+			return false;
+		} finally {
+			this.loaders.isVerifyingEmail = false;
+		}
+	}
+
+	async resendEmailVerification(cb?: () => void) {
+		this.loaders.isVerifyingEmail = true;
+		this.errors.isVerifyingEmail = '';
+		try {
+			const { data } = (await postResendEmailVerification(this.userEmail)) as {
+				data: CarivaServerResp<boolean>;
+			};
+			toast.success(data.message);
+			cb?.();
+		} catch (error) {
+			this.errors.isVerifyingEmail = parseError(error);
+			toast.error(this.errors.isVerifyingEmail);
+		} finally {
+			this.loaders.isVerifyingEmail = false;
+		}
+	}
+
+	async forgotPwd(email: string, cb?: () => void) {
+		this.loaders.isRequestingPasswordReset = true;
+		this.errors.isRequestingPasswordReset = '';
+		try {
+			const { data } = await postForgotPwd({ email });
+			toast.success(data.message);
+			cb?.();
+		} catch (error) {
+			this.errors.isRequestingPasswordReset = parseError(error);
+			toast.error(this.errors.isRequestingPasswordReset);
+		} finally {
+			this.loaders.isRequestingPasswordReset = false;
+		}
+	}
+
+	async resetPwd(payload: TResetPasswordSchema, cb: () => void) {
+		this.loaders.isResettingPassword = true;
+		this.errors.isResettingPassword = '';
+		try {
+			const { data } = (await postResetPwd(payload)) as {
+				data: CarivaServerResp<boolean>;
+			};
+			toast.success(data.message);
+			cb?.();
+		} catch (error) {
+			this.errors.isResettingPassword = parseError(error);
+			toast.error(this.errors.isResettingPassword);
+		} finally {
+			this.loaders.isResettingPassword = false;
 		}
 	}
 }

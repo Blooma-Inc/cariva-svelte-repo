@@ -3,7 +3,6 @@
 	import { email } from '$lib/validators';
 
 	export const ForgotPwdSchema = z.object({
-		hospital_code: z.string({ error: 'Code is required' }),
 		email
 	});
 </script>
@@ -25,16 +24,18 @@
 	import { zod4Client } from 'sveltekit-superforms/adapters';
 	import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
 
-	const { AppStore } = stores;
+	const { AppStore, AuthStore } = stores;
 
 	const form = superForm(
-		{ hospital_code: '', email: '' },
+		{ email: '' },
 		{
 			SPA: true,
 			resetForm: false,
 			validators: zod4Client(ForgotPwdSchema),
-			onUpdate: async ({ form }) => {
-				console.log(form.data);
+			onUpdated: async ({ form }) => {
+				if (form.valid) {
+					await AuthStore.forgotPwd(form.data.email, handleClose);
+				}
 			}
 		}
 	);
@@ -55,22 +56,16 @@
 		<DialogHeader>
 			<Heading level="h1">Secure Password Recovery</Heading>
 			<Paragraph class="text-neutral-500!">
-				Enter your hospital code and email address to receive a secure reset link.
+				Enter your email address to receive a secure reset link.
 			</Paragraph>
 		</DialogHeader>
 
 		<div class="flex flex-col gap-3 rounded-xl">
 			<form use:enhance class="flex flex-col gap-3">
-				<fieldset class="flex flex-col gap-3">
-					<FormField {form} name="hospital_code">
-						<InputField
-							label="Hospital Code"
-							placeholder="Enter Hospital code"
-							bind:value={$formData.hospital_code}
-							required
-						/>
-					</FormField>
-
+				<fieldset
+					disabled={AuthStore.loaders.isRequestingPasswordReset}
+					class="flex flex-col gap-3"
+				>
 					<FormField {form} name="email">
 						<InputField
 							label="Work Email Address"
@@ -81,7 +76,13 @@
 					</FormField>
 				</fieldset>
 
-				<Button size="lg" type="submit" class="w-fit">Send Reset Link</Button>
+				<Button
+					disabled={AuthStore.loaders.isRequestingPasswordReset}
+					isLoading={AuthStore.loaders.isRequestingPasswordReset}
+					size="lg"
+					type="submit"
+					class="w-fit">Send Reset Link</Button
+				>
 			</form>
 
 			<DialogFooter class="border-t pt-3">

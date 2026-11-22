@@ -19,10 +19,11 @@
 	import { TenantStatusEnum } from './tenant-status-badge';
 	import { stores } from '$lib/store/index.svelte';
 	import { AppModals } from '$lib/store/app/modal-types';
+	import { PERMISSIONS } from '$lib/configs/permissions';
 	import ROUTES from '$lib/configs/routes.svelte';
 
 	let { tenant }: TenantActionsProps = $props();
-	let { AppStore } = stores;
+	const { AppStore, PermissionStore } = stores;
 
 	const isSuspended = $derived(tenant.status === TenantStatusEnum.SUSPENDED);
 	const isOnBoarding = $derived(tenant.status === TenantStatusEnum.ONBOARDING);
@@ -41,6 +42,7 @@
 	<DropdownMenu.Content align="end" class="w-fit">
 		{#if isOnBoarding}
 			<DropdownMenu.Item
+				disabled={!PermissionStore.can(PERMISSIONS.TENANTS_UPDATE)}
 				onclick={() => {
 					AppStore.toggleModals({
 						open: true,

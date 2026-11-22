@@ -15,32 +15,38 @@
 	export const statusItem = [
 		{
 			label: 'Enable',
-			value: 'true'
+			value: 'true',
+			enable: true
 		},
 		{
 			label: 'Disable',
-			value: 'false'
+			value: 'false',
+			enable: true
 		}
 	];
 
 	export const durationItem = [
 		{
 			label: '1 month',
-			value: '30'
+			value: '30',
+			enable: true
 		},
 		{
 			label: '3 months',
-			value: '90'
+			value: '90',
+			enable: true
 		},
 
 		{
 			label: '6 months',
-			value: '180'
+			value: '180',
+			enable: true
 		},
 
 		{
 			label: '1 year',
-			value: '365'
+			value: '365',
+			enable: true
 		}
 	];
 </script>

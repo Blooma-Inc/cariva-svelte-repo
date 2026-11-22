@@ -7,6 +7,7 @@ import { Mangle } from '$lib/constants/mangle';
 
 let cachedKey: CryptoKey;
 async function getPublicKey() {
+	if (!env.JWT_PUBLIC_KEY) throw new Error('JWT public key is not configured');
 	cachedKey ??= await importSPKI(env.JWT_PUBLIC_KEY, 'RS256');
 	return cachedKey;
 }
@@ -19,10 +20,7 @@ function redirectToLogin(event: Parameters<Handle>[0]['event']) {
 export const handle: Handle = async ({ event, resolve }) => {
 	const pathname = event.url.pathname;
 
-	if (ROUTES.openRoutes().some((r) => pathname.startsWith(r.path))) {
-		return resolve(event);
-	}
-	if (!ROUTES.protectedRoutes().some((r) => pathname.startsWith(r.path))) {
+	if (!event.route.id?.split('/').includes('(protected)')) {
 		return resolve(event);
 	}
 

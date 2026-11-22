@@ -7,10 +7,11 @@
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 	import PlusIcon from '@lucide/svelte/icons/plus';
 	import { stores } from '$lib/store/index.svelte';
+	import { PERMISSIONS } from '$lib/configs/permissions';
 	import { AppModals } from '$lib/store/app/modal-types';
 	import { useOffsetPagination } from '$lib/hooks/app/use-offset-pagination.svelte';
 
-	const { AppStore } = stores;
+	const { AppStore, PermissionStore } = stores;
 
 	const params = $state({
 		limit: 10,
@@ -43,6 +44,7 @@
 					<DataTableSearch placeholder="search by name, status e.t.c" />
 
 					<Button
+						disabled={!PermissionStore.can(PERMISSIONS.TENANTS_CREATE)}
 						size="sm"
 						onclick={() =>
 							AppStore.toggleModals({

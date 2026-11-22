@@ -4,47 +4,47 @@ import ChartPieIcon from '@lucide/svelte/icons/chart-pie';
 import LayoutDashboardIcon from '@lucide/svelte/icons/layout-dashboard';
 import LogsIcon from '@lucide/svelte/icons/logs';
 import SettingsIcon from '@lucide/svelte/icons/settings';
-import { EnumRole } from './roles';
 import ROUTES from './routes.svelte';
 import UserRoundPenIcon from '@lucide/svelte/icons/user-round-pen';
 
-const ALL_MENU_ITEMS: RoleMenuItem[] = [
+const ALL_MENU_ITEMS: MenuItem[] = [
 	{
 		title: ROUTES.DASHBOARD.title,
 		url: ROUTES.DASHBOARD.path,
 		icon: LayoutDashboardIcon,
-		roles: ROUTES.DASHBOARD.roles
+		requiredPermission: ROUTES.DASHBOARD.requiredPermission
 	},
 	{
 		title: ROUTES.TENANT.title,
 		url: ROUTES.TENANT.path,
 		icon: Building2Icon,
-		roles: ROUTES.TENANT.roles,
+		requiredPermission: ROUTES.TENANT.requiredPermission,
 		isNestable: true
 	},
 	{
 		title: ROUTES.SYSTEM_SETTINGS.title,
 		url: ROUTES.SYSTEM_SETTINGS.path,
 		icon: SettingsIcon,
-		roles: ROUTES.SYSTEM_SETTINGS.roles
+		requiredPermission: ROUTES.SYSTEM_SETTINGS.requiredPermission
 	},
 	{
 		title: ROUTES.AUDIT_LOGS.title,
 		url: ROUTES.AUDIT_LOGS.path,
 		icon: LogsIcon,
-		roles: ROUTES.AUDIT_LOGS.roles
+		requiredPermission: ROUTES.AUDIT_LOGS.requiredPermission
 	},
 	{
 		title: ROUTES.PLATFORM_ANALYTICS.title,
 		url: ROUTES.PLATFORM_ANALYTICS.path,
 		icon: ChartPieIcon,
-		roles: ROUTES.PLATFORM_ANALYTICS.roles
+		requiredPermission: ROUTES.PLATFORM_ANALYTICS.requiredPermission
 	}
 ];
 
-export function getMenuForRole(role: EnumRole): MenuItem[] {
-	if (role) return ALL_MENU_ITEMS.filter((item) => item.roles.includes(role)).map((item) => item);
-	return [];
+export function getMenuForUser(permissions: string[]): MenuItem[] {
+	return ALL_MENU_ITEMS.filter(
+		(item) => !item.requiredPermission || permissions.includes(item.requiredPermission)
+	);
 }
 
 export const menuCommon: MenuItem[] = [

@@ -1,37 +1,40 @@
 import { resolve } from '$app/paths';
 import type { RouteId, RouteParams } from '$app/types';
-import { EnumRole } from './roles';
+import { PERMISSIONS } from './permissions';
 
 class Route<T extends RouteId = RouteId> {
 	path: T;
 	title: string;
 	description: string;
-	roles: Array<string>;
+	requiredPermission?: string;
 	isProtected: boolean;
 
 	constructor({
 		path,
 		title,
 		description = '',
-		roles = [],
+		requiredPermission,
 		isProtected
 	}: {
 		path: T;
 		title: string;
 		description?: string;
-		roles?: Array<string>;
+		requiredPermission?: string;
 		isProtected: boolean;
 	}) {
 		this.path = path;
 		this.title = title;
 		this.description = description;
-		this.roles = roles;
+		this.requiredPermission = requiredPermission;
 		this.isProtected = isProtected;
 	}
 
 	resolve(...params: RouteParams<T> extends Record<string, never> ? [] : [params: RouteParams<T>]) {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		return (resolve as any)(this.path, ...params);
+		const resolveRoute = resolve as unknown as (
+			path: T,
+			...args: typeof params
+		) => ReturnType<typeof resolve>;
+		return resolveRoute(this.path, ...params);
 	}
 }
 
@@ -44,42 +47,53 @@ class Routes {
 		isProtected: false
 	});
 
+	RESET_PWD = new Route({
+		path: '/auth/reset-password/[token]',
+		title: 'Password Reset',
+		isProtected: false
+	});
+	VERIFY = new Route({
+		path: '/auth/verify',
+		title: 'Email Verification',
+		isProtected: false
+	});
+
 	// protected
 	DASHBOARD = new Route({
 		path: '/',
 		title: 'Dashboard',
 		isProtected: true,
-		roles: [EnumRole.PLATFORM_SUPER_ADMIN]
+		requiredPermission: PERMISSIONS.PLATFORM_READ
 	});
 	TENANT = new Route({
 		path: '/(protected)/tenants',
 		title: 'Tenants',
 		isProtected: true,
-		roles: [EnumRole.PLATFORM_SUPER_ADMIN]
+		requiredPermission: PERMISSIONS.TENANTS_READ
 	});
 	TENANT_DETAILS = new Route({
 		path: '/(protected)/tenants/[id]',
 		title: 'New Tenants',
 		isProtected: true,
-		roles: [EnumRole.PLATFORM_SUPER_ADMIN]
+		requiredPermission: PERMISSIONS.TENANTS_READ
 	});
 	SYSTEM_SETTINGS = new Route({
 		path: '/(protected)/system-settings',
 		title: 'System settings',
 		isProtected: true,
-		roles: [EnumRole.PLATFORM_SUPER_ADMIN]
+		requiredPermission: PERMISSIONS.PLATFORM_MANAGE
 	});
 	AUDIT_LOGS = new Route({
 		path: '/(protected)/audit-logs',
 		title: 'Audit Logs',
 		isProtected: true,
-		roles: [EnumRole.PLATFORM_SUPER_ADMIN]
+		requiredPermission: PERMISSIONS.PLATFORM_READ
 	});
 	PLATFORM_ANALYTICS = new Route({
 		path: '/(protected)/analytics',
 		title: 'Platform Analytics',
 		isProtected: true,
-		roles: [EnumRole.PLATFORM_SUPER_ADMIN]
+		requiredPermission: PERMISSIONS.PLATFORM_READ
 	});
 
 	NOTIFICATION = new Route({
@@ -104,6 +118,8 @@ class Routes {
 	allRoutes() {
 		return [
 			this.LOGIN,
+			this.RESET_PWD,
+			this.VERIFY,
 			this.DASHBOARD,
 			this.TENANT,
 			this.TENANT_DETAILS,
@@ -126,5 +142,10 @@ class Routes {
 }
 
 const ROUTES = new Routes();
+
+export function getRoute(routeId: string | null) {
+	if (routeId === '/(protected)') return ROUTES.DASHBOARD;
+	return ROUTES.allRoutes().find((route) => route.path === routeId);
+}
 
 export default ROUTES;

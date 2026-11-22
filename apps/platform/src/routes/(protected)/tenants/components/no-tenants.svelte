@@ -4,9 +4,10 @@
 	import { Heading, Paragraph } from '@cariva/ui/components/ui/typography/index.js';
 	import PlusIcon from '@lucide/svelte/icons/plus';
 	import { stores } from '$lib/store/index.svelte';
+	import { PERMISSIONS } from '$lib/configs/permissions';
 	import { AppModals } from '$lib/store/app/modal-types';
 
-	const { AppStore } = stores;
+	const { AppStore, PermissionStore } = stores;
 </script>
 
 <Card>
@@ -23,6 +24,7 @@
 			</div>
 
 			<Button
+				disabled={!PermissionStore.can(PERMISSIONS.TENANTS_CREATE)}
 				size="lg"
 				onclick={() =>
 					AppStore.toggleModals({ open: true, name: AppModals.TENANT_FORM_MODAL, tenant_uid: '' })}

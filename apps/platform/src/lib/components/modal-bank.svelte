@@ -16,6 +16,8 @@
 			import('$lib/components/modals/tfa-backup-codes-modal.svelte'),
 		[AppModals.TFA_VERIFICATION_MODAL]: () =>
 			import('$lib/components/modals/tfa-verification-modal.svelte'),
+		[AppModals.REQUEST_EMAIL_VERIFICATION_MODAL]: () =>
+			import('$lib/components/modals/request-email-verification-modal.svelte'),
 		[AppModals.FORGOT_PWD_MODAL]: () => import('$lib/components/modals/forgot-pwd-modal.svelte'),
 		[AppModals.SESSION_TIMEOUT_MODAL]: () =>
 			import('$lib/components/modals/session-timeout-modal.svelte'),
