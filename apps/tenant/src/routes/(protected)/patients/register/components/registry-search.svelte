@@ -68,16 +68,37 @@
 	<CardContent class="flex flex-col gap-3">
 		<form use:enhance class="auto-grid">
 			<FormField {form} name="first_name">
-				<InputField label="First Name" showClear type="text" bind:value={$formData.first_name} />
+				<InputField
+					label="First Name (optional)"
+					showClear
+					type="text"
+					bind:value={$formData.first_name}
+				/>
 			</FormField>
 			<FormField {form} name="last_name">
-				<InputField label="Last Name" showClear type="text" bind:value={$formData.last_name} />
+				<InputField
+					label="Last Name (optional)"
+					showClear
+					type="text"
+					bind:value={$formData.last_name}
+				/>
 			</FormField>
 			<FormField {form} name="other_name">
-				<InputField label="Other Name" showClear type="text" bind:value={$formData.other_name} />
+				<InputField
+					label="Other Name (optional)"
+					showClear
+					type="text"
+					bind:value={$formData.other_name}
+				/>
 			</FormField>
 			<FormField {form} name="nin">
-				<InputField label="NIN" name="nin" showClear type="text" bind:value={$formData.nin} />
+				<InputField
+					label="NIN (optional)"
+					name="nin"
+					showClear
+					type="text"
+					bind:value={$formData.nin}
+				/>
 			</FormField>
 			<Button type="submit" disabled={!hasChanges} isLoading={false}>Search</Button>
 		</form>

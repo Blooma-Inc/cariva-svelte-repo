@@ -51,9 +51,6 @@
         {#if label && !floatingLabel}
           <Form.Label>
             {label}
-            {#if props.required}
-              <small class="text-destructive">*</small>
-            {/if}
           </Form.Label>
         {/if}
 
@@ -117,9 +114,6 @@
               )}
             >
               {label}
-              {#if props.required}
-                <small class="text-destructive">*</small>
-              {/if}
             </Form.Label>
           {/if}
         </div>

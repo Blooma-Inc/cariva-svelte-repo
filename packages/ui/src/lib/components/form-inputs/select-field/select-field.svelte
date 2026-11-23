@@ -37,13 +37,10 @@
         {#if label && !floatingLabel}
           <Form.Label>
             {label}
-            {#if props.required}
-              <small class="text-destructive">*</small>
-            {/if}
           </Form.Label>
         {/if}
         <Select {...controlProps} {...props} bind:value={value as never} bind:open>
-          <SelectTrigger {floatingLabel} {label} required={props.required}>
+          <SelectTrigger {floatingLabel} {label}>
             {triggerContent}
           </SelectTrigger>
           <SelectContent class="max-h-60">

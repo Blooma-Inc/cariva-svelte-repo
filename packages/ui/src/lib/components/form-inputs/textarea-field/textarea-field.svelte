@@ -32,9 +32,6 @@
         {#if label && !floatingLabel}
           <Form.Label>
             {label}
-            {#if props.required}
-              <small class="text-destructive">*</small>
-            {/if}
           </Form.Label>
         {/if}
         <div
@@ -57,13 +54,10 @@
                 'text-muted-foreground pointer-events-none absolute left-3 transition-all duration-150 ease-out select-none',
                 isFloating
                   ? 'bg-background text-foreground top-0 -translate-y-1/2 px-1 text-xs'
-                  : 'top-16 -translate-y-10 text-sm'
+                  : 'top-3 text-sm'
               )}
             >
               {label}
-              {#if props.required}
-                <small class="text-destructive">*</small>
-              {/if}
             </Form.Label>
           {/if}
         </div>

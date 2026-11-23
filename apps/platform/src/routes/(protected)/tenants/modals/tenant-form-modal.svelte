@@ -496,7 +496,7 @@
 										</FormField>
 										<FormField {form} name="admin.middle_name">
 											<InputField
-												label="Middle Name"
+												label="Middle Name (optional)"
 												placeholder="Musa"
 												bind:value={$formData.admin.middle_name}
 											/>

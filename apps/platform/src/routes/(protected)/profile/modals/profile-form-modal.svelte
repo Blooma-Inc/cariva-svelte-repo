@@ -197,14 +197,14 @@
 					<div class="grid grid-cols-1 gap-2 lg:grid-cols-[1fr_1fr] lg:items-end">
 						<FormField {form} name="middle_name">
 							<InputField
-								label="Middle Name"
+								label="Middle Name (optional)"
 								placeholder="Middle Name"
 								bind:value={$formData.middle_name}
 							/>
 						</FormField>
 						<FormField {form} name="prefered_name">
 							<InputField
-								label="Prefered Name"
+								label="Prefered Name (optional)"
 								placeholder="First Name"
 								bind:value={$formData.prefered_name}
 							/>
@@ -225,7 +225,7 @@
 
 						<FormField {form} name="dob">
 							<DateField
-								label="Date of Birth"
+								label="Date of Birth (optional)"
 								placeholder="January 01 2001"
 								bind:value={$formData.dob}
 								max={new SvelteDate()}
@@ -245,7 +245,7 @@
 						</FormField>
 						<FormField {form} name="alternative_phone">
 							<TelField
-								label="Optional Phone"
+								label="Alternative Phone (optional)"
 								defaultCountry="NG"
 								placeholder="08123456789"
 								bind:value={$formData.alternative_phone}

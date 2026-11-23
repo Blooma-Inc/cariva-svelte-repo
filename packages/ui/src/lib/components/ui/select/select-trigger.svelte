@@ -9,7 +9,6 @@
     class: className,
     label,
     floatingLabel = true,
-    required,
     children,
     size = 'default',
     ...restProps
@@ -17,7 +16,6 @@
     label?: string;
     size?: 'sm' | 'default';
     floatingLabel?: boolean;
-    required?: boolean;
   } = $props();
 
   let focused = $state(false);
@@ -49,9 +47,6 @@
       )}
     >
       {label}
-      {#if required}
-        <small class="text-destructive">*</small>
-      {/if}
     </Form.Label>
   {/if}
 </div>

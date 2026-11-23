@@ -196,7 +196,7 @@
 									<FormField {form} name="middle_name">
 										<InputField
 											floatingLabel
-											label="Middle Name"
+											label="Middle Name (optional)"
 											placeholder="Obinna"
 											bind:value={$formData.middle_name}
 										/>

@@ -310,3 +310,11 @@
   display: grid;
   gap: calc(var(--spacing) * var(--auto-grid-gap, 3));
 }
+
+input:is(:autofill, :-webkit-autofill),
+textarea:is(:autofill, :-webkit-autofill) {
+  -webkit-text-fill-color: var(--foreground);
+  caret-color: var(--foreground);
+  -webkit-background-clip: text;
+  background-clip: text;
+}

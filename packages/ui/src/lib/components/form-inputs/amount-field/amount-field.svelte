@@ -100,9 +100,6 @@
         {#if label && !floatingLabel}
           <Form.Label>
             {label}
-            {#if props.required}
-              <small class="text-destructive">*</small>
-            {/if}
           </Form.Label>
         {/if}
 
@@ -115,37 +112,36 @@
             <InputGroupAddon align="inline-start">
               <span class="text-muted-foreground text-sm">{currencySymbol}</span>
             </InputGroupAddon>
-            <InputGroupInput
-              bind:ref
-              {...controlProps}
-              {...props}
-              placeholder={floatingLabel ? '' : props.placeholder}
-              class={cn(floatingLabel && 'placeholder:text-transparent', props.class)}
-              type="text"
-              inputmode="decimal"
-              autocomplete="off"
-              value={displayValue}
-              oninput={handleInput}
-              onfocus={handleFocus}
-              onblur={handleBlur}
-            />
-          </InputGroup>
+            <div class="relative min-w-0 flex-1">
+              <InputGroupInput
+                bind:ref
+                {...controlProps}
+                {...props}
+                placeholder={floatingLabel ? '' : props.placeholder}
+                class={cn(floatingLabel && 'placeholder:text-transparent', props.class)}
+                type="text"
+                inputmode="decimal"
+                autocomplete="off"
+                value={displayValue}
+                oninput={handleInput}
+                onfocus={handleFocus}
+                onblur={handleBlur}
+              />
 
-          {#if floatingLabel && label}
-            <Form.Label
-              class={cn(
-                'text-muted-foreground pointer-events-none absolute left-3 transition-all duration-150 ease-out select-none',
-                isFloating
-                  ? 'bg-background text-foreground top-0 -translate-y-1/2 px-1 text-xs'
-                  : 'top-1/2 -translate-y-1/2 text-sm'
-              )}
-            >
-              {label}
-              {#if props.required}
-                <small class="text-destructive">*</small>
+              {#if floatingLabel && label}
+                <Form.Label
+                  class={cn(
+                    'text-muted-foreground pointer-events-none absolute left-3 transition-all duration-150 ease-out select-none',
+                    isFloating
+                      ? 'bg-background text-foreground top-0 -translate-y-1/2 px-1 text-xs'
+                      : 'top-1/2 -translate-y-1/2 text-sm'
+                  )}
+                >
+                  {label}
+                </Form.Label>
               {/if}
-            </Form.Label>
-          {/if}
+            </div>
+          </InputGroup>
         </div>
       </div>
     {/snippet}

@@ -107,9 +107,6 @@
       {#if label && !floatingLabel}
         <Form.Label>
           {label}
-          {#if rest.required}
-            <small class="text-destructive">*</small>
-          {/if}
         </Form.Label>
       {/if}
 
@@ -160,9 +157,6 @@
               )}
             >
               {label}
-              {#if rest.required}
-                <small class="text-destructive">*</small>
-              {/if}
             </Form.Label>
           {/if}
         </div>

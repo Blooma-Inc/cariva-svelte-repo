@@ -215,7 +215,7 @@
 						</FormField>
 						<FormField {form} name="bio.nin">
 							<InputField
-								label="NIN"
+								label="NIN (optional)"
 								name="nin"
 								showClear
 								type="text"
