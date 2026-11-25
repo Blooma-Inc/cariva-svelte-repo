@@ -1,9 +1,9 @@
 export const AUTH = {
 	LOGIN: '/auth/platform/login',
-	FORGOT_PWD: '/auth/forgot-password',
-	RESET_PWD: '/auth/reset-password',
-	VERIFY_EMAIL: '/auth/verify-email',
-	RESEND_EMAIL: '/auth/resend-email-verification',
+	FORGOT_PWD: '/auth/platform/forgot-password',
+	RESET_PWD: '/auth/platform/reset-password',
+	VERIFY_EMAIL: '/auth/platform/verify-email',
+	RESEND_EMAIL: '/auth/platform/resend-email-verification',
 	VERIFY_ACCT: '/auth/verify-account',
 	CHANGE_PWD: '/auth/change-password',
 	ACTIVE_SESSION: '/auth/sessions',
