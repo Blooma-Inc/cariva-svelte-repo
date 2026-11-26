@@ -1,5 +1,7 @@
 import { createQuery } from '@tanstack/svelte-query';
 import { tenant } from './fetch-key-factory';
+import { stores } from '$lib/store/index.svelte';
+import { PERMISSIONS } from '$lib/configs/permissions';
 
 export function useFetchTenantAdmin(
 	getTenantUuid: () => string = () => ''
@@ -11,7 +13,7 @@ export function useFetchTenantAdmin(
 		return {
 			queryKey: meta.keys(),
 			meta,
-			enabled: !!tenant_uid,
+			enabled: !!tenant_uid && stores.PermissionStore.can(PERMISSIONS.TENANTS_READ),
 			select: (resp: CarivaServerResp<PlatformTenantUserItem>) => resp.data
 		};
 	});

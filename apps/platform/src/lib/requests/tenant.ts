@@ -10,3 +10,19 @@ export const postActivateTenant = async (tenant_uid: string) =>
 		tenant_uid,
 		notes: 'All good!'
 	});
+
+export const postTenantLifecycle = (
+	action: TenantLifecycleAction,
+	tenant_uid: string,
+	reason: string
+) => {
+	const paths = {
+		activate: TENANT.ACTIVATE_TENANT,
+		reject: TENANT.REJECT_TENANT,
+		suspend: TENANT.SUSPEND_TENANT
+	};
+	return server.post<CarivaServerResp<boolean>>(paths[action], {
+		tenant_uid,
+		...(action === 'activate' ? { notes: reason || null } : { reason })
+	});
+};

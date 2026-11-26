@@ -1,4 +1,5 @@
 export enum AppModals {
+	TENANT_LIFECYCLE_MODAL = 'TENANT_LIFECYCLE_MODAL',
 	DONE = 'DONE',
 	DYNAMIC = 'DYNAMIC',
 	ACCOUNT_LOCKED_MODAL = 'ACCOUNT_LOCKED_MODAL',
@@ -18,6 +19,16 @@ export enum AppModals {
 }
 
 export type TAppModalsAction =
+	| ({ name: AppModals.TENANT_LIFECYCLE_MODAL } & (
+			| {
+					open: true;
+					tenant_uid: string;
+					tenant_name: string;
+					status: string;
+					action: TenantLifecycleAction;
+			  }
+			| { open?: false }
+	  ))
 	| { name?: undefined }
 	| { name: ''; open?: boolean }
 	| ({ name: AppModals.DONE } & (

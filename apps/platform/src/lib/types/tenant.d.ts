@@ -8,7 +8,7 @@ interface PlatformSubscriptionPlanItem extends BaseItem {
 	max_branches: number;
 	max_users: number;
 	duration_days: number;
-	amount: number;
+	amount: number | string;
 	is_active: boolean;
 }
 
@@ -41,7 +41,7 @@ interface PlatformTenantItem extends BaseItem {
 	email: string | null;
 	status: string;
 	onboarded_at: string | null;
-	main_branch: PlatformBranchItem;
+	main_branch: PlatformBranchItem | null;
 	latest_subscription: PlatformSubscriptionHistoryItem;
 }
 
@@ -65,10 +65,28 @@ interface PlatformTenantUserItem extends BaseItem {
 	first_name: string;
 	last_name: string;
 	middle_name: Optional[string];
-	phone: string;
+	phone: string | null;
+	last_login_at: string | null;
 	gender: Optional[string];
 	profile_photo_url: Optional[string];
 	is_active: boolean;
 	designation: Optional[string];
 	user_roles: List[PlatformTenantUserRoleItem];
+}
+
+interface PlatformTenantStats {
+	users: number;
+	max_users: number;
+	branches: number;
+	max_branches: number;
+}
+
+type TenantLifecycleAction = 'activate' | 'reject' | 'suspend';
+
+interface PlatformTenantBranchItem extends Omit<PlatformBranchItem, 'is_active' | 'timezone'> {
+	tenant_uid: string;
+	is_active: boolean | null;
+	timezone: string | null;
+	user_count: number;
+	admin: PlatformTenantUserItem | null;
 }

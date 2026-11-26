@@ -17,9 +17,10 @@
 	import CircleCheckIcon from '@lucide/svelte/icons/circle-check';
 	import { Heading, Paragraph } from '@cariva/ui/components/ui/typography/index.js';
 	import { useQueryClient } from '@tanstack/svelte-query';
-	import { TENANT } from '$lib/constants/api';
+	import { tenantDetailQueryKeys } from '$lib/hooks/tenant/fetch-key-factory';
+	import { PERMISSIONS } from '$lib/configs/permissions';
 
-	const { AppStore, TenantStore } = stores;
+	const { AppStore, TenantStore, PermissionStore } = stores;
 	const query = useQueryClient();
 
 	const handleClose = () => {
@@ -81,10 +82,12 @@
 				class="w-fit"
 				onclick={async () =>
 					await TenantStore.activateTenant(AppStore.tenantModal.tenant_uid, () => {
-						query.invalidateQueries({ predicate: (query) => query.queryKey[0] === TENANT.TENANTS });
+						for (const queryKey of tenantDetailQueryKeys(AppStore.tenantModal.tenant_uid))
+							void query.invalidateQueries({ queryKey });
 						handleClose();
 					})}
-				disabled={TenantStore.loaders.isTenantRequest}
+				disabled={TenantStore.loaders.isTenantRequest ||
+					!PermissionStore.canAll([PERMISSIONS.TENANTS_READ, PERMISSIONS.TENANTS_MANAGE])}
 				isLoading={TenantStore.loaders.isTenantRequest}>Activate</Button
 			>
 		</DialogFooter>

@@ -73,7 +73,7 @@ class Routes {
 	});
 	TENANT_DETAILS = new Route({
 		path: '/(protected)/tenants/[id]',
-		title: 'New Tenants',
+		title: 'Tenant Details',
 		isProtected: true,
 		requiredPermission: PERMISSIONS.TENANTS_READ
 	});
