@@ -4,6 +4,8 @@
 	import { stores } from '$lib/store/index.svelte';
 
 	const ModalsMap = {
+		[AppModals.TENANT_LIFECYCLE_MODAL]: () =>
+			import('$routes/(protected)/tenants/modals/tenant-lifecycle-modal.svelte'),
 		[AppModals.DONE]: () => import('$lib/components/modals/done-modal.svelte'),
 		[AppModals.DYNAMIC]: () => import('$lib/components/modals/dynamic-modal.svelte'),
 		[AppModals.ACCOUNT_LOCKED_MODAL]: () =>

@@ -232,7 +232,7 @@
 				first_name: tenantAdminQuery.data.first_name,
 				middle_name: tenantAdminQuery.data.middle_name ?? '',
 				last_name: tenantAdminQuery.data.last_name,
-				phone: tenantAdminQuery.data.phone,
+				phone: tenantAdminQuery.data.phone ?? '',
 				email: tenantAdminQuery.data.email
 			};
 		}
@@ -259,11 +259,11 @@
 				},
 				subscription_uid: tenantDetails.latest_subscription.subscription_plan_uid ?? '',
 				main_branch: {
-					name: tenantDetails.main_branch.name,
-					address: tenantDetails.main_branch.address,
-					city: tenantDetails.main_branch.city,
-					state: tenantDetails.main_branch.state,
-					country: tenantDetails.main_branch.country
+					name: tenantDetails.main_branch?.name ?? '',
+					address: tenantDetails.main_branch?.address ?? '',
+					city: tenantDetails.main_branch?.city ?? '',
+					state: tenantDetails.main_branch?.state ?? '',
+					country: tenantDetails.main_branch?.country ?? ''
 				},
 				admin: getTenantAdmin()
 			};

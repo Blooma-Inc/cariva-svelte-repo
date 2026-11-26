@@ -18,6 +18,7 @@ export const TENANT = {
 	TENANCY_REQUEST: '/platform/tenancy-request',
 	ACTIVATE_TENANT: '/platform/activate-tenant',
 	REJECT_TENANT: '/platform/reject-tenant',
+	SUSPEND_TENANT: '/platform/suspend-tenant',
 	TENANTS: '/platform/tenants',
 	STATS: '/platform/tenant/:uid/stats',
 	ADMIN: '/platform/tenant/:uid/admin',

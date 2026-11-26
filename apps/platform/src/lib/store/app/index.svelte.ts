@@ -43,6 +43,13 @@ class AppStore {
 		plan_uid: ''
 	});
 
+	tenantLifecycleModal = $state<{
+		tenant_uid: string;
+		tenant_name: string;
+		status: string;
+		action: TenantLifecycleAction;
+	}>({ tenant_uid: '', tenant_name: '', status: '', action: 'activate' });
+
 	tenantModal = $state({
 		tenant_uid: '',
 		tenant_name: ''
@@ -104,6 +111,15 @@ class AppStore {
 						plan_uid: modal.plan_uid
 					};
 				}
+				break;
+			case AppModals.TENANT_LIFECYCLE_MODAL:
+				if (modal.open)
+					this.tenantLifecycleModal = {
+						tenant_uid: modal.tenant_uid,
+						tenant_name: modal.tenant_name,
+						status: modal.status,
+						action: modal.action
+					};
 				break;
 			case AppModals.TENANT_FORM_MODAL:
 				if (modal.open) {

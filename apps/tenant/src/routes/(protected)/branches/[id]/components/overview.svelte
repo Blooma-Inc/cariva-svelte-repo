@@ -22,12 +22,24 @@
 	import CalendarPlusIcon from '@lucide/svelte/icons/calendar-plus';
 	import UserAvatar from '$lib/components/user-avatar.svelte';
 	import { formatRelativeTime, formatTime } from '$lib/utils/date';
-	import { DEFAULT_WEEK_DAYS } from '../modals/branch-operating-hours.svelte';
+	import { DEFAULT_WEEK_DAYS } from '$lib/validators/branch-hours';
+	import { PERMISSIONS } from '$lib/configs/permissions';
 	import { AppModals } from '$lib/store/app/modal-types';
 	import { stores } from '$lib/store/index.svelte';
 
 	let { branch, admin }: BranchOverviewProps = $props();
-	let { AppStore } = stores;
+	const { AppStore, PermissionStore } = stores;
+	const canEditHours = $derived(PermissionStore.can(PERMISSIONS.BRANCHES_UPDATE));
+	const openHours = () => {
+		if (!canEditHours) return;
+		AppStore.toggleModals({
+			open: true,
+			name: AppModals.BRANCH_OPERATING_HOURS_FROM,
+			branch_uid: branch.uid,
+			working_hours: JSON.stringify(branch.operating_hours),
+			timezone: branch.timezone
+		});
+	};
 </script>
 
 <section class="flex flex-col gap-3">
@@ -110,70 +122,67 @@
 		{/if}
 
 		<Item class="border border-neutral-200">
-			<ItemHeader class="border-b pb-2">
+			<ItemHeader class="flex flex-row items-center justify-between border-b pb-2">
 				<ItemTitle class="text-neutral-600">Operating Hours</ItemTitle>
-
-				<Button
-					size="icon-sm"
-					onclick={() => {
-						AppStore.toggleModals({
-							open: true,
-							name: AppModals.BRANCH_OPERATING_HOURS_FROM,
-							branch_uid: branch.uid,
-							working_hours: JSON.stringify(branch.operating_hours)
-						});
-					}}
-				>
-					<PencilIcon class="size-3" />
-				</Button>
+				{#if canEditHours}
+					<Button variant="secondary" onclick={openHours}>
+						{#if branch.operating_hours}<PencilIcon class="size-3" />{:else}<CalendarPlusIcon
+								class="size-3"
+							/>{/if}
+						{branch.operating_hours ? 'Edit hours' : 'Add hours'}
+					</Button>
+				{/if}
 			</ItemHeader>
 
-			{#if branch.operating_hours}
-				<ItemContent class="flex flex-col gap-2">
-					{#each branch.operating_hours.days as day, index (index)}
-						<div class="flex items-center justify-start gap-2">
-							<Paragraph size="sm" muted class="font-medium!">
-								{DEFAULT_WEEK_DAYS.find((item) => item.value === day.week_day)?.label}:
-							</Paragraph>
+			<ItemContent class="basis-full gap-3">
+				<Paragraph size="sm" muted>Timezone: {branch.timezone}</Paragraph>
 
-							{#if day.is_enabled}
-								<Paragraph size="sm" class="font-medium">
-									{day.open_time && formatTime(day.open_time)} – {day.close_time &&
-										formatTime(day.close_time)}
+				{#if branch.operating_hours}
+					<div class="flex flex-col gap-2">
+						{#each branch.operating_hours.days as day, index (index)}
+							<div class="flex items-center justify-start gap-2">
+								<Paragraph size="sm" muted class="font-medium!">
+									{DEFAULT_WEEK_DAYS.find((item) => item.value === day.week_day)?.label}:
 								</Paragraph>
+
+								{#if day.is_enabled && day.all_day}
+									<Paragraph size="sm" class="font-medium">All day</Paragraph>
+								{:else if day.is_enabled}
+									<Paragraph size="sm" class="font-medium">
+										{day.open_time && formatTime(day.open_time)} – {day.close_time &&
+											formatTime(day.close_time)}
+										{#if day.open_time && day.close_time && day.close_time < day.open_time}
+											(next day){/if}
+									</Paragraph>
+								{:else}
+									<Paragraph size="sm" class="font-medium text-destructive!">Closed</Paragraph>
+								{/if}
+							</div>
+						{/each}
+
+						<div
+							class="flex items-center justify-start gap-2 border-t border-neutral-200 pt-2 font-semibold!"
+						>
+							<Paragraph size="sm" class="text-destructive/70">Emergency Services:</Paragraph>
+
+							{#if branch.operating_hours.is_emergency_services}
+								<span class="text-sm text-destructive">24/7</span>
 							{:else}
-								<Paragraph size="sm" class="font-medium text-destructive!">Closed</Paragraph>
+								<span class="text-sm text-neutral-400">Not available</span>
 							{/if}
 						</div>
-					{/each}
-
-					<div
-						class="flex items-center justify-start gap-2 border-t border-neutral-200 pt-2 font-semibold!"
-					>
-						<Paragraph size="sm" class="text-destructive/70">Emergency Services:</Paragraph>
-
-						{#if branch.operating_hours.is_emergency_services}
-							<span class="text-sm text-destructive">24/7</span>
-						{:else}
-							<span class="text-sm text-neutral-400">Not available</span>
-						{/if}
 					</div>
-				</ItemContent>
-			{:else}
-				<ItemContent>
-					<div class="mx-auto flex w-full max-w-fit flex-col items-center justify-center gap-2">
-						<div class="flex flex-col items-center justify-center">
-							<Heading level="h3">No Operating Hours</Heading>
-							<Paragraph size="sm" muted>To add operating hours click the button below.</Paragraph>
+				{:else}
+					<div>
+						<div class="mx-auto flex w-full max-w-fit flex-col items-center justify-center gap-2">
+							<div class="flex flex-col items-center justify-center">
+								<Heading level="h3">No Operating Hours</Heading>
+								<Paragraph size="sm" muted>Operating hours have not been configured.</Paragraph>
+							</div>
 						</div>
-
-						<Button>
-							<CalendarPlusIcon class="size-3" />
-							Add hours
-						</Button>
 					</div>
-				</ItemContent>
-			{/if}
+				{/if}
+			</ItemContent>
 		</Item>
 	</div>
 </section>
