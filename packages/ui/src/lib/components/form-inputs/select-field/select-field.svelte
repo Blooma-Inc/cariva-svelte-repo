@@ -27,7 +27,15 @@
     ...props
   }: SelectFieldProps = $props();
 
-  const triggerContent = $derived(selectables.find((f) => f.value === value)?.label ?? placeholder);
+  const triggerContent = $derived.by(() => {
+    const selected = value;
+    return Array.isArray(selected)
+      ? selectables
+          .filter((option) => selected.includes(option.value))
+          .map((option) => option.label)
+          .join(', ') || placeholder
+      : (selectables.find((option) => option.value === selected)?.label ?? placeholder);
+  });
 </script>
 
 <div class="flex w-full flex-col gap-1">

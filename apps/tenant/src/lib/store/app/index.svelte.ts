@@ -49,6 +49,27 @@ class AppStore {
 
 	encounterModal = $state({ patient_uid: '', branch_uid: '', branch_name: '' });
 
+	branchHealthcareServiceModal = $state<{
+		branch_uid: string;
+		branch_name: string;
+		timezone: string;
+		branch_is_active: boolean;
+		service_uid: string;
+		mode: 'view' | 'form' | 'status';
+	}>({
+		branch_uid: '',
+		branch_name: '',
+		timezone: '',
+		branch_is_active: false,
+		service_uid: '',
+		mode: 'form'
+	});
+
+	healthcareServiceModal = $state<{ service_uid: string; mode: 'view' | 'form' | 'status' }>({
+		service_uid: '',
+		mode: 'form'
+	});
+
 	patientModal = $state({ patient_uid: '' });
 
 	wardModal = $state<{ branch_uid: string; branch_name: string; ward: WardItem | null }>({
@@ -82,6 +103,21 @@ class AppStore {
 	 */
 	toggleModals(modal: TAppModalsAction = {}) {
 		switch (modal.name) {
+			case AppModals.BRANCH_HEALTHCARE_SERVICE_MODAL:
+				if (modal.open)
+					this.branchHealthcareServiceModal = {
+						branch_uid: modal.branch_uid,
+						branch_name: modal.branch_name,
+						timezone: modal.timezone,
+						branch_is_active: modal.branch_is_active,
+						service_uid: modal.service_uid ?? '',
+						mode: modal.mode
+					};
+				break;
+			case AppModals.HEALTHCARE_SERVICE_MODAL:
+				if (modal.open)
+					this.healthcareServiceModal = { service_uid: modal.service_uid ?? '', mode: modal.mode };
+				break;
 			case '':
 				break;
 			case AppModals.DONE:

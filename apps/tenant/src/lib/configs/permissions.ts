@@ -14,6 +14,19 @@ export const PERMISSIONS = {
 	BRANCHES_UPDATE: 'branches.update',
 	BRANCHES_MANAGE: 'branches.manage',
 
+	HEALTHCARE_SERVICES_CREATE: 'healthcare_services.create',
+	HEALTHCARE_SERVICES_READ: 'healthcare_services.read',
+	HEALTHCARE_SERVICES_UPDATE: 'healthcare_services.update',
+
+	BRANCH_HEALTHCARE_SERVICES_CREATE: 'branch_healthcare_services.create',
+	BRANCH_HEALTHCARE_SERVICES_READ: 'branch_healthcare_services.read',
+	BRANCH_HEALTHCARE_SERVICES_UPDATE: 'branch_healthcare_services.update',
+
+	PRACTITIONER_AVAILABILITY_CREATE: 'practitioner_availability.create',
+	PRACTITIONER_AVAILABILITY_READ: 'practitioner_availability.read',
+	PRACTITIONER_AVAILABILITY_UPDATE: 'practitioner_availability.update',
+	PRACTITIONER_AVAILABILITY_MANAGE: 'practitioner_availability.manage',
+
 	WARDS_CREATE: 'wards.create',
 	WARDS_READ: 'wards.read',
 	WARDS_UPDATE: 'wards.update',
@@ -48,6 +61,8 @@ export const PERMISSIONS = {
 
 	ENCOUNTERS_READ: 'encounters.read',
 	ENCOUNTERS_CREATE: 'encounters.create',
+	ENCOUNTERS_UPDATE: 'encounters.update',
+	ENCOUNTERS_MANAGE: 'encounters.manage',
 
 	ADMISSIONS_CREATE: 'admissions.create',
 	ADMISSIONS_READ: 'admissions.read',

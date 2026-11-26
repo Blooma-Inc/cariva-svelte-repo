@@ -4,6 +4,10 @@
 	import { stores } from '$lib/store/index.svelte';
 
 	const ModalsMap = {
+		[AppModals.BRANCH_HEALTHCARE_SERVICE_MODAL]: () =>
+			import('$routes/(protected)/branches/[id]/modals/branch-healthcare-service-modal.svelte'),
+		[AppModals.HEALTHCARE_SERVICE_MODAL]: () =>
+			import('$routes/(protected)/healthcare-services/modals/healthcare-service-modal.svelte'),
 		[AppModals.ENCOUNTER_FORM_MODAL]: () =>
 			import('$routes/(protected)/patients/modals/encounter-form-modal.svelte'),
 		[AppModals.PATIENT_PROFILE_MODAL]: () =>

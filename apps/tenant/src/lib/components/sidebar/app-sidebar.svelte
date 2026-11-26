@@ -68,24 +68,30 @@
 </script>
 
 <Sidebar collapsible="icon">
-	<SidebarHeader class="flex flex-row items-center justify-between bg-white">
+	<SidebarHeader class="flex flex-row items-center justify-between border-b border-sidebar-border">
 		<SidebarMenu>
 			<SidebarMenuItem>
-				<SidebarMenuButton class="bg-neutral-50 text-xl! text-black! hover:bg-transparent">
-					<img src={CarivaIcon} alt="cariva logo" width={24} height={24} />
-					<span class="text-primary">Cariva</span>
+				<SidebarMenuButton class="h-12 text-lg font-semibold group-data-[collapsible=icon]:p-0!">
+					<span
+						class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-sidebar-primary"
+					>
+						<img src={CarivaIcon} alt="cariva logo" width={24} height={24} />
+					</span>
+					<span class="text-sidebar-foreground">Cariva</span>
 				</SidebarMenuButton>
 			</SidebarMenuItem>
 		</SidebarMenu>
 	</SidebarHeader>
-	<SidebarContent class="bg-white">
+	<SidebarContent>
 		<SidebarGroup>
 			<SidebarGroupLabel>Menu</SidebarGroupLabel>
 			{#if permissionsQuery.status === 'pending'}
 				loading
 			{:else if permissionsQuery.status === 'error'}
 				<div class="flex h-screen flex-col items-center justify-center">
-					<Paragraph size="sm" muted>Couldn't load your permissions. Try refreshing.</Paragraph>
+					<Paragraph size="sm" class="text-sidebar-foreground/85"
+						>Couldn't load your permissions. Try refreshing.</Paragraph
+					>
 				</div>
 			{:else if permissionsQuery.status === 'success' && permissionsQuery.data}
 				<SidebarMenu>
@@ -158,7 +164,7 @@
 			</SidebarMenu>
 		</SidebarGroup>
 	</SidebarContent>
-	<SidebarFooter class="bg-white">
+	<SidebarFooter class="border-t border-sidebar-border">
 		<NavUser />
 	</SidebarFooter>
 	<SidebarRail />

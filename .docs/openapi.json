@@ -1272,6 +1272,7 @@
       "get": {
         "tags": ["patient"],
         "summary": "Tenant Patients",
+        "description": "Requires `patients.read`. Lists patients linked to the current tenant.",
         "operationId": "tenant_patients_api_v1_patients_get",
         "security": [
           {
@@ -1476,6 +1477,7 @@
       "get": {
         "tags": ["patient"],
         "summary": "Registry Search",
+        "description": "Requires `patient.registry_search`. Searches the patient registry for matching patients.",
         "operationId": "registry_search_api_v1_patients_registry_search_get",
         "security": [
           {
@@ -1641,6 +1643,7 @@
       "post": {
         "tags": ["patient"],
         "summary": "Check Existing",
+        "description": "Requires `patient.registry_search`. Checks for an existing patient using the supplied biographical details.",
         "operationId": "check_existing_api_v1_patients_check_existing_post",
         "requestBody": {
           "content": {
@@ -1685,6 +1688,7 @@
       "post": {
         "tags": ["patient"],
         "summary": "Register",
+        "description": "Requires `patient.register`. Registers a patient for the current tenant.",
         "operationId": "register_api_v1_patients_register_post",
         "requestBody": {
           "content": {
@@ -1729,6 +1733,7 @@
       "post": {
         "tags": ["patient"],
         "summary": "Lint To Tenant",
+        "description": "Requires `patient.register`. Links an existing registry patient to the current tenant.",
         "operationId": "lint_to_tenant_api_v1_patients__patient_uid__link_to_tenant_post",
         "security": [
           {
@@ -1775,6 +1780,7 @@
       "get": {
         "tags": ["patient"],
         "summary": "Get Patient",
+        "description": "Requires `patients.read`. Returns details of a patient linked to the current tenant.",
         "operationId": "get_patient_api_v1_patients__patient_uid__get",
         "security": [
           {
@@ -1997,6 +2003,7 @@
       "post": {
         "tags": ["branch"],
         "summary": "Create Branch",
+        "description": "Requires `branches.create`. Creates a branch in the current tenant. The existing tenant_admin role restriction also applies.",
         "operationId": "create_branch_api_v1_branch_post",
         "requestBody": {
           "content": {
@@ -2041,6 +2048,7 @@
       "get": {
         "tags": ["branch"],
         "summary": "Get Branch",
+        "description": "Requires `branches.read`. Returns branch details and its administrator within the current tenant.",
         "operationId": "get_branch_api_v1_branch__branch_uid__get",
         "security": [
           {
@@ -2085,6 +2093,7 @@
       "patch": {
         "tags": ["branch"],
         "summary": "Update Branch",
+        "description": "Requires `branches.update`. Updates branch details within the current tenant.",
         "operationId": "update_branch_api_v1_branch__branch_uid__patch",
         "security": [
           {
@@ -2139,6 +2148,7 @@
       "get": {
         "tags": ["facility"],
         "summary": "Overview",
+        "description": "Requires `wards.read` and `beds.read`. Returns the selected branch facility overview. Access is limited to the assigned branch unless the caller has the tenant_admin role.",
         "operationId": "overview_api_v1_facility_branch__branch_uid__overview_get",
         "security": [
           {
@@ -2185,6 +2195,7 @@
       "post": {
         "tags": ["facility"],
         "summary": "Create Ward",
+        "description": "Requires `wards.create`. Creates a ward in the selected branch. Access is limited to the assigned branch unless the caller has the tenant_admin role.",
         "operationId": "create_ward_api_v1_facility_branch__branch_uid__wards_post",
         "security": [
           {
@@ -2239,6 +2250,7 @@
       "get": {
         "tags": ["facility"],
         "summary": "Wards",
+        "description": "Requires `wards.read`. Lists wards in the selected branch. Access is limited to the assigned branch unless the caller has the tenant_admin role.",
         "operationId": "wards_api_v1_facility_branch__branch_uid__wards_get",
         "security": [
           {
@@ -2372,6 +2384,7 @@
       "get": {
         "tags": ["facility"],
         "summary": "Get Ward",
+        "description": "Requires `wards.read`. Returns a ward in the selected branch. Access is limited to the assigned branch unless the caller has the tenant_admin role.",
         "operationId": "get_ward_api_v1_facility_branch__branch_uid__wards__ward_uid__get",
         "security": [
           {
@@ -2426,6 +2439,7 @@
       "patch": {
         "tags": ["facility"],
         "summary": "Update Ward",
+        "description": "Requires `wards.update`. Updates a ward in the selected branch. Access is limited to the assigned branch unless the caller has the tenant_admin role.",
         "operationId": "update_ward_api_v1_facility_branch__branch_uid__wards__ward_uid__patch",
         "security": [
           {
@@ -2492,6 +2506,7 @@
       "post": {
         "tags": ["facility"],
         "summary": "Create Bed",
+        "description": "Requires `beds.create`. Creates a bed in the selected branch. Access is limited to the assigned branch unless the caller has the tenant_admin role.",
         "operationId": "create_bed_api_v1_facility_branch__branch_uid__beds_post",
         "security": [
           {
@@ -2546,6 +2561,7 @@
       "get": {
         "tags": ["facility"],
         "summary": "Beds",
+        "description": "Requires `beds.read`. Lists beds in the selected branch. Access is limited to the assigned branch unless the caller has the tenant_admin role.",
         "operationId": "beds_api_v1_facility_branch__branch_uid__beds_get",
         "security": [
           {
@@ -2728,6 +2744,7 @@
       "get": {
         "tags": ["facility"],
         "summary": "Get Bed",
+        "description": "Requires `beds.read`. Returns a bed in the selected branch. Access is limited to the assigned branch unless the caller has the tenant_admin role.",
         "operationId": "get_bed_api_v1_facility_branch__branch_uid__beds__bed_uid__get",
         "security": [
           {
@@ -2782,6 +2799,7 @@
       "patch": {
         "tags": ["facility"],
         "summary": "Update Bed",
+        "description": "Requires `beds.update`. Updates a bed in the selected branch. Access is limited to the assigned branch unless the caller has the tenant_admin role.",
         "operationId": "update_bed_api_v1_facility_branch__branch_uid__beds__bed_uid__patch",
         "security": [
           {
@@ -2848,6 +2866,7 @@
       "post": {
         "tags": ["encounters"],
         "summary": "Create Encounter",
+        "description": "Requires `encounters.create`. Creates an encounter in the selected branch. Access is limited to the assigned branch unless the caller has the tenant_admin role.",
         "operationId": "create_encounter_api_v1_encounters_branch__branch_uid__post",
         "security": [
           {
@@ -2902,6 +2921,7 @@
       "get": {
         "tags": ["encounters"],
         "summary": "Encounters",
+        "description": "Requires `encounters.read`. Lists encounters in the selected branch. Access is limited to the assigned branch unless the caller has the tenant_admin role.",
         "operationId": "encounters_api_v1_encounters_branch__branch_uid__get",
         "security": [
           {
@@ -3121,6 +3141,7 @@
       "get": {
         "tags": ["encounters"],
         "summary": "Get Encounter",
+        "description": "Requires `encounters.read`. Returns an encounter in the selected branch. Access is limited to the assigned branch unless the caller has the tenant_admin role.",
         "operationId": "get_encounter_api_v1_encounters_branch__branch_uid___encounter_uid__get",
         "security": [
           {
@@ -3177,6 +3198,7 @@
       "patch": {
         "tags": ["encounters"],
         "summary": "Close Encounter",
+        "description": "Requires `encounters.update`. Closes an encounter using the requested status. Access is limited to the assigned branch unless the caller has the tenant_admin role.",
         "operationId": "close_encounter_api_v1_encounters_branch__branch_uid___encounter_uid__status_patch",
         "security": [
           {
@@ -3243,6 +3265,7 @@
       "patch": {
         "tags": ["encounters"],
         "summary": "Update Practitioner",
+        "description": "Requires `encounters.update`. Updates the encounter primary practitioner. Access is limited to the assigned branch unless the caller has the tenant_admin role.",
         "operationId": "update_practitioner_api_v1_encounters_branch__branch_uid___encounter_uid__practitioner_patch",
         "security": [
           {
@@ -3309,6 +3332,7 @@
       "get": {
         "tags": ["encounters"],
         "summary": "Encounter History",
+        "description": "Requires `encounters.read`. Lists the encounter status history. Access is limited to the assigned branch unless the caller has the tenant_admin role.",
         "operationId": "encounter_history_api_v1_encounters_branch__branch_uid___encounter_uid__history_get",
         "security": [
           {
@@ -3388,6 +3412,7 @@
       "get": {
         "tags": ["encounters"],
         "summary": "Encounter Practitioner History",
+        "description": "Requires `encounters.read`. Lists the encounter primary practitioner history. Access is limited to the assigned branch unless the caller has the tenant_admin role.",
         "operationId": "encounter_practitioner_history_api_v1_encounters_branch__branch_uid___encounter_uid__practitioner_history_get",
         "security": [
           {
@@ -3467,6 +3492,7 @@
       "get": {
         "tags": ["encounters"],
         "summary": "Encounter Types",
+        "description": "Requires `encounters.read`. Lists supported encounter types.",
         "operationId": "encounter_types_api_v1_encounter_types_get",
         "responses": {
           "200": {
@@ -3491,6 +3517,7 @@
       "post": {
         "tags": ["admissions"],
         "summary": "Create Admission",
+        "description": "Requires `admissions.create`. Admits a patient in the selected branch. Access is limited to the assigned branch unless the caller has the tenant_admin role.",
         "operationId": "create_admission_api_v1_admissions_branch__branch_uid__post",
         "security": [
           {
@@ -3545,6 +3572,7 @@
       "get": {
         "tags": ["admissions"],
         "summary": "Admissions",
+        "description": "Requires `admissions.read`. Lists admissions in the selected branch. Access is limited to the assigned branch unless the caller has the tenant_admin role.",
         "operationId": "admissions_api_v1_admissions_branch__branch_uid__get",
         "security": [
           {
@@ -3730,6 +3758,7 @@
       "get": {
         "tags": ["admissions"],
         "summary": "Get Admission",
+        "description": "Requires `admissions.read`. Returns an admission in the selected branch. Access is limited to the assigned branch unless the caller has the tenant_admin role.",
         "operationId": "get_admission_api_v1_admissions_branch__branch_uid___admission_uid__get",
         "security": [
           {
@@ -3786,6 +3815,7 @@
       "post": {
         "tags": ["admissions"],
         "summary": "Discharge Admission",
+        "description": "Requires `discharge.create`. Discharges an admission in the selected branch. Access is limited to the assigned branch unless the caller has the tenant_admin role.",
         "operationId": "discharge_admission_api_v1_admissions_branch__branch_uid___admission_uid__discharge_post",
         "security": [
           {
@@ -3852,6 +3882,7 @@
       "post": {
         "tags": ["appointments"],
         "summary": "Create Appointment",
+        "description": "Requires `appointments.create`. Books an appointment in the selected branch. Requires `branches.manage` when the selected branch differs from the branch in the access token.",
         "operationId": "create_appointment_api_v1_appointments_branch__branch_uid__post",
         "security": [
           {
@@ -3906,6 +3937,7 @@
       "get": {
         "tags": ["appointments"],
         "summary": "Appointments",
+        "description": "Requires `appointments.read`. Lists appointments in the selected branch. Requires `branches.manage` when the selected branch differs from the branch in the access token.",
         "operationId": "appointments_api_v1_appointments_branch__branch_uid__get",
         "security": [
           {
@@ -4092,6 +4124,7 @@
       "get": {
         "tags": ["appointments"],
         "summary": "Appointment Availability",
+        "description": "Requires `appointments.read`. Returns appointment availability in the selected branch. Requires `branches.manage` when the selected branch differs from the branch in the access token.",
         "operationId": "appointment_availability_api_v1_appointments_branch__branch_uid__availability_get",
         "security": [
           {
@@ -4212,6 +4245,7 @@
       "get": {
         "tags": ["appointments"],
         "summary": "Get Appointment",
+        "description": "Requires `appointments.read`. Returns an appointment in the selected branch. Requires `branches.manage` when the selected branch differs from the branch in the access token.",
         "operationId": "get_appointment_api_v1_appointments_branch__branch_uid___appointment_uid__get",
         "security": [
           {
@@ -4268,6 +4302,7 @@
       "patch": {
         "tags": ["appointments"],
         "summary": "Reschedule Appointment",
+        "description": "Requires `appointments.update`. Reschedules an appointment in the selected branch. Requires `branches.manage` when the selected branch differs from the branch in the access token.",
         "operationId": "reschedule_appointment_api_v1_appointments_branch__branch_uid___appointment_uid__reschedule_patch",
         "security": [
           {
@@ -4334,6 +4369,7 @@
       "post": {
         "tags": ["appointments"],
         "summary": "Cancel Appointment",
+        "description": "Requires `appointments.update`. Cancels an appointment in the selected branch. Requires `branches.manage` when the selected branch differs from the branch in the access token.",
         "operationId": "cancel_appointment_api_v1_appointments_branch__branch_uid___appointment_uid__cancel_post",
         "security": [
           {
@@ -4400,6 +4436,7 @@
       "post": {
         "tags": ["appointments"],
         "summary": "Mark Appointment No Show",
+        "description": "Requires `appointments.update`. Marks an appointment as no-show. Requires `branches.manage` when the selected branch differs from the branch in the access token.",
         "operationId": "mark_appointment_no_show_api_v1_appointments_branch__branch_uid___appointment_uid__no_show_post",
         "security": [
           {
@@ -4473,6 +4510,7 @@
       "post": {
         "tags": ["appointments"],
         "summary": "Arrive For Appointment",
+        "description": "Requires `appointments.update`. Records arrival for an appointment. Requires `branches.manage` when the selected branch differs from the branch in the access token.",
         "operationId": "arrive_for_appointment_api_v1_appointments_branch__branch_uid___appointment_uid__arrive_post",
         "security": [
           {
@@ -4529,6 +4567,7 @@
       "post": {
         "tags": ["appointments"],
         "summary": "Check In For Appointment",
+        "description": "Requires `appointments.update`. Records check-in for an appointment. Requires `branches.manage` when the selected branch differs from the branch in the access token.",
         "operationId": "check_in_for_appointment_api_v1_appointments_branch__branch_uid___appointment_uid__check_in_post",
         "security": [
           {
@@ -4585,6 +4624,7 @@
       "post": {
         "tags": ["appointments"],
         "summary": "Start Appointment Encounter",
+        "description": "Requires `appointments.update` and `encounters.create`. Starts an encounter linked to the appointment. Requires `branches.manage` when the selected branch differs from the branch in the access token.",
         "operationId": "start_appointment_encounter_api_v1_appointments_branch__branch_uid___appointment_uid__encounters_post",
         "security": [
           {
@@ -4651,6 +4691,7 @@
       "post": {
         "tags": ["healthcare services"],
         "summary": "Create Service",
+        "description": "Requires `healthcare_services.create`. Creates a healthcare service in the current tenant catalog.",
         "operationId": "create_service_api_v1_healthcare_services_post",
         "security": [
           {
@@ -4693,6 +4734,7 @@
       "get": {
         "tags": ["healthcare services"],
         "summary": "List Services",
+        "description": "Requires `healthcare_services.read`. Lists healthcare services in the current tenant catalog.",
         "operationId": "list_services_api_v1_healthcare_services_get",
         "security": [
           {
@@ -4784,6 +4826,7 @@
       "post": {
         "tags": ["healthcare services"],
         "summary": "Create Branch Service",
+        "description": "Requires `branch_healthcare_services.create`. Configures a catalog healthcare service for the selected branch. Requires `branches.manage` when the selected branch differs from the branch in the access token.",
         "operationId": "create_branch_service_api_v1_healthcare_services_branch__branch_uid___service_uid__post",
         "security": [
           {
@@ -4848,6 +4891,7 @@
       "get": {
         "tags": ["healthcare services"],
         "summary": "Get Branch Service",
+        "description": "Requires `branch_healthcare_services.read`. Returns a healthcare service configured for the selected branch. Requires `branches.manage` when the selected branch differs from the branch in the access token.",
         "operationId": "get_branch_service_api_v1_healthcare_services_branch__branch_uid___service_uid__get",
         "security": [
           {
@@ -4902,6 +4946,7 @@
       "patch": {
         "tags": ["healthcare services"],
         "summary": "Update Branch Service",
+        "description": "Requires `branch_healthcare_services.update`. Updates a healthcare service configuration for the selected branch. Requires `branches.manage` when the selected branch differs from the branch in the access token.",
         "operationId": "update_branch_service_api_v1_healthcare_services_branch__branch_uid___service_uid__patch",
         "security": [
           {
@@ -4968,6 +5013,7 @@
       "get": {
         "tags": ["healthcare services"],
         "summary": "List Branch Services",
+        "description": "Requires `branch_healthcare_services.read`. Lists healthcare services configured for the selected branch. Requires `branches.manage` when the selected branch differs from the branch in the access token.",
         "operationId": "list_branch_services_api_v1_healthcare_services_branch__branch_uid__get",
         "security": [
           {
@@ -5069,6 +5115,7 @@
       "get": {
         "tags": ["healthcare services"],
         "summary": "Get Service",
+        "description": "Requires `healthcare_services.read`. Returns a healthcare service from the current tenant catalog.",
         "operationId": "get_service_api_v1_healthcare_services__service_uid__get",
         "security": [
           {
@@ -5113,6 +5160,7 @@
       "patch": {
         "tags": ["healthcare services"],
         "summary": "Update Service",
+        "description": "Requires `healthcare_services.update`. Updates a healthcare service in the current tenant catalog.",
         "operationId": "update_service_api_v1_healthcare_services__service_uid__patch",
         "security": [
           {
@@ -5169,6 +5217,7 @@
       "post": {
         "tags": ["practitioner availability"],
         "summary": "Create Availability",
+        "description": "Requires `practitioner_availability.create`. Creates practitioner availability in the selected branch. Requires `branches.manage` when the selected branch differs from the branch in the access token. Requires `practitioner_availability.manage` when creating availability for another practitioner.",
         "operationId": "create_availability_api_v1_practitioner_availability_branch__branch_uid__post",
         "security": [
           {
@@ -5223,6 +5272,7 @@
       "get": {
         "tags": ["practitioner availability"],
         "summary": "List Availability",
+        "description": "Requires `practitioner_availability.read`. Lists practitioner availability in the selected branch. Requires `branches.manage` when the selected branch differs from the branch in the access token.",
         "operationId": "list_availability_api_v1_practitioner_availability_branch__branch_uid__get",
         "security": [
           {
@@ -5368,6 +5418,7 @@
       "get": {
         "tags": ["practitioner availability"],
         "summary": "Get Availability",
+        "description": "Requires `practitioner_availability.read`. Returns a practitioner availability record in the selected branch. Requires `branches.manage` when the selected branch differs from the branch in the access token.",
         "operationId": "get_availability_api_v1_practitioner_availability_branch__branch_uid___availability_uid__get",
         "security": [
           {
@@ -5422,6 +5473,7 @@
       "patch": {
         "tags": ["practitioner availability"],
         "summary": "Update Availability",
+        "description": "Requires `practitioner_availability.update`. Updates practitioner availability in the selected branch. Requires `branches.manage` when the selected branch differs from the branch in the access token. Requires `practitioner_availability.manage` when updating availability for another practitioner.",
         "operationId": "update_availability_api_v1_practitioner_availability_branch__branch_uid___availability_uid__patch",
         "security": [
           {
@@ -5488,6 +5540,7 @@
       "get": {
         "tags": ["staff"],
         "summary": "Get Tenant Users",
+        "description": "Requires `staff.read`. Lists staff in the token branch, or across the current tenant when no branch is selected.",
         "operationId": "get_tenant_users_api_v1_staff_get",
         "security": [
           {
@@ -5613,6 +5666,7 @@
       "get": {
         "tags": ["staff"],
         "summary": "Get Single Staff",
+        "description": "Requires `staff.read`. Returns a staff member in the current tenant. The existing tenant_admin role restriction also applies.",
         "operationId": "get_single_staff_api_v1_staff__staff_uid__get",
         "security": [
           {
@@ -5659,6 +5713,7 @@
       "post": {
         "tags": ["staff"],
         "summary": "Add Staff",
+        "description": "Requires `staff.create`. Creates a staff member in the current tenant. The existing tenant_admin role restriction also applies.",
         "operationId": "add_staff_api_v1_staff_add_post",
         "requestBody": {
           "content": {
@@ -5703,6 +5758,7 @@
       "get": {
         "tags": ["staff"],
         "summary": "Get Staff In Branch",
+        "description": "Requires `branches.read`. Lists staff in the selected branch within the current tenant.",
         "operationId": "get_staff_in_branch_api_v1_staff_branch__branch_uid__get",
         "security": [
           {
