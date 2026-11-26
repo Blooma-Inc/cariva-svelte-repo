@@ -101,6 +101,7 @@ export type TAppModalsAction =
 					open: true;
 					branch_uid: string;
 					working_hours: string;
+					timezone: string;
 			  }
 			| { open?: false }
 	  ));

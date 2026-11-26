@@ -1,8 +1,8 @@
-<!-- <script lang="ts" module>
+<script lang="ts" module>
 	interface LoginAttemptsProps {
 		email: string;
 	}
-</script> -->
+</script>
 
 <script lang="ts">
 	import { Card, CardHeader, CardTitle, CardContent } from '@cariva/ui/components/ui/card/index.js';
@@ -10,7 +10,8 @@
 	import XIcon from '@lucide/svelte/icons/x';
 	import EmptyData from '$lib/components/empty-data.svelte';
 
-	// let { email }: LoginAttemptsProps = $props();
+	let { email }: LoginAttemptsProps = $props();
+	$inspect(email);
 </script>
 
 <Card>

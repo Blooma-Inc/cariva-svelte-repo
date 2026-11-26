@@ -36,7 +36,7 @@ class BranchStore {
 	}
 
 	async editBranch(branch_uid: string, payload: Partial<BranchDetailedItem>, cb?: () => void) {
-		this.loaders.isBranchLoading = false;
+		this.loaders.isBranchLoading = true;
 		this.errors.isBranchLoading = '';
 		try {
 			const res = await patchBranch(branch_uid, payload);

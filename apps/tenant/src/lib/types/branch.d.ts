@@ -1,8 +1,9 @@
 interface BranchOperatingHoursDay {
 	week_day: number;
 	is_enabled: boolean;
-	open_time: string | null;
-	close_time: string | null;
+	all_day?: boolean;
+	open_time?: string | null;
+	close_time?: string | null;
 }
 
 interface BranchOperatingHours {

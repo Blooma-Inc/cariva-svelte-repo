@@ -43,7 +43,8 @@ class AppStore {
 	branchModal = $state({
 		branch_uid: '',
 		branch_name: '',
-		working_hours: ''
+		working_hours: '',
+		timezone: ''
 	});
 
 	encounterModal = $state({ patient_uid: '', branch_uid: '', branch_name: '' });
@@ -150,6 +151,7 @@ class AppStore {
 				if (modal.open) {
 					this.branchModal.branch_uid = modal.branch_uid;
 					this.branchModal.working_hours = modal.working_hours;
+					this.branchModal.timezone = modal.timezone;
 				}
 				break;
 			case AppModals.STAFF_FORM_MODAL:
