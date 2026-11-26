@@ -2,12 +2,12 @@
   import { tv, type VariantProps } from 'tailwind-variants';
 
   export const sidebarMenuButtonVariants = tv({
-    base: 'ring-sidebar-ring hover:bg-sidebar-accent hover:text-black active:bg-sidebar-accent active:text-black data-active:bg-sidebar-accent text-neutral-500 data-active:text-black data-open:hover:bg-sidebar-accent data-open:hover:text-black gap-2 rounded-md p-2 text-left text-sm transition-[width,height,padding] group-has-data-[sidebar=menu-action]/menu-item:pr-8 group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! focus-visible:ring-2 peer/menu-button group/menu-button flex w-full items-center overflow-hidden outline-hidden disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:size-3 data-active:[&_svg]:text-primary [&_svg]:shrink-0 [&>span:last-child]:truncate',
+    base: 'ring-sidebar-ring hover:bg-sidebar-accent hover:text-sidebar-accent-foreground active:bg-sidebar-accent active:text-sidebar-accent-foreground data-active:bg-sidebar-primary text-sidebar-foreground/85 data-active:text-sidebar-primary-foreground data-active:font-semibold data-active:hover:bg-sidebar-primary data-active:hover:text-sidebar-primary-foreground gap-2 rounded-md p-2 text-left text-sm transition-[width,height,padding] group-has-data-[sidebar=menu-action]/menu-item:pr-8 group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! focus-visible:ring-2 peer/menu-button group/menu-button flex w-full items-center overflow-hidden outline-hidden disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:size-3 data-active:[&_svg]:text-sidebar-primary-foreground [&_svg]:shrink-0 [&>span:last-child]:truncate',
     variants: {
       variant: {
-        default: 'hover:bg-sidebar-accent hover:text-black',
+        default: 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
         outline:
-          'bg-background hover:bg-sidebar-accent hover:text-black shadow-[0_0_0_1px_var(--sidebar-border)] hover:shadow-[0_0_0_1px_var(--sidebar-accent)]'
+          'bg-sidebar hover:bg-sidebar-accent hover:text-sidebar-accent-foreground shadow-[0_0_0_1px_var(--sidebar-border)] hover:shadow-[0_0_0_1px_var(--sidebar-accent)]'
       },
       size: {
         default: 'h-9 text-sm',

@@ -100,6 +100,12 @@ class Routes {
 		isProtected: true,
 		requiredPermission: PERMISSIONS.STAFF_READ
 	});
+	HEALTHCARE_SERVICES = new Route({
+		path: '/(protected)/healthcare-services',
+		title: 'Healthcare Services',
+		isProtected: true,
+		requiredPermission: PERMISSIONS.HEALTHCARE_SERVICES_READ
+	});
 	WARDS = new Route({
 		path: '/(protected)/wards',
 		title: 'Wards',
@@ -173,7 +179,8 @@ class Routes {
 			this.PROFILE,
 			this.NOTIFICATION,
 			this.SETTINGS,
-			this.WARDS
+			this.WARDS,
+			this.HEALTHCARE_SERVICES
 		];
 	}
 }

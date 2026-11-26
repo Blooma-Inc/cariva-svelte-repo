@@ -1,4 +1,6 @@
 export enum AppModals {
+	BRANCH_HEALTHCARE_SERVICE_MODAL = 'BRANCH_HEALTHCARE_SERVICE_MODAL',
+	HEALTHCARE_SERVICE_MODAL = 'HEALTHCARE_SERVICE_MODAL',
 	ENCOUNTER_FORM_MODAL = 'ENCOUNTER_FORM_MODAL',
 	PATIENT_PROFILE_MODAL = 'PATIENT_PROFILE_MODAL',
 	DONE = 'DONE',
@@ -23,6 +25,22 @@ export enum AppModals {
 }
 
 export type TAppModalsAction =
+	| ({ name: AppModals.BRANCH_HEALTHCARE_SERVICE_MODAL } & (
+			| {
+					open: true;
+					branch_uid: string;
+					branch_name: string;
+					timezone: string;
+					branch_is_active: boolean;
+					service_uid?: string;
+					mode: 'view' | 'form' | 'status';
+			  }
+			| { open?: false }
+	  ))
+	| ({ name: AppModals.HEALTHCARE_SERVICE_MODAL } & (
+			| { open: true; service_uid?: string; mode: 'view' | 'form' | 'status' }
+			| { open?: false }
+	  ))
 	| ({ name: AppModals.ENCOUNTER_FORM_MODAL } & (
 			| { open: true; patient_uid: string; branch_uid?: string; branch_name?: string }
 			| { open?: false }

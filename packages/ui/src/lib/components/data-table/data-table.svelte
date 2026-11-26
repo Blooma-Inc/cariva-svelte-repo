@@ -19,6 +19,7 @@
     showPagination?: boolean;
     paginationProps: DataTablePaginationProps;
     emptyDataNode?: Snippet;
+    loadingDataNode?: Snippet;
     emptyDataProps?: DataTableEmptyProps;
     errorDataProps: DataTableErrorProps;
   }
@@ -56,6 +57,7 @@
     columns,
     children,
     emptyDataNode,
+    loadingDataNode,
     paginationProps,
     emptyDataProps,
     errorDataProps,
@@ -115,14 +117,18 @@
   });
 </script>
 
-<div class="w-full">
+<div class="bg-card text-card-foreground border-border w-full overflow-hidden rounded-xl border">
   {@render children?.()}
 
   <div class="max-h-150 overflow-y-auto">
     <Table>
       <DataTableHeader headers={table.getHeaderGroups()} />
       {#if status === 'pending'}
-        <DataTableLoading columnLength={table.getAllLeafColumns().length} rowLength={limit} />
+        {#if loadingDataNode}
+          {@render loadingDataNode()}
+        {:else}
+          <DataTableLoading columnLength={table.getAllLeafColumns().length} rowLength={limit} />
+        {/if}
       {:else if status === 'success'}
         {#if data && data.length}
           <DataTableBody rows={table.getRowModel().rows} />

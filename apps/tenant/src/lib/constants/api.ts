@@ -81,3 +81,9 @@ export const ENCOUNTERS = {
 	ALL: '/encounters/branch/:branch_uid',
 	TYPES: '/encounter-types'
 } as const;
+
+export const HEALTHCARE_SERVICES = {
+	BRANCH: '/healthcare-services/branch/:branch_uid',
+	ALL: '/healthcare-services',
+	SINGLE: '/healthcare-services/:uid'
+} as const;

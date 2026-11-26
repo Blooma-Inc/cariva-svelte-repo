@@ -1,3 +1,5 @@
+import BranchHealthcareServiceStore from './branch-healthcare-services/index.svelte';
+import HealthcareServiceStore from './healthcare-services/index.svelte';
 import AppStore from './app/index.svelte';
 import AuthStore from './auth/index.svelte';
 import BranchStore from './branch/index.svelte';
@@ -8,6 +10,8 @@ import PermissionStore from './permissions/index.svelte';
 import StaffStore from './staff/index.svelte';
 
 export class RootStore {
+	BranchHealthcareServiceStore: BranchHealthcareServiceStore;
+	HealthcareServiceStore: HealthcareServiceStore;
 	AppStore: AppStore;
 	AuthStore: AuthStore;
 	BranchStore: BranchStore;
@@ -18,6 +22,8 @@ export class RootStore {
 	PermissionStore: PermissionStore;
 
 	constructor() {
+		this.BranchHealthcareServiceStore = new BranchHealthcareServiceStore(this);
+		this.HealthcareServiceStore = new HealthcareServiceStore(this);
 		this.AppStore = new AppStore(this);
 		this.AuthStore = new AuthStore(this);
 		this.BranchStore = new BranchStore(this);

@@ -9,17 +9,22 @@
 	import Staff from './components/staff.svelte';
 	import WardsAndBeds from '$lib/components/facility/wards-and-beds.svelte';
 	import Settings from './components/settings.svelte';
+	import Services from './components/services.svelte';
+	import { stores } from '$lib/store/index.svelte';
+	import { canAccessBranchServices } from '$lib/utils/branch-service-access';
 	import { useFetchBranchByUid } from '$lib/hooks/branch/use-fetch-branch-by-uid.js';
 	import { useScrollActiveTab } from '$lib/hooks/app/use-scroll-into-view.svelte.js';
 	import { useFetchTenant } from '$lib/hooks/tenant/use-fetch-Tenant.js';
 
 	let { data } = $props();
 	const branch_uid = () => data.branch_uid;
+	const servicesAllowed = $derived(canAccessBranchServices(stores, branch_uid()));
 
 	const tabs = [
 		{ tab: 'Overview', value: 'overview', Content: Overview },
 		{ tab: 'Wards & Beds', value: 'wards_and_beds', Content: WardsAndBeds },
 		{ tab: 'Staff', value: 'staff', Content: Staff },
+		{ tab: 'Services', value: 'services', Content: Services },
 		{ tab: 'Settings', value: 'settings', Content: Settings }
 	];
 	let tabValue = $state(page.url.searchParams.get('tab') ?? 'overview');
@@ -65,7 +70,9 @@
 				class="scrollbar-hide sticky top-20 left-0 z-20 flex w-full items-center justify-start gap-1 overflow-x-auto backdrop-blur lg:w-fit"
 			>
 				{#each tabs as { tab, value } (value)}
-					<TabsTrigger bind:ref={refs[value]} {value}>{tab}</TabsTrigger>
+					{#if value !== 'services' || servicesAllowed}<TabsTrigger bind:ref={refs[value]} {value}
+							>{tab}</TabsTrigger
+						>{/if}
 				{/each}
 			</TabsList>
 
@@ -82,6 +89,14 @@
 			<TabsContent value="staff">
 				{#if tabValue === 'staff'}
 					<Staff branchUid={branch_uid()} branchName={branchQuery.data.branch.name} />
+				{/if}
+			</TabsContent>
+			<TabsContent value="services">
+				{#if tabValue === 'services'}
+					{#if servicesAllowed}
+						{#key branch_uid()}<Services branch={branchQuery.data.branch} />{/key}
+					{:else}<Paragraph>You do not have permission to view services for this branch.</Paragraph
+						>{/if}
 				{/if}
 			</TabsContent>
 			<TabsContent value="settings">

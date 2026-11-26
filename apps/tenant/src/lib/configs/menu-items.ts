@@ -7,6 +7,7 @@ import LogsIcon from '@lucide/svelte/icons/logs';
 import UsersIcon from '@lucide/svelte/icons/users';
 import ShieldUserIcon from '@lucide/svelte/icons/shield-user';
 import HospitalIcon from '@lucide/svelte/icons/hospital';
+import StethoscopeIcon from '@lucide/svelte/icons/stethoscope';
 import BedDoubleIcon from '@lucide/svelte/icons/bed-double';
 
 const ALL_MENU_ITEMS: MenuItem[] = [
@@ -21,6 +22,12 @@ const ALL_MENU_ITEMS: MenuItem[] = [
 		url: ROUTES.BRANCHES.resolve(),
 		requiredPermission: ROUTES.BRANCHES.requiredPermission,
 		icon: HospitalIcon
+	},
+	{
+		title: ROUTES.HEALTHCARE_SERVICES.title,
+		url: ROUTES.HEALTHCARE_SERVICES.resolve(),
+		requiredPermission: ROUTES.HEALTHCARE_SERVICES.requiredPermission,
+		icon: StethoscopeIcon
 	},
 	{
 		title: ROUTES.STAFF.title,
