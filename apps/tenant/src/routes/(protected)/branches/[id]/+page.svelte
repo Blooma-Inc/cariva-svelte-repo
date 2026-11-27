@@ -56,7 +56,7 @@
 	{#if branchQuery.status === 'success' && branchQuery.data}
 		<div class="flex flex-col">
 			<button class="flex w-fit items-center justify-start gap-2" onclick={() => history.back()}>
-				<ArrowLeftIcon />
+				<ArrowLeftIcon class="size-3" />
 				<Heading level="h3">{branchQuery.data.branch.name}</Heading>
 				<Badge>{branchQuery.data.branch.is_active ? 'Active' : 'Inactive'}</Badge>
 			</button>

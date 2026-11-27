@@ -47,6 +47,8 @@ class AppStore {
 		timezone: ''
 	});
 
+	appointmentModal = $state<{ patient: { uid: string; label: string } | null }>({ patient: null });
+
 	encounterModal = $state({ patient_uid: '', branch_uid: '', branch_name: '' });
 
 	practitionerScheduleModal = $state<{
@@ -109,6 +111,9 @@ class AppStore {
 	 */
 	toggleModals(modal: TAppModalsAction = {}) {
 		switch (modal.name) {
+			case AppModals.APPOINTMENT_FORM_MODAL:
+				if (modal.open) this.appointmentModal = { patient: modal.patient ?? null };
+				break;
 			case AppModals.PRACTITIONER_SCHEDULE_MODAL:
 				if (modal.open)
 					this.practitionerScheduleModal = {

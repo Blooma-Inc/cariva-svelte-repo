@@ -58,7 +58,7 @@
 				</div>
 				{#if canRead && PermissionStore.can(PERMISSIONS.WARDS_CREATE)}
 					<Button variant="secondary" onclick={() => openWardForm()}
-						><PlusIcon class="size-4" />Add Ward</Button
+						><PlusIcon class="size-3" />Add Ward</Button
 					>
 				{/if}
 			</div>

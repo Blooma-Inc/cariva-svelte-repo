@@ -4241,6 +4241,53 @@
         }
       }
     },
+    "/api/v1/appointments/branch/{branch_uid}/booking-context": {
+      "get": {
+        "tags": ["appointments"],
+        "summary": "Appointment Booking Context",
+        "description": "Requires `appointments.read`. Returns minimal appointment-booking context for the selected branch. Requires `branches.manage` when the selected branch differs from the branch in the access token. Does not grant branch-directory or branch-administration access.",
+        "operationId": "appointment_booking_context_api_v1_appointments_branch__branch_uid__booking_context_get",
+        "security": [
+          {
+            "AccessTokenBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "branch_uid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Branch Uid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerRespModel_AppointmentBookingContext_NoneType_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/appointments/branch/{branch_uid}/{appointment_uid}": {
       "get": {
         "tags": ["appointments"],
@@ -6895,6 +6942,57 @@
           "intervals"
         ],
         "title": "AppointmentAvailabilityResult"
+      },
+      "AppointmentBookingBranch": {
+        "properties": {
+          "uid": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Uid"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "is_active": {
+            "type": "boolean",
+            "title": "Is Active"
+          },
+          "timezone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timezone"
+          },
+          "operating_hours": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BranchOperatingHours"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": ["uid", "name", "is_active", "timezone", "operating_hours"],
+        "title": "AppointmentBookingBranch"
+      },
+      "AppointmentBookingContext": {
+        "properties": {
+          "branch": {
+            "$ref": "#/components/schemas/AppointmentBookingBranch"
+          }
+        },
+        "type": "object",
+        "required": ["branch"],
+        "title": "AppointmentBookingContext"
       },
       "AppointmentItem": {
         "properties": {
@@ -11655,6 +11753,29 @@
         "type": "object",
         "required": ["data", "message", "status"],
         "title": "ServerRespModel[AppointmentAvailabilityResult, NoneType]"
+      },
+      "ServerRespModel_AppointmentBookingContext_NoneType_": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/AppointmentBookingContext"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "meta": {
+            "type": "null",
+            "title": "Meta"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "readOnly": true
+          }
+        },
+        "type": "object",
+        "required": ["data", "message", "status"],
+        "title": "ServerRespModel[AppointmentBookingContext, NoneType]"
       },
       "ServerRespModel_AppointmentItem_NoneType_": {
         "properties": {

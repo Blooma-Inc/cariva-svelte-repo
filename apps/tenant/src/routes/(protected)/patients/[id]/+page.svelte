@@ -17,7 +17,7 @@
 <div class="flex min-w-0 flex-col gap-4">
 	<div>
 		<Button variant="ghost" href={ROUTES.PATIENTS.resolve()}
-			><ChevronLeftIcon class="size-4" />Patients</Button
+			><ChevronLeftIcon class="size-3" />Patients</Button
 		>
 	</div>
 	{#if query.status === 'pending'}

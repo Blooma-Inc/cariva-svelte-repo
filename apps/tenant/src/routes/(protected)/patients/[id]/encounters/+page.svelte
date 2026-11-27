@@ -17,7 +17,7 @@
 <div class="flex min-w-0 flex-col gap-4">
 	<div>
 		<Button variant="ghost" href={resolve('/(protected)/patients/[id]', { id: patientUid })}
-			><ChevronLeftIcon class="size-4" />Patient profile</Button
+			><ChevronLeftIcon class="size-3" />Patient profile</Button
 		>
 	</div>
 	{#if query.status === 'pending'}

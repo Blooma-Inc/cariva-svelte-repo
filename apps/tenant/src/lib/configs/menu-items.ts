@@ -1,3 +1,4 @@
+import CalendarDaysIcon from '@lucide/svelte/icons/calendar-days';
 import BellDotIcon from '@lucide/svelte/icons/bell-dot';
 import LayoutDashboardIcon from '@lucide/svelte/icons/layout-dashboard';
 import SettingsIcon from '@lucide/svelte/icons/settings';
@@ -16,6 +17,12 @@ const ALL_MENU_ITEMS: MenuItem[] = [
 		url: ROUTES.DASHBOARD.resolve(),
 		requiredPermission: ROUTES.DASHBOARD.requiredPermission,
 		icon: LayoutDashboardIcon
+	},
+	{
+		title: ROUTES.APPOINTMENTS.title,
+		url: ROUTES.APPOINTMENTS.resolve(),
+		requiredPermission: ROUTES.APPOINTMENTS.requiredPermission,
+		icon: CalendarDaysIcon
 	},
 	{
 		title: ROUTES.BRANCHES.title,

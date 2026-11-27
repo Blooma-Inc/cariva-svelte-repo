@@ -50,7 +50,7 @@
 					variant="ghost"
 					onclick={() => AppStore.toggleModals({ open: true, name: AppModals.PROFILE_FORM_MODAL })}
 				>
-					<PenIcon />
+					<PenIcon class="size-3" />
 				</Button>
 			</div>
 

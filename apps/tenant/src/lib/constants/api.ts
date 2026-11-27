@@ -91,3 +91,7 @@ export const HEALTHCARE_SERVICES = {
 export const PRACTITIONER_AVAILABILITY = {
 	ALL: '/practitioner-availability/branch/:branch_uid'
 } as const;
+
+export const APPOINTMENTS = {
+	BRANCH: '/appointments/branch/:branch_uid'
+} as const;

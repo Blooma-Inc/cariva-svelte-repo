@@ -79,7 +79,7 @@
 		<div class="flex items-center justify-between">
 			<Heading level="h3">Your branches</Heading>
 			<Button size="xs" variant="outline" onclick={() => goto(ROUTES.BRANCHES.resolve())}
-				>View all <ArrowRightIcon /></Button
+				>View all <ArrowRightIcon class="size-3" /></Button
 			>
 		</div>
 

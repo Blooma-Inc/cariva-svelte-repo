@@ -100,6 +100,12 @@ class Routes {
 		isProtected: true,
 		requiredPermission: PERMISSIONS.STAFF_READ
 	});
+	APPOINTMENTS = new Route({
+		path: '/(protected)/appointments',
+		title: 'Appointments',
+		isProtected: true,
+		requiredPermission: PERMISSIONS.APPOINTMENTS_READ
+	});
 	HEALTHCARE_SERVICES = new Route({
 		path: '/(protected)/healthcare-services',
 		title: 'Healthcare Services',

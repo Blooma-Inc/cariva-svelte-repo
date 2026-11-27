@@ -27,4 +27,4 @@
 	}
 </script>
 
-<Button onclick={openModal}><PlusIcon class="size-4" />Create encounter</Button>
+<Button onclick={openModal}><PlusIcon class="size-3" />Create encounter</Button>

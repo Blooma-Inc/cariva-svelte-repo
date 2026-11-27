@@ -8,7 +8,8 @@ import { practitionerAvailability } from './fetch-key-factory';
 export function useFetchPractitionerAvailability(
 	branchUid: () => string,
 	params: PractitionerAvailabilityQueryParams,
-	allPages = false
+	allPages = false,
+	fresh = false
 ) {
 	return createQuery(() => {
 		const tenantUid = stores.AppStore.currentTenant.uid ?? '';
@@ -18,6 +19,7 @@ export function useFetchPractitionerAvailability(
 		return {
 			queryKey: [...meta.keys(), allPages],
 			meta,
+			...(fresh ? { staleTime: 0, refetchOnMount: 'always' as const } : {}),
 			enabled: browser && canReadPractitionerSchedule(stores, selectedBranch, practitionerUid),
 			queryFn: async ({ signal }) => {
 				let offset = meta.params.offset;

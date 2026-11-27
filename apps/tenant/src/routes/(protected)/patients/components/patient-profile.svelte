@@ -1,4 +1,5 @@
 <script lang="ts">
+	import BookAppointment from '$lib/components/appointments/book-appointment.svelte';
 	import { resolve } from '$app/paths';
 	import { format, parseISO } from 'date-fns';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
@@ -43,12 +44,16 @@
 		</div>
 	</div>
 	<div class="flex flex-wrap gap-2 border-b pb-5">
+		<BookAppointment
+			patient={{ uid: data.patient_uid, label: `${fullName} · ${data.patient_no}` }}
+			onOpen={() => onNavigate?.()}
+		/>
 		{#if stores.PermissionStore.can(PERMISSIONS.ENCOUNTERS_READ)}
 			<Button
 				variant="outline"
 				size="sm"
 				href={resolve('/(protected)/patients/[id]/encounters', { id: data.patient_uid })}
-				onclick={() => onNavigate?.()}><ClipboardListIcon class="size-4" />View encounters</Button
+				onclick={() => onNavigate?.()}><ClipboardListIcon class="size-3" />View encounters</Button
 			>
 		{/if}
 		{#if stores.PermissionStore.can(PERMISSIONS.ENCOUNTERS_CREATE)}
@@ -61,7 +66,7 @@
 						open: true,
 						patient_uid
 					});
-				}}><PlusIcon class="size-4" />Create encounter</Button
+				}}><PlusIcon class="size-3" />Create encounter</Button
 			>
 		{/if}
 	</div>

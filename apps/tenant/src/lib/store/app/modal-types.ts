@@ -1,4 +1,5 @@
 export enum AppModals {
+	APPOINTMENT_FORM_MODAL = 'APPOINTMENT_FORM_MODAL',
 	PRACTITIONER_SCHEDULE_MODAL = 'PRACTITIONER_SCHEDULE_MODAL',
 	BRANCH_HEALTHCARE_SERVICE_MODAL = 'BRANCH_HEALTHCARE_SERVICE_MODAL',
 	HEALTHCARE_SERVICE_MODAL = 'HEALTHCARE_SERVICE_MODAL',
@@ -26,6 +27,10 @@ export enum AppModals {
 }
 
 export type TAppModalsAction =
+	| ({ name: AppModals.APPOINTMENT_FORM_MODAL } & (
+			| { open: true; patient?: { uid: string; label: string } }
+			| { open?: false }
+	  ))
 	| ({ name: AppModals.PRACTITIONER_SCHEDULE_MODAL } & (
 			| {
 					open: true;

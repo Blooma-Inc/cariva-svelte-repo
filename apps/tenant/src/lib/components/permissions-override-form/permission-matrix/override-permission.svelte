@@ -33,13 +33,13 @@
 >
 	{override.permission.code}
 	{#if mutateQuery.isPending}
-		<LoaderCircleIcon class="animate-spin" />
+		<LoaderCircleIcon class="size-3 animate-spin" />
 	{:else}
 		<button
 			class="cursor-pointer transition-all duration-150 hover:scale-125"
 			onclick={() => mutateQuery.mutate(override.uid)}
 		>
-			<CircleXIcon />
+			<CircleXIcon class="size-3" />
 		</button>
 	{/if}
 </Button>
