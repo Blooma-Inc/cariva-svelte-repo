@@ -14,6 +14,10 @@
 	</CardHeader>
 
 	<CardContent>
-		<EmptyData title="No recent activity" description="All recent activities will appear here." />
+		<EmptyData
+			compact
+			title="No recent activity"
+			description="All recent activities will appear here."
+		/>
 	</CardContent>
 </Card>

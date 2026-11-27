@@ -7,29 +7,13 @@
 </script>
 
 <script lang="ts">
-  import { CircleAlertIcon, RefreshCwIcon } from '@lucide/svelte';
-  import { Button } from '../ui/button';
-  import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '../ui/card';
-
+  import { EmptyState } from '../empty-state/index.js';
   let { title, errorDescription, onRetry }: DataTableErrorProps = $props();
 </script>
 
-<Card class="border-destructive/40 bg-destructive/5 col-span-full w-full">
-  <CardHeader>
-    <div class="text-destructive flex items-center gap-2">
-      <CircleAlertIcon class="h-5 w-5" />
-      <CardTitle>{title}</CardTitle>
-    </div>
-  </CardHeader>
-
-  <CardContent class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-    <CardDescription class="text-muted-foreground">{errorDescription}</CardDescription>
-
-    {#if onRetry}
-      <Button variant="info" onclick={() => onRetry()}>
-        <RefreshCwIcon class="size-3" />
-        Retry
-      </Button>
-    {/if}
-  </CardContent>
-</Card>
+<EmptyState
+  kind="error"
+  {title}
+  description={errorDescription || 'We couldn’t retrieve these records. Please try again.'}
+  onAction={onRetry}
+/>

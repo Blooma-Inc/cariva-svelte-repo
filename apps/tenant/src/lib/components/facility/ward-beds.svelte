@@ -69,6 +69,7 @@
 		</ul>
 	{:else}
 		<EmptyData
+			compact
 			title="No beds in this ward"
 			description="Beds will appear here once they are created."
 		/>

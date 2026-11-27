@@ -52,6 +52,7 @@
 </script>
 
 <script lang="ts">
+	import { EmptyState } from '@cariva/ui/components/empty-state/index.js';
 	import CarivaHospitalForm from '$lib/assets/icons/form.png';
 	import {
 		Item,
@@ -449,8 +450,15 @@
 								{#if subscriptionPlansQuery.status === 'pending'}
 									<p>Fetching subscription data...</p>
 								{:else if subscriptionPlansQuery.status === 'error'}
-									<p>Error Page</p>
-									<p>Might need to reload</p>
+									<EmptyState
+										compact
+										kind="error"
+										title="Couldn’t load subscription plans"
+										description="We couldn’t retrieve the available plans. Please try again."
+										onAction={() => {
+											void subscriptionPlansQuery.refetch();
+										}}
+									/>
 								{:else if subscriptionPlansQuery.data}
 									{@const plans = subscriptionPlansQuery.data.data.map((subscription) => {
 										const { plan, uid, max_branches, max_users, duration_days, amount } =

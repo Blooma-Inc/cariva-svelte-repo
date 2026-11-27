@@ -1,14 +1,28 @@
 import { isAxiosError } from 'axios';
 import type { RootStore } from '../index.svelte';
 import { canBookAppointments, containsAppointment } from '$lib/utils/appointment-booking';
-import { appointmentPayloadSchema } from '$lib/validators/appointments';
-import { getAppointmentAvailability, postAppointment } from '$lib/requests/appointments';
+import {
+	appointmentPayloadSchema,
+	appointmentActionSchema,
+	appointmentRescheduleSchema
+} from '$lib/validators/appointments';
+import {
+	getAppointmentAvailability,
+	postAppointment,
+	getAppointmentDetail,
+	patchAppointmentTime,
+	postAppointmentAction
+} from '$lib/requests/appointments';
 import { parseError } from '$lib/utils/errorHandler';
+import { canPerformAppointment, appointmentViewer } from '$lib/utils/appointment-workspace';
 import { toast } from '@cariva/ui/components/toast/index.js';
 export default class AppointmentStore {
 	loading = $state(false);
 	error = $state('');
 	slotConflict = $state(false);
+	actionLoading = $state(false);
+	actionError = $state('');
+	actionConflict = $state(false);
 	constructor(private root: RootStore) {}
 	async create(
 		branchUid: string,
@@ -59,6 +73,61 @@ export default class AppointmentStore {
 			return null;
 		} finally {
 			this.loading = false;
+		}
+	}
+	async perform(
+		branchUid: string,
+		record: AppointmentListItem,
+		action: AppointmentAction,
+		payload: object = {}
+	) {
+		if (this.actionLoading) return false;
+		this.actionError = '';
+		this.actionConflict = false;
+		const tenant = this.root.AppStore.currentTenant.uid;
+		const viewer = JSON.stringify(appointmentViewer(this.root));
+		const parsed = appointmentActionSchema(action).safeParse(payload);
+		const allowed = (current: AppointmentListItem) =>
+			tenant === this.root.AppStore.currentTenant.uid &&
+			viewer === JSON.stringify(appointmentViewer(this.root)) &&
+			canPerformAppointment(this.root, branchUid, current, action);
+		if (!allowed(record) || !parsed.success) {
+			this.actionError = 'This action is unavailable, or its required details are invalid.';
+			return false;
+		}
+		this.actionLoading = true;
+		try {
+			const latest = (await getAppointmentDetail(branchUid, record.uid)).data.data;
+			if (latest.uid !== record.uid || !allowed(latest)) {
+				this.actionConflict = true;
+				this.actionError =
+					'This appointment or your permissions changed. Review the refreshed details.';
+				return false;
+			}
+			if (action === 'reschedule')
+				await patchAppointmentTime(
+					branchUid,
+					record.uid,
+					appointmentRescheduleSchema.parse(payload)
+				);
+			else
+				await postAppointmentAction(
+					branchUid,
+					record.uid,
+					action,
+					Object.keys(parsed.data).length ? parsed.data : undefined
+				);
+			if (!allowed(latest)) return false;
+			toast.success('Appointment updated.');
+			return true;
+		} catch (error) {
+			this.actionConflict = isAxiosError(error) && error.response?.status === 409;
+			this.actionError = this.actionConflict
+				? 'This appointment changed or the time is no longer available. Review the refreshed details.'
+				: parseError(error);
+			return false;
+		} finally {
+			this.actionLoading = false;
 		}
 	}
 }

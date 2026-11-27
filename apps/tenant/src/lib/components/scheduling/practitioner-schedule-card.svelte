@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { EmptyState } from '@cariva/ui/components/empty-state/index.js';
 	import { superForm } from 'sveltekit-superforms';
 	import {
 		Card,
@@ -183,14 +184,30 @@
 							</div>{/each}
 					</div>
 				{:else if query.isError}
-					<p role="alert">{parseError(query.error)}</p>
-					<Button variant="outline" onclick={() => query.refetch()}>Retry schedules</Button>
+					<EmptyState
+						compact
+						kind="error"
+						title="Couldn’t load practitioner schedules"
+						description={parseError(query.error)}
+						onAction={() => {
+							void query.refetch();
+						}}
+					/>
 				{:else if query.data}
-					{#if !query.data.data.length}<p class="text-sm text-muted-foreground">
-							{status === 'all'
-								? 'No schedules configured for this practitioner at this branch.'
-								: 'No schedules match this status.'}
-						</p>{/if}
+					{#if !query.data.data.length}<EmptyState
+							compact
+							kind={status === 'all' ? 'empty' : 'no-results'}
+							title={status === 'all' ? 'No schedules configured' : 'No matching schedules'}
+							description={status === 'all'
+								? 'No schedules are configured for this practitioner at this branch.'
+								: 'Try another status or clear the filter.'}
+							actionLabel="Clear filters"
+							onAction={status !== 'all'
+								? () => {
+										status = 'all';
+									}
+								: undefined}
+						/>{/if}
 					{#each query.data.data as record (record.uid)}
 						<div class="flex flex-col gap-2 rounded-lg border p-3">
 							<div class="flex flex-wrap items-center justify-between gap-2">

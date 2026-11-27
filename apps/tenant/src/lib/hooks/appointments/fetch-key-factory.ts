@@ -1,7 +1,37 @@
-import { appointmentPath } from '$lib/requests/appointments';
+import { appointmentPath, appointmentDetailPath } from '$lib/requests/appointments';
 import { HEALTHCARE_SERVICES, PRACTITIONER_AVAILABILITY, PATIENTS } from '$lib/constants/api';
 export const appointments = {
 	all: (tenantUid: string, branchUid: string) => ['appointments', tenantUid, branchUid] as const,
+	list(tenantUid: string, branchUid: string, params: AppointmentListParams) {
+		const snapshot = { ...params };
+		return {
+			path: appointmentPath(branchUid),
+			params: snapshot,
+			keys: () => [...appointments.all(tenantUid, branchUid), 'list', snapshot] as const
+		};
+	},
+	week(tenantUid: string, branchUid: string, params: AppointmentWeekParams) {
+		const snapshot = { ...params };
+		return {
+			path: appointmentPath(branchUid),
+			params: snapshot,
+			keys: () => [...appointments.all(tenantUid, branchUid), 'week', snapshot] as const
+		};
+	},
+	detail(tenantUid: string, branchUid: string, uid: string) {
+		return {
+			path: appointmentDetailPath(branchUid, uid),
+			keys: () => [...appointments.all(tenantUid, branchUid), 'detail', uid] as const
+		};
+	},
+	summary(tenantUid: string, branchUid: string, params: AppointmentSummaryParams) {
+		const snapshot = { ...params };
+		return {
+			path: `${appointmentPath(branchUid)}/summary`,
+			params: snapshot,
+			keys: () => [...appointments.all(tenantUid, branchUid), 'summary', snapshot] as const
+		};
+	},
 	bookingContext(tenantUid: string, branchUid: string) {
 		return {
 			path: `${appointmentPath(branchUid)}/booking-context`,

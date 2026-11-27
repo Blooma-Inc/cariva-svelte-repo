@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { EmptyState } from '@cariva/ui/components/empty-state/index.js';
 	import { untrack } from 'svelte';
 	import { superForm } from 'sveltekit-superforms';
 	import { zod4Client } from 'sveltekit-superforms/adapters';
@@ -96,10 +97,15 @@
 				}}
 			/>
 			{#if catalog.isPending}<Skeleton class="h-12 w-full" />
-			{:else if catalog.isError}<p role="alert">{parseError(catalog.error)}</p>
-				<Button type="button" variant="outline" onclick={() => catalog.refetch()}
-					>Retry catalogue</Button
-				>
+			{:else if catalog.isError}<EmptyState
+					compact
+					kind="error"
+					title="Couldn’t load services"
+					description={parseError(catalog.error)}
+					onAction={() => {
+						void catalog.refetch();
+					}}
+				/>
 			{:else}
 				<FormField {form} name="service_uid"
 					><SelectField

@@ -24,6 +24,7 @@
 </script>
 
 <script lang="ts">
+	import { EmptyState } from '@cariva/ui/components/empty-state/index.js';
 	import { createColumns } from './column';
 	import { DataTable } from '@cariva/ui/components/data-table/index.js';
 	import { superForm } from 'sveltekit-superforms';
@@ -134,7 +135,10 @@
 </script>
 
 {#snippet EmptyRPMatrix()}
-	<div>Empty...</div>
+	<EmptyState
+		title="No permissions available"
+		description="Permissions will appear here once they are configured."
+	/>
 {/snippet}
 
 <div class="flex flex-col">

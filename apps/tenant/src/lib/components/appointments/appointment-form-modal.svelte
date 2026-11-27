@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { EmptyState } from '@cariva/ui/components/empty-state/index.js';
 	import BookingBranchHours from './booking-branch-hours.svelte';
 	import BookingServiceSchedule from './booking-service-schedule.svelte';
 	import BookingPractitionerSchedule from './booking-practitioner-schedule.svelte';
@@ -240,12 +241,15 @@
 									><CardHeader class="px-4 pt-4 pb-0"
 										><CardTitle class="text-sm">Branch operating hours</CardTitle></CardHeader
 									><CardContent class="flex flex-col gap-3 px-4 pb-4"
-										><p role="alert" class="text-sm">
-											Could not load branch booking details: {parseError(bookingContext.error)}
-										</p>
-										<Button type="button" variant="outline" onclick={() => bookingContext.refetch()}
-											>Retry branch details</Button
-										></CardContent
+										><EmptyState
+											compact
+											kind="error"
+											title="Couldn’t load branch details"
+											description={parseError(bookingContext.error)}
+											onAction={() => {
+												void bookingContext.refetch();
+											}}
+										/></CardContent
 									></Card
 								>
 							{:else if bookingContext.data}
@@ -267,11 +271,20 @@
 									class="h-16 w-full"
 									aria-label="Loading services"
 								/>
-							{:else if servicesQuery.isError}<p role="alert">{parseError(servicesQuery.error)}</p>
-								<Button type="button" variant="outline" onclick={() => servicesQuery.refetch()}
-									>Retry services</Button
-								>
-							{:else if !services.length}<p>No active services are available in this branch.</p>
+							{:else if servicesQuery.isError}<EmptyState
+									compact
+									kind="error"
+									title="Couldn’t load services"
+									description={parseError(servicesQuery.error)}
+									onAction={() => {
+										void servicesQuery.refetch();
+									}}
+								/>
+							{:else if !services.length}<EmptyState
+									compact
+									title="No active services"
+									description="This branch has no active services available for booking."
+								/>
 							{:else}<FormField {form} name="branch_healthcare_service_uid"
 									><SelectField
 										type="single"
@@ -291,17 +304,20 @@
 										class="h-16 w-full"
 										aria-label="Loading practitioners"
 									/>
-								{:else if practitionersQuery.isError}<p role="alert">
-										{parseError(practitionersQuery.error)}
-									</p>
-									<Button
-										type="button"
-										variant="outline"
-										onclick={() => practitionersQuery.refetch()}>Retry practitioners</Button
-									>
-								{:else if !practitioners.length}<p>
-										No practitioners have an active schedule for this service.
-									</p>
+								{:else if practitionersQuery.isError}<EmptyState
+										compact
+										kind="error"
+										title="Couldn’t load practitioners"
+										description={parseError(practitionersQuery.error)}
+										onAction={() => {
+											void practitionersQuery.refetch();
+										}}
+									/>
+								{:else if !practitioners.length}<EmptyState
+										compact
+										title="No practitioners available"
+										description="No practitioners have an active schedule for this service."
+									/>
 								{:else}<FormField {form} name="practitioner_uid"
 										><SelectField
 											type="single"
@@ -403,12 +419,15 @@
 							>
 							{#if availability.isFetching}<p role="status" class="text-sm text-muted-foreground">
 									Checking availability for this patient…
-								</p>{:else if availability.isError}<p role="alert">
-									{parseError(availability.error)}
-								</p>
-								<Button type="button" variant="outline" onclick={() => availability.refetch()}
-									>Retry availability</Button
-								>{:else if !validSelection}<p role="alert">
+								</p>{:else if availability.isError}<EmptyState
+									compact
+									kind="error"
+									title="Couldn’t load available times"
+									description={parseError(availability.error)}
+									onAction={() => {
+										void availability.refetch();
+									}}
+								/>{:else if !validSelection}<p role="alert">
 									This time is no longer available. Go back to choose another time.
 								</p>{/if}
 						{/if}

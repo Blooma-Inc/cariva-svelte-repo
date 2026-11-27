@@ -1,4 +1,6 @@
 <script lang="ts">
+	import ErrorState from '$lib/components/error-state.svelte';
+	import { parseError } from '$lib/utils/errorHandler';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
@@ -108,6 +110,12 @@
 	{/if}
 
 	{#if branchQuery.status === 'error'}
-		<div>Error...</div>
+		<ErrorState
+			title="Couldn’t load branch details"
+			description={parseError(branchQuery.error)}
+			onretry={() => {
+				void branchQuery.refetch();
+			}}
+		/>
 	{/if}
 </div>

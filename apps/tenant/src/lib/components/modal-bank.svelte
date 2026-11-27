@@ -4,6 +4,8 @@
 	import { stores } from '$lib/store/index.svelte';
 
 	const ModalsMap = {
+		[AppModals.APPOINTMENT_DETAILS_MODAL]: () =>
+			import('$lib/components/appointments/appointment-details-modal.svelte'),
 		[AppModals.APPOINTMENT_FORM_MODAL]: () =>
 			import('$lib/components/appointments/appointment-form-modal.svelte'),
 		[AppModals.PRACTITIONER_SCHEDULE_MODAL]: () =>

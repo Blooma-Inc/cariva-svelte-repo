@@ -1,9 +1,10 @@
 <script lang="ts">
+	import { EmptyState } from '@cariva/ui/components/empty-state/index.js';
 	import { untrack } from 'svelte';
 	import { Card, CardHeader, CardTitle, CardContent } from '@cariva/ui/components/ui/card/index.js';
 	import { Skeleton } from '@cariva/ui/components/ui/skeleton/index.js';
 	import { Badge } from '@cariva/ui/components/ui/badge/index.js';
-	import { Button } from '@cariva/ui/components/ui/button/index.js';
+
 	import AvailabilitySummary from '$lib/components/scheduling/availability-summary.svelte';
 	import { useFetchPractitionerAvailability } from '$lib/hooks/practitioner-availability/use-fetch-practitioner-availability';
 	import { parseError } from '$lib/utils/errorHandler';
@@ -39,10 +40,15 @@
 		{#if query.isPending || query.isFetching}
 			<Skeleton class="h-4 w-40" /><Skeleton class="h-20 w-full" /><Skeleton class="h-20 w-full" />
 		{:else if query.isError}
-			<p role="alert" class="text-sm">{parseError(query.error)}</p>
-			<Button type="button" variant="outline" onclick={() => query.refetch()}
-				>Retry practitioner schedule</Button
-			>
+			<EmptyState
+				compact
+				kind="error"
+				title="Couldn’t load practitioner schedule"
+				description={parseError(query.error)}
+				onAction={() => {
+					void query.refetch();
+				}}
+			/>
 		{:else}
 			<section class="flex flex-col gap-3" aria-label="General working hours">
 				<div class="flex items-center justify-between gap-2">

@@ -24,3 +24,36 @@ export const appointmentFormSchema = z.object({
 });
 
 export type AppointmentFormData = z.infer<typeof appointmentFormSchema>;
+
+export const appointmentRescheduleSchema = z
+	.object({
+		starts_at: z.iso.datetime({ offset: true }),
+		ends_at: z.iso.datetime({ offset: true })
+	})
+	.strict()
+	.refine(
+		(value) =>
+			Date.parse(value.ends_at) > Date.parse(value.starts_at) &&
+			Date.parse(value.starts_at) > Date.now(),
+		'Choose a future appointment time.'
+	);
+
+export function appointmentActionSchema(action: AppointmentAction) {
+	if (action === 'cancel')
+		return z
+			.object({
+				cancellation_reason: z.string().trim().min(1, 'Provide a cancellation reason.').max(2000)
+			})
+			.strict();
+	if (action === 'mark_no_show')
+		return z.object({ no_show_reason: z.string().trim().max(2000).nullable().optional() }).strict();
+	if (action === 'reschedule') return appointmentRescheduleSchema;
+	if (action === 'start_encounter')
+		return z
+			.object({
+				encounter_class: z.enum(['outpatient', 'emergency']),
+				encounter_types: z.array(z.string()).max(10).optional()
+			})
+			.strict();
+	return z.object({}).strict();
+}

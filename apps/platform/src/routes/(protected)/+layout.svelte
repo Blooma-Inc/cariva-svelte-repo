@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { EmptyState } from '@cariva/ui/components/empty-state/index.js';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import AppSidebar from '$lib/components/sidebar/app-sidebar.svelte';
@@ -52,8 +53,15 @@
 		<Paragraph size="sm" muted>Loading workspace...</Paragraph>
 	</div>
 {:else if permissionsQuery.status === 'error'}
-	<div class="flex h-screen items-center justify-center">
-		<Paragraph size="sm" muted>Couldn't load your permissions. Try refreshing.</Paragraph>
+	<div class="flex min-h-screen items-center justify-center p-6">
+		<EmptyState
+			kind="error"
+			title="Couldn’t load workspace permissions"
+			description="We couldn’t retrieve your access permissions. Please try again."
+			onAction={() => {
+				void permissionsQuery.refetch();
+			}}
+		/>
 	</div>
 {:else}
 	<SidebarProvider>

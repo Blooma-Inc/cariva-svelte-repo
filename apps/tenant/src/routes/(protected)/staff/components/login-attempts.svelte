@@ -26,6 +26,7 @@
 	</CardHeader>
 	<CardContent class="flex flex-col gap-3">
 		<EmptyData
+			compact
 			title="No Recent logins"
 			description="The most recent logins of this user will appear here."
 		/>

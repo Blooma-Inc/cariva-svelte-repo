@@ -1,8 +1,9 @@
 <script lang="ts">
+	import { EmptyState } from '@cariva/ui/components/empty-state/index.js';
 	import { Card, CardHeader, CardTitle, CardContent } from '@cariva/ui/components/ui/card/index.js';
 	import { Skeleton } from '@cariva/ui/components/ui/skeleton/index.js';
 	import { Badge } from '@cariva/ui/components/ui/badge/index.js';
-	import { Button } from '@cariva/ui/components/ui/button/index.js';
+
 	import AvailabilitySummary from '$lib/components/scheduling/availability-summary.svelte';
 	import { useFetchBranchHealthcareService } from '$lib/hooks/branch-healthcare-services/use-fetch-branch-healthcare-services';
 	import { parseError } from '$lib/utils/errorHandler';
@@ -21,10 +22,15 @@
 		{#if query.isPending || query.isFetching}
 			<Skeleton class="h-4 w-40" /><Skeleton class="h-20 w-full" /><Skeleton class="h-20 w-full" />
 		{:else if query.isError}
-			<p role="alert" class="text-sm">{parseError(query.error)}</p>
-			<Button type="button" variant="outline" onclick={() => query.refetch()}
-				>Retry service schedule</Button
-			>
+			<EmptyState
+				compact
+				kind="error"
+				title="Couldn’t load service schedule"
+				description={parseError(query.error)}
+				onAction={() => {
+					void query.refetch();
+				}}
+			/>
 		{:else if query.data}
 			<div class="flex items-center justify-between gap-2">
 				<p class="text-sm font-medium">{query.data.name}</p>

@@ -15,6 +15,7 @@
 
 	<CardContent>
 		<EmptyData
+			compact
 			title="No ward occupancy data"
 			description="Ward occupancy stats will be displayed here"
 		/>

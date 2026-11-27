@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { EmptyState } from '@cariva/ui/components/empty-state/index.js';
+	import CalendarClock from '@lucide/svelte/icons/calendar-clock';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 	import { Skeleton } from '@cariva/ui/components/ui/skeleton/index.js';
 	import { appointmentPeriod, appointmentTime } from '$lib/utils/appointment-booking';
@@ -37,11 +39,21 @@
 					class="h-10 w-full"
 				/>{/each}
 		</div>
-	{:else if error}<p role="alert">{error}</p>
-		<Button type="button" variant="outline" onclick={onretry}>Retry available times</Button>
-	{:else if !slots.length}<p class="text-sm text-muted-foreground">
-			No available times for this date and duration. Try another date or practitioner.
-		</p>
+	{:else if error}<EmptyState
+			compact
+			kind="error"
+			title="Couldn’t load available times"
+			description={error}
+			onAction={onretry}
+			class="p-0"
+		/>
+	{:else if !slots.length}<EmptyState
+			compact
+			icon={CalendarClock}
+			title="No available times"
+			description="No available times for this date and duration. Try another date or practitioner."
+			class="p-0"
+		/>
 	{:else}{#each ['Morning', 'Afternoon', 'Evening'] as period (period)}
 			{@const group = slots.filter(
 				(slot) => appointmentPeriod(slot.starts_at, timezone) === period

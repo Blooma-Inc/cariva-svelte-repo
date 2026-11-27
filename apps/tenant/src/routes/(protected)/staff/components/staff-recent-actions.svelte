@@ -11,6 +11,7 @@
 	</CardHeader>
 	<CardContent class="flex flex-col gap-3">
 		<EmptyData
+			compact
 			title="No Recent actions"
 			description="The most recent actions of this user will appear here."
 		/>

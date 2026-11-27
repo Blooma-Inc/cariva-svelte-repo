@@ -1,7 +1,8 @@
 <script lang="ts">
+	import { EmptyState } from '@cariva/ui/components/empty-state/index.js';
 	import { Card, CardHeader, CardTitle, CardContent } from '@cariva/ui/components/ui/card/index.js';
 	import { Skeleton } from '@cariva/ui/components/ui/skeleton/index.js';
-	import { Button } from '@cariva/ui/components/ui/button/index.js';
+
 	import { useFetchUserProfile } from '$lib/hooks/user/use-fetch-profile';
 	import { parseError } from '$lib/utils/errorHandler';
 	import PractitionerScheduleCard from '$lib/components/scheduling/practitioner-schedule-card.svelte';
@@ -23,8 +24,15 @@
 						class="h-24 w-full"
 					/>
 				</div>
-			{:else if query.status === 'error'}<p role="alert">{parseError(query.error)}</p>
-				<Button variant="outline" onclick={() => query.refetch()}>Retry profile</Button>{/if}
+			{:else if query.status === 'error'}<EmptyState
+					compact
+					kind="error"
+					title="Couldn’t load your schedule"
+					description={parseError(query.error)}
+					onAction={() => {
+						void query.refetch();
+					}}
+				/>{/if}
 		</CardContent>
 	</Card>
 {/if}

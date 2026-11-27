@@ -3937,7 +3937,7 @@
       "get": {
         "tags": ["appointments"],
         "summary": "Appointments",
-        "description": "Requires `appointments.read`. Lists appointments in the selected branch. Requires `branches.manage` when the selected branch differs from the branch in the access token.",
+        "description": "Requires `appointments.read`. Lists appointments in the selected branch. Requires `branches.manage` when the selected branch differs from the branch in the access token. Includes minimal patient, practitioner and service summaries and caller-specific allowed actions. Search matches patient name, tenant patient number or reason. Period bounds use half-open overlap; one-sided bounds are supported. Results are ordered by start time then UID, with complete filtered pagination totals.",
         "operationId": "appointments_api_v1_appointments_branch__branch_uid__get",
         "security": [
           {
@@ -4102,7 +4102,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ServerRespModel_list_AppointmentItem__OffsetPaginationModel_"
+                  "$ref": "#/components/schemas/ServerRespModel_list_AppointmentListItem__OffsetPaginationModel_"
                 }
               }
             }
@@ -4288,6 +4288,130 @@
         }
       }
     },
+    "/api/v1/appointments/branch/{branch_uid}/summary": {
+      "get": {
+        "tags": ["appointments"],
+        "summary": "Appointment Summary",
+        "description": "Requires `appointments.read`. Returns branch-local daily status counts and next expected arrival, using patient, practitioner, service and search filters across all matching appointments. Requires `branches.manage` when the selected branch differs from the branch in the access token. Does not accept status filters or pagination. Requires a configured branch timezone.",
+        "operationId": "appointment_summary_api_v1_appointments_branch__branch_uid__summary_get",
+        "security": [
+          {
+            "AccessTokenBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "branch_uid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Branch Uid"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "Date"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
+            }
+          },
+          {
+            "name": "patient_uid",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Patient Uid"
+            }
+          },
+          {
+            "name": "practitioner_uid",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Practitioner Uid"
+            }
+          },
+          {
+            "name": "branch_healthcare_service_uid",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Branch Healthcare Service Uid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerRespModel_AppointmentDailySummary_NoneType_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/appointments/branch/{branch_uid}/{appointment_uid}": {
       "get": {
         "tags": ["appointments"],
@@ -4327,7 +4451,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ServerRespModel_AppointmentItem_NoneType_"
+                  "$ref": "#/components/schemas/ServerRespModel_AppointmentDetailItem_NoneType_"
                 }
               }
             }
@@ -6898,6 +7022,11 @@
         "enum": ["admitted", "discharged"],
         "title": "AdmissionStatusEnum"
       },
+      "AppointmentAction": {
+        "type": "string",
+        "enum": ["arrive", "check_in", "reschedule", "cancel", "mark_no_show", "start_encounter"],
+        "title": "AppointmentAction"
+      },
       "AppointmentAvailabilityResult": {
         "properties": {
           "practitioner_uid": {
@@ -6993,6 +7122,427 @@
         "type": "object",
         "required": ["branch"],
         "title": "AppointmentBookingContext"
+      },
+      "AppointmentDailySummary": {
+        "properties": {
+          "branch_uid": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Branch Uid"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "timezone": {
+            "type": "string",
+            "title": "Timezone"
+          },
+          "period_start": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Period Start"
+          },
+          "period_end": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Period End"
+          },
+          "as_of": {
+            "type": "string",
+            "format": "date-time",
+            "title": "As Of"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "counts_by_status": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "propertyNames": {
+              "$ref": "#/components/schemas/AppointmentStatusEnum"
+            },
+            "type": "object",
+            "title": "Counts By Status"
+          },
+          "next_expected": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AppointmentExpectedItem"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "branch_uid",
+          "date",
+          "timezone",
+          "period_start",
+          "period_end",
+          "as_of",
+          "total",
+          "counts_by_status",
+          "next_expected"
+        ],
+        "title": "AppointmentDailySummary"
+      },
+      "AppointmentDetailItem": {
+        "properties": {
+          "uid": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Uid"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          },
+          "branch_uid": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Branch Uid"
+          },
+          "tenant_uid": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Tenant Uid"
+          },
+          "patient_uid": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Patient Uid"
+          },
+          "patient_tenant_link_uid": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Patient Tenant Link Uid"
+          },
+          "practitioner_uid": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Practitioner Uid"
+          },
+          "branch_healthcare_service_uid": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Branch Healthcare Service Uid"
+          },
+          "starts_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Starts At"
+          },
+          "ends_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Ends At"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AppointmentStatusEnum"
+          },
+          "reason_for_visit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason For Visit"
+          },
+          "created_by_uid": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Created By Uid"
+          },
+          "rescheduled_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rescheduled At"
+          },
+          "rescheduled_by_uid": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rescheduled By Uid"
+          },
+          "cancelled_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cancelled At"
+          },
+          "cancelled_by_uid": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cancelled By Uid"
+          },
+          "cancellation_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cancellation Reason"
+          },
+          "arrived_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Arrived At"
+          },
+          "arrived_by_uid": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Arrived By Uid"
+          },
+          "checked_in_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Checked In At"
+          },
+          "checked_in_by_uid": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Checked In By Uid"
+          },
+          "no_show_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "No Show At"
+          },
+          "no_show_by_uid": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "No Show By Uid"
+          },
+          "no_show_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "No Show Reason"
+          },
+          "patient": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AppointmentPatientSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "practitioner": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AppointmentPersonSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "service": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AppointmentServiceSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "allowed_actions": {
+            "items": {
+              "$ref": "#/components/schemas/AppointmentAction"
+            },
+            "type": "array",
+            "title": "Allowed Actions"
+          },
+          "created_by": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AppointmentPersonSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "uid",
+          "created_at",
+          "updated_at",
+          "branch_uid",
+          "tenant_uid",
+          "patient_uid",
+          "patient_tenant_link_uid",
+          "practitioner_uid",
+          "starts_at",
+          "ends_at",
+          "status",
+          "reason_for_visit",
+          "created_by_uid",
+          "patient",
+          "practitioner",
+          "service",
+          "allowed_actions",
+          "created_by"
+        ],
+        "title": "AppointmentDetailItem"
+      },
+      "AppointmentExpectedItem": {
+        "properties": {
+          "uid": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Uid"
+          },
+          "starts_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Starts At"
+          },
+          "ends_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Ends At"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AppointmentStatusEnum"
+          },
+          "patient": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AppointmentPatientSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "practitioner": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AppointmentPersonSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "service": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AppointmentServiceSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": ["uid", "starts_at", "ends_at", "status", "patient", "practitioner", "service"],
+        "title": "AppointmentExpectedItem"
       },
       "AppointmentItem": {
         "properties": {
@@ -7237,6 +7787,348 @@
           "created_by_uid"
         ],
         "title": "AppointmentItem"
+      },
+      "AppointmentListItem": {
+        "properties": {
+          "uid": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Uid"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          },
+          "branch_uid": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Branch Uid"
+          },
+          "tenant_uid": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Tenant Uid"
+          },
+          "patient_uid": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Patient Uid"
+          },
+          "patient_tenant_link_uid": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Patient Tenant Link Uid"
+          },
+          "practitioner_uid": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Practitioner Uid"
+          },
+          "branch_healthcare_service_uid": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Branch Healthcare Service Uid"
+          },
+          "starts_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Starts At"
+          },
+          "ends_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Ends At"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AppointmentStatusEnum"
+          },
+          "reason_for_visit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason For Visit"
+          },
+          "created_by_uid": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Created By Uid"
+          },
+          "rescheduled_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rescheduled At"
+          },
+          "rescheduled_by_uid": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rescheduled By Uid"
+          },
+          "cancelled_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cancelled At"
+          },
+          "cancelled_by_uid": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cancelled By Uid"
+          },
+          "cancellation_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cancellation Reason"
+          },
+          "arrived_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Arrived At"
+          },
+          "arrived_by_uid": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Arrived By Uid"
+          },
+          "checked_in_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Checked In At"
+          },
+          "checked_in_by_uid": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Checked In By Uid"
+          },
+          "no_show_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "No Show At"
+          },
+          "no_show_by_uid": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "No Show By Uid"
+          },
+          "no_show_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "No Show Reason"
+          },
+          "patient": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AppointmentPatientSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "practitioner": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AppointmentPersonSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "service": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AppointmentServiceSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "allowed_actions": {
+            "items": {
+              "$ref": "#/components/schemas/AppointmentAction"
+            },
+            "type": "array",
+            "title": "Allowed Actions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "uid",
+          "created_at",
+          "updated_at",
+          "branch_uid",
+          "tenant_uid",
+          "patient_uid",
+          "patient_tenant_link_uid",
+          "practitioner_uid",
+          "starts_at",
+          "ends_at",
+          "status",
+          "reason_for_visit",
+          "created_by_uid",
+          "patient",
+          "practitioner",
+          "service",
+          "allowed_actions"
+        ],
+        "title": "AppointmentListItem"
+      },
+      "AppointmentPatientSummary": {
+        "properties": {
+          "uid": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Uid"
+          },
+          "display_name": {
+            "type": "string",
+            "title": "Display Name"
+          },
+          "patient_no": {
+            "type": "string",
+            "title": "Patient No"
+          }
+        },
+        "type": "object",
+        "required": ["uid", "display_name", "patient_no"],
+        "title": "AppointmentPatientSummary"
+      },
+      "AppointmentPersonSummary": {
+        "properties": {
+          "uid": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Uid"
+          },
+          "display_name": {
+            "type": "string",
+            "title": "Display Name"
+          }
+        },
+        "type": "object",
+        "required": ["uid", "display_name"],
+        "title": "AppointmentPersonSummary"
+      },
+      "AppointmentServiceSummary": {
+        "properties": {
+          "branch_healthcare_service_uid": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Branch Healthcare Service Uid"
+          },
+          "healthcare_service_uid": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Healthcare Service Uid"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": ["branch_healthcare_service_uid", "healthcare_service_uid", "name"],
+        "title": "AppointmentServiceSummary"
       },
       "AppointmentStatusEnum": {
         "type": "string",
@@ -11777,6 +12669,52 @@
         "required": ["data", "message", "status"],
         "title": "ServerRespModel[AppointmentBookingContext, NoneType]"
       },
+      "ServerRespModel_AppointmentDailySummary_NoneType_": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/AppointmentDailySummary"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "meta": {
+            "type": "null",
+            "title": "Meta"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "readOnly": true
+          }
+        },
+        "type": "object",
+        "required": ["data", "message", "status"],
+        "title": "ServerRespModel[AppointmentDailySummary, NoneType]"
+      },
+      "ServerRespModel_AppointmentDetailItem_NoneType_": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/AppointmentDetailItem"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "meta": {
+            "type": "null",
+            "title": "Meta"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "readOnly": true
+          }
+        },
+        "type": "object",
+        "required": ["data", "message", "status"],
+        "title": "ServerRespModel[AppointmentDetailItem, NoneType]"
+      },
       "ServerRespModel_AppointmentItem_NoneType_": {
         "properties": {
           "data": {
@@ -12491,11 +13429,11 @@
         "required": ["data", "message", "status"],
         "title": "ServerRespModel[list[AdmissionItem], OffsetPaginationModel]"
       },
-      "ServerRespModel_list_AppointmentItem__OffsetPaginationModel_": {
+      "ServerRespModel_list_AppointmentListItem__OffsetPaginationModel_": {
         "properties": {
           "data": {
             "items": {
-              "$ref": "#/components/schemas/AppointmentItem"
+              "$ref": "#/components/schemas/AppointmentListItem"
             },
             "type": "array",
             "title": "Data"
@@ -12522,7 +13460,7 @@
         },
         "type": "object",
         "required": ["data", "message", "status"],
-        "title": "ServerRespModel[list[AppointmentItem], OffsetPaginationModel]"
+        "title": "ServerRespModel[list[AppointmentListItem], OffsetPaginationModel]"
       },
       "ServerRespModel_list_BedItem__OffsetPaginationModel_": {
         "properties": {

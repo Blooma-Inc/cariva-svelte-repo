@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { EmptyState } from '@cariva/ui/components/empty-state/index.js';
+	import Stethoscope from '@lucide/svelte/icons/stethoscope';
 	import { Heading, Paragraph } from '@cariva/ui/components/ui/typography/index.js';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 	import { DataTable, DataTableSearch } from '@cariva/ui/components/data-table/index.js';
@@ -147,17 +149,23 @@
 				>
 			{/snippet}
 			{#snippet emptyDataNode()}
-				<div class="p-6 text-center">
-					<Heading level="h3"
-						>{params.q || status !== 'all'
-							? 'No matching services'
-							: 'No services configured'}</Heading
-					><Paragraph muted
-						>{params.q || status !== 'all'
-							? 'Try another search or status filter.'
-							: 'Assign a service from the tenant catalogue to get started.'}</Paragraph
-					>
-				</div>
+				<EmptyState
+					kind={params.q || status !== 'all' ? 'no-results' : 'empty'}
+					title={params.q || status !== 'all' ? 'No matching services' : 'No services configured'}
+					description={params.q || status !== 'all'
+						? 'Try another search or clear your filters.'
+						: 'Assign a service from the tenant catalogue to get started.'}
+					icon={params.q || status !== 'all' ? undefined : Stethoscope}
+					actionLabel={params.q || status !== 'all' ? 'Clear filters' : 'Assign service'}
+					onAction={params.q || status !== 'all'
+						? () => {
+								search = '';
+								status = 'all';
+							}
+						: canCreate && branch.is_active
+							? () => open('form')
+							: undefined}
+				/>
 			{/snippet}
 		</DataTable>
 	{/if}

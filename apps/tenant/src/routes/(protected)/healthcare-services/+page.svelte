@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { EmptyState } from '@cariva/ui/components/empty-state/index.js';
+	import Stethoscope from '@lucide/svelte/icons/stethoscope';
 	import { superForm } from 'sveltekit-superforms';
 	import { FormField } from '@cariva/ui/components/ui/form/index.js';
 	import { Heading, Paragraph } from '@cariva/ui/components/ui/typography/index.js';
@@ -56,17 +58,23 @@
 </script>
 
 {#snippet EmptyService()}
-	<div class="py-10 text-center">
-		<Heading level="h3"
-			>{params.q || status !== 'all'
-				? 'No matching services'
-				: 'No healthcare services yet'}</Heading
-		><Paragraph muted
-			>{params.q || status !== 'all'
-				? 'Try another search or status filter.'
-				: 'Add your first service to start building your catalog.'}</Paragraph
-		>
-	</div>
+	<EmptyState
+		kind={params.q || status !== 'all' ? 'no-results' : 'empty'}
+		title={params.q || status !== 'all' ? 'No matching services' : 'No healthcare services yet'}
+		description={params.q || status !== 'all'
+			? 'Try another search or clear your filters.'
+			: 'Add your first service to start building your catalog.'}
+		icon={params.q || status !== 'all' ? undefined : Stethoscope}
+		actionLabel={params.q || status !== 'all' ? 'Clear filters' : 'Add service'}
+		onAction={params.q || status !== 'all'
+			? () => {
+					$filterData.search = '';
+					$filterData.status = 'all';
+				}
+			: canCreate
+				? () => open('form')
+				: undefined}
+	/>
 {/snippet}
 
 <div class="flex min-w-0 flex-col gap-6">

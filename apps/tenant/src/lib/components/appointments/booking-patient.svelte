@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { EmptyState } from '@cariva/ui/components/empty-state/index.js';
 	import { untrack } from 'svelte';
 	import type { SuperForm } from 'sveltekit-superforms';
 	import type { AppointmentFormData } from '$lib/validators/appointments';
@@ -6,7 +7,7 @@
 	import { InputField } from '@cariva/ui/components/form-inputs/input-field/index.js';
 	import { SelectField } from '@cariva/ui/components/form-inputs/select-field/index.js';
 	import { Skeleton } from '@cariva/ui/components/ui/skeleton/index.js';
-	import { Button } from '@cariva/ui/components/ui/button/index.js';
+
 	import { useBookingOptions } from '$lib/hooks/appointments/use-appointment-booking';
 	import { useDebounce } from '$lib/hooks/app/use-debounce.svelte';
 	import { parseError } from '$lib/utils/errorHandler';
@@ -56,8 +57,15 @@
 	/></FormField
 >
 {#if loading}<Skeleton class="h-16 w-full" aria-label="Searching patients" />
-{:else if query.isError}<p role="alert">{parseError(query.error)}</p>
-	<Button type="button" variant="outline" onclick={() => query.refetch()}>Retry patients</Button>
+{:else if query.isError}<EmptyState
+		compact
+		kind="error"
+		title="Couldn’t load patients"
+		description={parseError(query.error)}
+		onAction={() => {
+			void query.refetch();
+		}}
+	/>
 {:else}<FormField {form} name="patient_uid"
 		><SelectField
 			type="single"
@@ -70,6 +78,9 @@
 	<p class="text-xs text-muted-foreground">
 		Showing up to 10 matching patients. Refine the search if needed.
 	</p>
-	{#if !options.length}<p>
-			No matching patients. Patients must be registered before booking.
-		</p>{/if}{/if}
+	{#if !options.length}<EmptyState
+			compact
+			kind={search.value ? 'no-results' : 'empty'}
+			title={search.value ? 'No matching patients' : 'No patients available'}
+			description="Patients must be registered before booking. Try another search if the patient is already registered."
+		/>{/if}{/if}

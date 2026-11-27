@@ -3,10 +3,19 @@ import AppointmentStore from './index.svelte';
 import { appointmentBranch } from '$lib/utils/appointment-booking';
 import { PERMISSIONS } from '$lib/configs/permissions';
 import type { RootStore } from '../index.svelte';
-import { getAppointmentAvailability, postAppointment } from '$lib/requests/appointments';
+import {
+	getAppointmentAvailability,
+	postAppointment,
+	getAppointmentDetail,
+	patchAppointmentTime,
+	postAppointmentAction
+} from '$lib/requests/appointments';
 vi.mock('$lib/requests/appointments', () => ({
 	getAppointmentAvailability: vi.fn(),
-	postAppointment: vi.fn()
+	postAppointment: vi.fn(),
+	getAppointmentDetail: vi.fn(),
+	patchAppointmentTime: vi.fn(),
+	postAppointmentAction: vi.fn()
 }));
 vi.mock('@cariva/ui/components/toast/index.js', () => ({ toast: { success: vi.fn() } }));
 const payload: CreateAppointmentPayload = {
@@ -121,5 +130,121 @@ describe('appointment creation', () => {
 		expect(store.slotConflict).toBe(true);
 		expect(postAppointment).toHaveBeenCalledTimes(1);
 		expect(store.loading).toBe(false);
+	});
+});
+
+const record = (): AppointmentDetailItem => ({
+	...payload,
+	uid: 'appointment-a',
+	branch_uid: 'branch-a',
+	tenant_uid: 'tenant-a',
+	patient_tenant_link_uid: 'link-a',
+	created_at: '2030-01-01T00:00:00Z',
+	updated_at: '2030-01-01T00:00:00Z',
+	status: 'booked',
+	patient: null,
+	practitioner: null,
+	service: null,
+	created_by: null,
+	allowed_actions: ['arrive', 'reschedule', 'cancel', 'mark_no_show']
+});
+describe('appointment worklist actions', () => {
+	beforeEach(() => {
+		vi.resetAllMocks();
+		vi.useFakeTimers();
+		vi.setSystemTime(new Date('2030-01-01T00:00:00Z'));
+		vi.mocked(getAppointmentDetail).mockResolvedValue({ data: { data: record() } } as never);
+		vi.mocked(postAppointmentAction).mockResolvedValue({ data: {} } as never);
+		vi.mocked(patchAppointmentTime).mockResolvedValue({ data: {} } as never);
+	});
+	afterEach(() => vi.useRealTimers());
+	it('records arrival with appointment permissions alone after rechecking the latest actions', async () => {
+		const { store, permissions } = setup();
+		permissions.splice(
+			0,
+			permissions.length,
+			PERMISSIONS.APPOINTMENTS_READ,
+			PERMISSIONS.APPOINTMENTS_UPDATE
+		);
+		expect(await store.perform('branch-a', record(), 'arrive')).toBe(true);
+		expect(getAppointmentDetail).toHaveBeenCalledWith('branch-a', 'appointment-a');
+		expect(postAppointmentAction).toHaveBeenCalledWith(
+			'branch-a',
+			'appointment-a',
+			'arrive',
+			undefined
+		);
+	});
+	it('does not request or mutate across branches or without update permission', async () => {
+		const { store, permissions } = setup();
+		await store.perform('branch-b', record(), 'arrive');
+		permissions.splice(permissions.indexOf(PERMISSIONS.APPOINTMENTS_UPDATE), 1);
+		await store.perform('branch-a', record(), 'arrive');
+		expect(getAppointmentDetail).not.toHaveBeenCalled();
+		expect(postAppointmentAction).not.toHaveBeenCalled();
+	});
+	it('refuses an action removed by the server since the list was loaded', async () => {
+		const { store } = setup();
+		vi.mocked(getAppointmentDetail).mockResolvedValue({
+			data: { data: { ...record(), status: 'cancelled', allowed_actions: [] } }
+		} as never);
+		expect(await store.perform('branch-a', record(), 'arrive')).toBe(false);
+		expect(store.actionConflict).toBe(true);
+		expect(postAppointmentAction).not.toHaveBeenCalled();
+	});
+	it('refuses a mutation if the branch session changes during the details refresh', async () => {
+		const { store, root } = setup();
+		vi.mocked(getAppointmentDetail).mockImplementation(async () => {
+			root.AuthStore.accessToken = token('branch-b');
+			return { data: { data: record() } } as never;
+		});
+		await store.perform('branch-a', record(), 'arrive');
+		expect(postAppointmentAction).not.toHaveBeenCalled();
+	});
+	it('requires a cancellation reason and sends the trimmed reason', async () => {
+		const { store } = setup();
+		expect(await store.perform('branch-a', record(), 'cancel', { cancellation_reason: '  ' })).toBe(
+			false
+		);
+		expect(getAppointmentDetail).not.toHaveBeenCalled();
+		expect(
+			await store.perform('branch-a', record(), 'cancel', {
+				cancellation_reason: '  Patient request  '
+			})
+		).toBe(true);
+		expect(postAppointmentAction).toHaveBeenCalledWith('branch-a', 'appointment-a', 'cancel', {
+			cancellation_reason: 'Patient request'
+		});
+	});
+	it('patches only a valid future interval for a reschedule', async () => {
+		const { store } = setup();
+		const interval = { starts_at: payload.starts_at, ends_at: payload.ends_at };
+		expect(await store.perform('branch-a', record(), 'reschedule', interval)).toBe(true);
+		expect(patchAppointmentTime).toHaveBeenCalledWith('branch-a', 'appointment-a', interval);
+		expect(postAppointmentAction).not.toHaveBeenCalled();
+	});
+	it('requires encounter create permission even when the server offers start encounter', async () => {
+		const { store, permissions } = setup();
+		permissions.splice(permissions.indexOf(PERMISSIONS.ENCOUNTERS_CREATE), 1);
+		expect(
+			await store.perform(
+				'branch-a',
+				{ ...record(), status: 'checked-in', allowed_actions: ['start_encounter'] },
+				'start_encounter',
+				{ encounter_class: 'outpatient' }
+			)
+		).toBe(false);
+		expect(getAppointmentDetail).not.toHaveBeenCalled();
+	});
+	it('preserves server conflicts and does not retry a mutation', async () => {
+		const { store } = setup();
+		vi.mocked(postAppointmentAction).mockRejectedValue({
+			isAxiosError: true,
+			response: { status: 409 }
+		});
+		expect(await store.perform('branch-a', record(), 'arrive')).toBe(false);
+		expect(store.actionConflict).toBe(true);
+		expect(store.actionLoading).toBe(false);
+		expect(postAppointmentAction).toHaveBeenCalledTimes(1);
 	});
 });

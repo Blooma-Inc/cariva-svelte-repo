@@ -146,13 +146,10 @@
           </div>
         {:else if emptyDataProps}
           <div class="w-full">
-            <DataTableEmpty
-              description={emptyDataProps.description}
-              showAction={emptyDataProps.showAction}
-              actionFn={emptyDataProps.actionFn}
-              actionText={emptyDataProps.actionText}
-            />
+            <DataTableEmpty {...emptyDataProps} />
           </div>
+        {:else}
+          <DataTableEmpty description="Records will appear here when they are available." />
         {/if}
       {/if}
     {/if}

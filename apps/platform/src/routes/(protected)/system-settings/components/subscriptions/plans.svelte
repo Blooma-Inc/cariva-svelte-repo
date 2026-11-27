@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Heading, Paragraph } from '@cariva/ui/components/ui/typography/index.js';
+	import { EmptyState } from '@cariva/ui/components/empty-state/index.js';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
 	import PlusIcon from '@lucide/svelte/icons/plus';
 	import { Card, CardContent, CardHeader, CardTitle } from '@cariva/ui/components/ui/card/index.js';
@@ -34,32 +34,10 @@
 
 		{#if query.status === 'success' && query.data}
 			{#if query.data.data.length === 0}
-				<div class="flex h-40 flex-col items-center justify-center gap-3 text-center">
-					<div
-						class="mx-auto flex w-full max-w-lg flex-col items-center justify-center gap-1 text-center"
-					>
-						<Heading level="h3">No Plans yet</Heading>
-						<Paragraph size="sm" muted
-							>You haven't added any subscription plans on the platform. Click "Add New Plan" to
-							create your first plan.</Paragraph
-						>
-					</div>
-
-					{#if query.data.data.length > 0}
-						<Button
-							size="lg"
-							onclick={() =>
-								AppStore.toggleModals({
-									open: true,
-									name: AppModals.PLANS_FORM_MODAL,
-									plan_uid: ''
-								})}
-						>
-							<PlusIcon class="size-3" />
-							Add subscription plan
-						</Button>
-					{/if}
-				</div>
+				<EmptyState
+					title="No subscription plans yet"
+					description="Subscription plans will appear here once they are created."
+				/>
 			{:else}
 				<div class="grid grid-cols-1 gap-2 md:grid-cols-[1fr_1fr] lg:grid-cols-[1fr_1fr_1fr]">
 					{#each query.data.data as plan (plan.uid)}
@@ -67,6 +45,14 @@
 					{/each}
 				</div>
 			{/if}
+		{:else if query.status === 'error'}<EmptyState
+				kind="error"
+				title="Couldn’t load subscription plans"
+				description="We couldn’t retrieve the available plans. Please try again."
+				onAction={() => {
+					void query.refetch();
+				}}
+			/>
 		{/if}
 	</CardContent>
 </Card>

@@ -64,14 +64,14 @@ export function useAppointmentAvailability(
 		return {
 			queryKey: meta.keys(),
 			meta,
-			enabled: browser && !!meta.params && canBookAppointments(stores, branchUid),
+			enabled: browser && !!meta.params && canReadAppointments(stores, branchUid),
 			staleTime: 0,
 			retry: false,
 			queryFn: async ({ signal }) => {
 				if (
 					!meta.params ||
 					tenant !== stores.AppStore.currentTenant.uid ||
-					!canBookAppointments(stores, branchUid)
+					!canReadAppointments(stores, branchUid)
 				)
 					throw new Error('Your booking session or permissions changed.');
 				const result = (

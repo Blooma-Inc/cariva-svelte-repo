@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { EmptyState } from '@cariva/ui/components/empty-state/index.js';
 	import { untrack } from 'svelte';
 	import SheetModal from '$lib/atoms/parent-modals/sheetModal.svelte';
 	import {
@@ -142,8 +143,15 @@
 							</div>
 						{/if}
 					</div>
-				{:else if query.isError}<p role="alert">{parseError(query.error)}</p>
-					<Button variant="outline" onclick={() => query.refetch()}>Retry schedule</Button>
+				{:else if query.isError}<EmptyState
+						compact
+						kind="error"
+						title="Couldn’t load schedule details"
+						description={parseError(query.error)}
+						onAction={() => {
+							void query.refetch();
+						}}
+					/>
 				{:else if query.isSuccess}
 					{#if record}
 						<p class="shrink-0 font-medium">{record.service_name ?? 'General working hours'}</p>

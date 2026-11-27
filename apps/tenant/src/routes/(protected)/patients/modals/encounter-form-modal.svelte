@@ -12,6 +12,7 @@
 </script>
 
 <script lang="ts">
+	import { EmptyState } from '@cariva/ui/components/empty-state/index.js';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import * as Dialog from '@cariva/ui/components/ui/dialog/index.js';
 	import { Button } from '@cariva/ui/components/ui/button/index.js';
@@ -139,19 +140,21 @@
 						{#if branchesQuery.status === 'pending'}
 							<Paragraph size="sm" muted>Loading branches…</Paragraph>
 						{:else if branchesQuery.status === 'error'}
-							<div role="alert">
-								<Paragraph size="sm">{parseError(branchesQuery.error)}</Paragraph>
-								<Button
-									type="button"
-									variant="outline"
-									size="sm"
-									onclick={() => branchesQuery.refetch()}>Retry branches</Button
-								>
-							</div>
+							<EmptyState
+								compact
+								kind="error"
+								title="Couldn’t load branches"
+								description={parseError(branchesQuery.error)}
+								onAction={() => {
+									void branchesQuery.refetch();
+								}}
+							/>
 						{:else if !branchOptions.length}
-							<Paragraph size="sm" muted
-								>No branches are available for encounter creation.</Paragraph
-							>
+							<EmptyState
+								compact
+								title="No branches available"
+								description="No branches are available for encounter creation with your current access."
+							/>
 						{/if}
 						{#if branchesQuery.hasNextPage}
 							<Button
@@ -187,14 +190,15 @@
 						{#if types.status === 'pending'}<Paragraph size="sm" muted
 								>Loading encounter types…</Paragraph
 							>
-						{:else if types.status === 'error'}<div role="alert">
-								<Paragraph size="sm">{parseError(types.error)}</Paragraph><Button
-									type="button"
-									variant="outline"
-									size="sm"
-									onclick={() => types.refetch()}>Retry types</Button
-								>
-							</div>
+						{:else if types.status === 'error'}<EmptyState
+								compact
+								kind="error"
+								title="Couldn’t load encounter types"
+								description={parseError(types.error)}
+								onAction={() => {
+									void types.refetch();
+								}}
+							/>
 						{:else}
 							<div class="grid max-h-48 gap-2 overflow-y-auto sm:grid-cols-2">
 								{#each types.data ?? [] as item (item.value)}

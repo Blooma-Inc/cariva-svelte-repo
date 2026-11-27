@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { EmptyState } from '@cariva/ui/components/empty-state/index.js';
 	import { untrack } from 'svelte';
 	import { superForm } from 'sveltekit-superforms';
 	import { FormField } from '@cariva/ui/components/ui/form/index.js';
@@ -69,10 +70,16 @@
 			}}
 		/>
 		{#if query.isPending}<Skeleton class="h-12 w-full" />
-		{:else if query.isError}<p role="alert">{parseError(query.error)}</p>
-			<Button type="button" variant="outline" {disabled} onclick={() => query.refetch()}
-				>Retry services</Button
-			>
+		{:else if query.isError}<EmptyState
+				compact
+				kind="error"
+				title="Couldn’t load services"
+				description={parseError(query.error)}
+				onAction={() => {
+					void query.refetch();
+				}}
+				actionDisabled={disabled}
+			/>
 		{:else}
 			<FormField form={filters} name="offering"
 				><SelectField
@@ -88,9 +95,12 @@
 					}))}
 				/></FormField
 			>
-			{#if !query.data?.data.length}<p class="text-sm text-muted-foreground">
-					No active services match this search.
-				</p>{/if}
+			{#if !query.data?.data.length}<EmptyState
+					compact
+					kind={search ? 'no-results' : 'empty'}
+					title={search ? 'No matching services' : 'No services available'}
+					description="Choose another search or configure services for this branch."
+				/>{/if}
 			<div class="flex justify-between gap-2">
 				<Button
 					type="button"

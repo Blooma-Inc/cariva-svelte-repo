@@ -1,4 +1,6 @@
 <script lang="ts">
+	import ErrorState from '$lib/components/error-state.svelte';
+	import { parseError } from '$lib/utils/errorHandler';
 	import { goto } from '$app/navigation';
 	import { Heading, Paragraph } from '@cariva/ui/components/ui/typography/index.js';
 	import { useFetchStaff } from '$lib/hooks/staff/use-fetch-staff.js';
@@ -38,5 +40,12 @@
 				<StaffDetails data={staffQuery.data} />
 			</section>
 		</div>
+	{:else if staffQuery.status === 'error'}<ErrorState
+			title="Couldn’t load staff details"
+			description={parseError(staffQuery.error)}
+			onretry={() => {
+				void staffQuery.refetch();
+			}}
+		/>
 	{/if}
 </section>

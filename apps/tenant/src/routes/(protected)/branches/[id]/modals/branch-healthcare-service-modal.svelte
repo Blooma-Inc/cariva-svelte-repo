@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { EmptyState } from '@cariva/ui/components/empty-state/index.js';
 	import DialogModal from '$lib/atoms/parent-modals/dialogModal.svelte';
 	import {
 		DialogContent,
@@ -119,8 +120,15 @@
 				{/if}
 			</div>
 		{:else if context.service_uid && query.isError}
-			<p role="alert">{parseError(query.error)}</p>
-			<Button variant="outline" onclick={() => query.refetch()}>Retry</Button>
+			<EmptyState
+				compact
+				kind="error"
+				title="Couldn’t load service details"
+				description={parseError(query.error)}
+				onAction={() => {
+					void query.refetch();
+				}}
+			/>
 		{:else if context.mode === 'form'}
 			{#if query.data}<p class="font-medium">{query.data.name}</p>{/if}
 			<ServiceForm

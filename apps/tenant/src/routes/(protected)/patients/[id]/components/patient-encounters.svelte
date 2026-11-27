@@ -44,6 +44,7 @@
 			onRetry: query.refetch
 		}}
 		emptyDataProps={{
+			title: 'No encounters yet',
 			description: 'This patient has no encounters at this branch.'
 		}}
 	/>
