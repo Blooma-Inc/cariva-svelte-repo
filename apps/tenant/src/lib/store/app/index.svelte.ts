@@ -49,6 +49,12 @@ class AppStore {
 
 	encounterModal = $state({ patient_uid: '', branch_uid: '', branch_name: '' });
 
+	practitionerScheduleModal = $state<{
+		context: PractitionerScheduleContext | null;
+		record_uid: string;
+		mode: 'view' | 'form';
+	}>({ context: null, record_uid: '', mode: 'form' });
+
 	branchHealthcareServiceModal = $state<{
 		branch_uid: string;
 		branch_name: string;
@@ -103,6 +109,14 @@ class AppStore {
 	 */
 	toggleModals(modal: TAppModalsAction = {}) {
 		switch (modal.name) {
+			case AppModals.PRACTITIONER_SCHEDULE_MODAL:
+				if (modal.open)
+					this.practitionerScheduleModal = {
+						context: modal.context,
+						record_uid: modal.record_uid ?? '',
+						mode: modal.mode
+					};
+				break;
 			case AppModals.BRANCH_HEALTHCARE_SERVICE_MODAL:
 				if (modal.open)
 					this.branchHealthcareServiceModal = {

@@ -59,15 +59,19 @@
           onfocusin={() => (focused = true)}
           onfocusout={() => (focused = false)}
         >
-          <InputGroup>
+          <InputGroup class={cn(floatingLabel && label && 'h-14 sm:h-16')}>
             <InputGroupInput
               bind:ref
               bind:value
               {...controlProps}
               {...props}
               type={derivedType}
-              placeholder={floatingLabel ? '' : props.placeholder}
-              class={cn(floatingLabel && 'placeholder:text-transparent', props.class)}
+              placeholder={floatingLabel && label && !isFloating ? '' : props.placeholder}
+              class={cn(
+                floatingLabel && label && 'h-full',
+                floatingLabel && label && isFloating && 'pt-7 pb-2',
+                props.class
+              )}
             />
             <InputGroupAddon align="inline-end" class="gap-0.5">
               {#if showClear && value}
@@ -109,7 +113,7 @@
               class={cn(
                 'text-muted-foreground pointer-events-none absolute left-3 transition-all duration-150 ease-out select-none',
                 isFloating
-                  ? 'bg-background text-foreground top-0 -translate-y-1/2 px-1 text-xs'
+                  ? 'text-foreground top-3 text-xs leading-none'
                   : 'top-1/2 -translate-y-1/2 text-sm'
               )}
             >

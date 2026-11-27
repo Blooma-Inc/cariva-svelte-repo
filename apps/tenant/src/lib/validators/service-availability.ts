@@ -76,7 +76,7 @@ export function exceptionInstant(value: string, timezone: string, original?: str
 	return local.toZonedDateTime(timezone, { disambiguation: 'reject' }).toInstant().toString();
 }
 
-export function branchServiceFormSchema(timezone: string) {
+export function scheduleFormSchema(timezone: string) {
 	return z
 		.object({
 			service_uid: z.string().min(1, 'Select a service.'),
@@ -161,28 +161,32 @@ export function branchServiceFormSchema(timezone: string) {
 		});
 }
 
-export type BranchServiceFormData = z.infer<ReturnType<typeof branchServiceFormSchema>>;
+export type ScheduleFormData = z.infer<ReturnType<typeof scheduleFormSchema>>;
+export type BranchServiceFormData = ScheduleFormData;
+export const branchServiceFormSchema = scheduleFormSchema;
 
-export function branchServiceDefaults(
-	service?: BranchHealthcareServiceItem,
-	timezone = ''
-): BranchServiceFormData {
+export function scheduleDefaults(
+	availability: ServiceAvailability | null,
+	timezone: string,
+	isActive = true,
+	serviceUid = ''
+): ScheduleFormData {
 	const local = (value: string) =>
 		Temporal.Instant.from(value)
 			.toZonedDateTimeISO(timezone || 'UTC')
 			.toPlainDateTime()
 			.toString();
 	return {
-		service_uid: service?.healthcare_service_uid ?? '',
-		is_active: service?.is_active ?? true,
-		configure_availability: service?.availability !== null && service?.availability !== undefined,
-		windows: (service?.availability?.available_time ?? []).map((window) => ({
+		service_uid: serviceUid,
+		is_active: isActive,
+		configure_availability: availability !== null,
+		windows: (availability?.available_time ?? []).map((window) => ({
 			days: [...window.days_of_week],
 			all_day: window.all_day,
 			start: window.available_start_time ?? '',
 			end: window.available_end_time ?? ''
 		})),
-		exceptions: (service?.availability?.not_available_time ?? []).map((exception) => ({
+		exceptions: (availability?.not_available_time ?? []).map((exception) => ({
 			description: exception.description ?? '',
 			start: local(exception.during.start),
 			end: local(exception.during.end),
@@ -192,8 +196,20 @@ export function branchServiceDefaults(
 	};
 }
 
-export function branchServicePayload(
-	data: BranchServiceFormData,
+export function branchServiceDefaults(
+	service?: BranchHealthcareServiceItem,
+	timezone = ''
+): BranchServiceFormData {
+	return scheduleDefaults(
+		service?.availability ?? null,
+		timezone,
+		service?.is_active ?? true,
+		service?.healthcare_service_uid ?? ''
+	);
+}
+
+export function schedulePayload(
+	data: ScheduleFormData,
 	timezone: string
 ): BranchHealthcareServicePayload {
 	return {
@@ -230,3 +246,6 @@ export function branchServiceChanges(
 			: {})
 	};
 }
+
+export const branchServicePayload = schedulePayload;
+export const scheduleChanges = branchServiceChanges;

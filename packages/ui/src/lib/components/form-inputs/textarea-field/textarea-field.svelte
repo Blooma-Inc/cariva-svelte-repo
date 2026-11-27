@@ -44,8 +44,8 @@
             bind:value
             {...controlProps}
             {...props}
-            placeholder={floatingLabel ? '' : props.placeholder}
-            class={cn(floatingLabel && 'placeholder:text-transparent', props.class)}
+            placeholder={floatingLabel && label && !isFloating ? '' : props.placeholder}
+            class={cn(floatingLabel && label && isFloating && 'pt-9 pb-4', props.class)}
           />
 
           {#if floatingLabel && label}
@@ -53,7 +53,7 @@
               class={cn(
                 'text-muted-foreground pointer-events-none absolute left-3 transition-all duration-150 ease-out select-none',
                 isFloating
-                  ? 'bg-background text-foreground top-0 -translate-y-1/2 px-1 text-xs'
+                  ? 'text-foreground top-3 right-3 bg-white py-0.5 text-xs leading-none'
                   : 'top-3 text-sm'
               )}
             >

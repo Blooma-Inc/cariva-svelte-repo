@@ -108,17 +108,24 @@
           onfocusin={() => (focused = true)}
           onfocusout={() => (focused = false)}
         >
-          <InputGroup>
-            <InputGroupAddon align="inline-start">
+          <InputGroup class={cn(floatingLabel && label && 'h-14 sm:h-16')}>
+            <InputGroupAddon
+              align="inline-start"
+              class={cn(floatingLabel && label && isFloating && 'pt-7 pb-2')}
+            >
               <span class="text-muted-foreground text-sm">{currencySymbol}</span>
             </InputGroupAddon>
-            <div class="relative min-w-0 flex-1">
+            <div class="min-w-0 flex-1 self-stretch">
               <InputGroupInput
                 bind:ref
                 {...controlProps}
                 {...props}
-                placeholder={floatingLabel ? '' : props.placeholder}
-                class={cn(floatingLabel && 'placeholder:text-transparent', props.class)}
+                placeholder={floatingLabel && label && !isFloating ? '' : props.placeholder}
+                class={cn(
+                  floatingLabel && label && 'h-full',
+                  floatingLabel && label && isFloating && 'pt-7 pb-2',
+                  props.class
+                )}
                 type="text"
                 inputmode="decimal"
                 autocomplete="off"
@@ -127,20 +134,19 @@
                 onfocus={handleFocus}
                 onblur={handleBlur}
               />
-
-              {#if floatingLabel && label}
-                <Form.Label
-                  class={cn(
-                    'text-muted-foreground pointer-events-none absolute left-3 transition-all duration-150 ease-out select-none',
-                    isFloating
-                      ? 'bg-background text-foreground top-0 -translate-y-1/2 px-1 text-xs'
-                      : 'top-1/2 -translate-y-1/2 text-sm'
-                  )}
-                >
-                  {label}
-                </Form.Label>
-              {/if}
             </div>
+            {#if floatingLabel && label}
+              <Form.Label
+                class={cn(
+                  'text-muted-foreground pointer-events-none absolute left-3 transition-all duration-150 ease-out select-none',
+                  isFloating
+                    ? 'text-foreground top-3 text-xs leading-none'
+                    : 'top-1/2 left-10 -translate-y-1/2 text-sm'
+                )}
+              >
+                {label}
+              </Form.Label>
+            {/if}
           </InputGroup>
         </div>
       </div>

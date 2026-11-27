@@ -5,14 +5,15 @@ export function useFetchStaff(
 	staff_uid: () => string,
 	enabled: boolean = true
 ): QueryHookResponse<UserProfileItem | undefined> {
-	const meta = staff.getStaff(staff_uid());
-
-	const query = createQuery(() => ({
-		queryKey: meta.keys(),
-		meta,
-		enabled,
-		select: (resp: CarivaServerResp<UserProfileItem, null>) => resp.data
-	}));
+	const query = createQuery(() => {
+		const meta = staff.getStaff(staff_uid());
+		return {
+			queryKey: meta.keys(),
+			meta,
+			enabled,
+			select: (resp: CarivaServerResp<UserProfileItem, null>) => resp.data
+		};
+	});
 
 	return {
 		get data() {

@@ -7,6 +7,7 @@
 	import ChevronLeftIcon from '@lucide/svelte/icons/chevron-left';
 	import ROUTES from '$lib/configs/routes.svelte';
 	import StaffRecentActions from '../components/staff-recent-actions.svelte';
+	import PractitionerScheduleCard from '$lib/components/scheduling/practitioner-schedule-card.svelte';
 
 	let { data } = $props();
 	const staff_uid = () => data.staff_uid;
@@ -28,6 +29,9 @@
 			<section class="grid grid-cols-1 gap-3 md:grid-cols-[.6fr_.4fr]">
 				<div class="flex flex-col gap-3">
 					<LoginAttempts email={staffQuery.data.email} />
+					{#key staffQuery.data.uid}<PractitionerScheduleCard
+							practitioner={staffQuery.data}
+						/>{/key}
 					<StaffRecentActions />
 				</div>
 

@@ -7,7 +7,8 @@ import { branchHealthcareServices } from './fetch-key-factory';
 
 export function useFetchBranchHealthcareServices(
 	branchUid: () => string,
-	params: HealthcareServiceQueryParams
+	params: HealthcareServiceQueryParams,
+	enabled: () => boolean = () => true
 ) {
 	return createQuery(() => {
 		const tenantUid = stores.AppStore.currentTenant.uid;
@@ -20,9 +21,10 @@ export function useFetchBranchHealthcareServices(
 		return {
 			queryKey: meta.keys(),
 			meta,
-			enabled: browser && canAccessBranchServices(stores, branchUid()),
+			enabled: browser && enabled() && canAccessBranchServices(stores, branchUid()),
 			queryFn: async ({ signal }) => {
 				if (
+					!enabled() ||
 					tenantUid !== stores.AppStore.currentTenant.uid ||
 					selectedBranch !== branchUid() ||
 					!canAccessBranchServices(stores, branchUid())

@@ -2,10 +2,10 @@ import { decodeJwt } from 'jose';
 import { PERMISSIONS } from '$lib/configs/permissions';
 import type { RootStore } from '$lib/store/index.svelte';
 
-export function canAccessBranchServices(
+export function canAccessBranch(
 	root: Pick<RootStore, 'PermissionStore' | 'AuthStore' | 'AppStore'>,
 	branchUid: string,
-	permission = PERMISSIONS.BRANCH_HEALTHCARE_SERVICES_READ as string
+	permission: string
 ) {
 	if (!branchUid || !root.AppStore.currentTenant.uid || !root.PermissionStore.can(permission))
 		return false;
@@ -20,4 +20,12 @@ export function canAccessBranchServices(
 	} catch {
 		return false;
 	}
+}
+
+export function canAccessBranchServices(
+	root: Pick<RootStore, 'PermissionStore' | 'AuthStore' | 'AppStore'>,
+	branchUid: string,
+	permission: string = PERMISSIONS.BRANCH_HEALTHCARE_SERVICES_READ
+) {
+	return canAccessBranch(root, branchUid, permission);
 }

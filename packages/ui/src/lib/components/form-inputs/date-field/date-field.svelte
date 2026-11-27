@@ -186,6 +186,8 @@
                 onblur={() => (focused = false)}
                 class={cn(
                   'font-grotesk border-border relative flex h-11 w-full items-center justify-start gap-2 rounded-xl border bg-white px-3 text-left text-sm font-normal shadow-none focus-within:border-neutral-950 hover:bg-white',
+                  floatingLabel && label && 'h-14 sm:h-16',
+                  floatingLabel && label && isFloating && 'pt-7 pb-2',
                   !value && 'text-neutral-400',
                   props.class
                 )}
@@ -195,7 +197,7 @@
                     class={cn(
                       'text-muted-foreground pointer-events-none absolute left-3 transition-all duration-150 ease-out select-none',
                       isFloating
-                        ? 'text-foreground top-0 -translate-y-1/2 bg-white px-1 text-xs'
+                        ? 'text-foreground top-3 text-xs leading-none'
                         : 'top-1/2 -translate-y-1/2 text-sm'
                     )}
                   >
@@ -205,7 +207,7 @@
 
                 {#if value}
                   <span class={floatingLabel ? 'text-neutral-950' : ''}>{formatValue(value)}</span>
-                {:else if !floatingLabel}
+                {:else if !floatingLabel || isFloating}
                   <span class="w-11/12 text-sm">{props.placeholder}</span>
                 {/if}
               </button>

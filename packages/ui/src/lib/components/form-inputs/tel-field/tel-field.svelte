@@ -129,7 +129,7 @@
         />
 
         <div class="relative flex-1">
-          <InputGroup>
+          <InputGroup class={cn(floatingLabel && label && 'h-14 sm:h-16')}>
             <InputGroupInput
               {...controlProps}
               {...rest}
@@ -142,8 +142,12 @@
               type="tel"
               aria-invalid={rawInput.length > 0 && !valid}
               required={rest.required}
-              placeholder={floatingLabel ? '' : placeholder}
-              class={cn(floatingLabel && 'placeholder:text-transparent', className)}
+              placeholder={floatingLabel && label && !isFloating ? '' : placeholder}
+              class={cn(
+                floatingLabel && label && 'h-full',
+                floatingLabel && label && isFloating && 'pt-7 pb-2',
+                className
+              )}
             />
           </InputGroup>
 
@@ -152,7 +156,7 @@
               class={cn(
                 'text-muted-foreground pointer-events-none absolute left-3 transition-all duration-150 ease-out select-none',
                 isFloating
-                  ? 'bg-background text-foreground top-0 -translate-y-1/2 px-1 text-xs'
+                  ? 'text-foreground top-3 text-xs leading-none'
                   : 'top-1/2 -translate-y-1/2 text-sm'
               )}
             >

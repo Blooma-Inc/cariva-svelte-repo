@@ -2,8 +2,13 @@
 	import { Paragraph } from '@cariva/ui/components/ui/typography/index.js';
 	let {
 		availability,
-		timezone
-	}: { availability: ServiceAvailability | null; timezone: string | null } = $props();
+		timezone,
+		kind = 'service'
+	}: {
+		availability: ServiceAvailability | null;
+		timezone: string | null;
+		kind?: 'service' | 'practitioner';
+	} = $props();
 	function date(value: string) {
 		return new Intl.DateTimeFormat('en', {
 			timeZone: timezone || 'UTC',
@@ -16,7 +21,11 @@
 <div class="flex flex-col gap-3">
 	<Paragraph size="sm" muted>Timezone: {timezone || 'Not configured'}</Paragraph>
 	{#if availability === null}
-		<Paragraph>Service hours are unconfigured. New bookings require service hours.</Paragraph>
+		<Paragraph
+			>{kind === 'service'
+				? 'Service hours are unconfigured. New bookings require service hours.'
+				: 'Working hours are unconfigured. New bookings require a general practitioner schedule.'}</Paragraph
+		>
 	{:else}
 		{#if !availability.available_time.length}<Paragraph
 				>No available windows. New bookings are unavailable.</Paragraph
@@ -46,7 +55,7 @@
 		{/each}
 	{/if}
 	<Paragraph size="sm" muted
-		>Active service settings do not guarantee a bookable time. Branch hours and practitioner
-		schedules also apply.</Paragraph
+		>Active settings do not guarantee a bookable time. Branch, service, and practitioner hours also
+		apply.</Paragraph
 	>
 </div>

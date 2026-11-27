@@ -50,7 +50,7 @@
 <div
   class={cn(
     'relative flex items-center gap-1',
-    floatingLabel && 'border-border bg-background h-11 rounded-xl border px-3',
+    floatingLabel && 'border-border bg-background h-14 rounded-xl border px-3 sm:h-16',
     className
   )}
 >
@@ -60,13 +60,31 @@
         <button
           {disabled}
           {...props}
-          class={cn('flex flex-1 flex-row items-center gap-1', props.class)}
+          class={cn(
+            'focus-visible:ring-ring flex h-full min-w-0 flex-1 flex-row items-center gap-1 outline-none focus-visible:ring-2',
+            props.class
+          )}
         >
-          <Flag country={selectedCountry} />
-          {#if selectedCountry}
-            <small>+{selectedCountry.dialCode}</small>
-          {/if}
-          <ChevronDownIcon class={cn('size-3 opacity-50', disabled ? 'hidden' : 'opacity-100')} />
+          <span
+            class={cn(
+              'flex min-w-0 flex-1 items-center gap-1',
+              floatingLabel && isFloating && 'pt-7 pb-2'
+            )}
+          >
+            <Flag country={selectedCountry} />
+            {#if selectedCountry}
+              <small>+{selectedCountry.dialCode}</small>
+            {/if}
+          </span>
+          <span
+            aria-hidden="true"
+            class={cn(
+              'bg-secondary text-secondary-foreground -mr-1 flex size-6 shrink-0 items-center justify-center rounded-xl',
+              disabled && 'hidden'
+            )}
+          >
+            <ChevronDownIcon class="size-3" />
+          </span>
         </button>
       {/snippet}
     </Popover.Trigger>
@@ -107,7 +125,7 @@
       class={cn(
         'text-muted-foreground pointer-events-none absolute left-3 transition-all duration-150 ease-out select-none',
         isFloating
-          ? 'bg-background text-foreground top-0 -translate-y-1/2 px-1 text-xs'
+          ? 'text-foreground top-3 text-xs leading-none'
           : 'top-1/2 -translate-y-1/2 text-sm'
       )}
     >
